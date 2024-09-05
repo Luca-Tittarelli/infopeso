@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { dolarAPI } from "../apis";
+import { Loading } from "../components/LoadingAnim";
 
 export default function Cambios(){
     const [response, setResponse] = useState(null);
@@ -28,11 +29,7 @@ export default function Cambios(){
       <div className="bg-white shadow-lg rounded-lg p-6 max-w-sm w-full">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">Cambios del Dólar</h1>
 
-        {status === "loading" && (
-          <div className="flex items-center justify-center">
-            <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
-          </div>
-        )}
+        {status === "loading" && (<Loading />)}
 
         {status === "error" && (
           <p className="text-red-500 text-center">Error al cargar los datos.</p>
