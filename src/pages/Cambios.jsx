@@ -1,60 +1,76 @@
 import { useState, useEffect } from "react";
-import { dolarAPI } from "../apis";
+import { dolarAPI, dolarHistorico } from "../apis";
 import { Loading } from "../components/LoadingAnim";
+import { ChangesCard } from "../components/cambios/InfoCard";
+import { fetchData } from "../utils/Fetch";
+import { getLastMonthDate } from "../utils/functions";
 
-export default function Cambios(){
-    const [response, setResponse] = useState(null);
-    const [status, setStatus] = useState('loading');
-  
+export default function Cambios() {
+    const [dolar, setDolar] = useState(null);
+    const [dolarStatus, setDolarStatus] = useState('loading');
+    const [cotizaciones, setCotizaciones] = useState([]);
+    const [cotizacionesStatus, setCotizacionesStatus] = useState('loading');
+
+    const filtrarUltimoMes = (cotizaciones) => {
+        const lastMonthDate = getLastMonthDate();
+        const today = new Date();
+
+        return cotizaciones.filter(cotizacion => {
+            const fechaCotizacion = new Date(cotizacion.fecha);
+            return fechaCotizacion >= new Date(lastMonthDate) && fechaCotizacion <= today;
+        });
+    };
+
+    const filtrarPorCasa = (data, casa) => {
+        return data.filter(cotizacion => cotizacion.casa === casa);
+    };
+
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const res = await fetch(dolarAPI);
-          if (!res.ok) throw new Error();
-          const data = await res.json();
-          setResponse(data);
-          setStatus('success');
-        } catch (err) {
-          console.error(err);
-          setStatus('error');
-        }
-      };
-      
-      fetchData();
+        const fetching = async () => {
+          const res = await fetchData(dolarAPI);
+          setDolar(res.data);
+          setDolarStatus(res.status);
+        };fetching();
     }, []);
-    console.log(response);
 
-    return(
-      <section className="min-h-screen flex items-center justify-center bg-gray-100 pt-[100px]">
-      <div className="bg-white shadow-lg rounded-lg p-6 max-w-sm w-full">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Cambios del Dólar</h1>
+    useEffect(() => {
+        const fetching = async () => {
+          const res = await fetchData(dolarHistorico);
+          setCotizaciones(filtrarUltimoMes(res.data));
+          setCotizacionesStatus(res.status);
+        };
+        fetching();
+    }, []);
 
-        {status === "loading" && (<Loading />)}
-
-        {status === "error" && (
-          <p className="text-red-500 text-center">Error al cargar los datos.</p>
-        )}
-
-        {status === "success" && response && (
-          <div className="space-y-4">
-            {response.map((item, key) => (
-              <div key={key} className="bg-gray-100 p-4 rounded-lg">
-                <h3 className="text-gray-900 text-xl">{item.nombre}</h3>
-                <div className="flex justify-between text-center">
-                  <span className="font-bold">
-                    Compra
-                    <p>{item.compra}</p>
-                  </span>
-                  <span className="font-bold">
-                    Venta
-                    <p>{item.venta}</p>
-                  </span>
+    return (
+        <section className="pt-[100px]">
+            <h2 className="text-4xl text-center text-black font-bold py-8" style={{ textShadow: '2px 2px 2px #eee' }}>
+                Tipos de cambio
+            </h2>
+            <hr className="w-[70%] bg-gray-200 h-[1px] m-auto mt-8 mb-8"/>
+            <h3 className="text-2xl m-auto font-bold text-center">Dólar</h3>
+            {dolarStatus === "loading" && <Loading />}
+            {dolarStatus === "error" && (
+                <p className="text-red-500 text-center">Error al cargar los datos.</p>
+            )}
+            {dolarStatus === "success" && dolar && (
+                <div className="grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-10 pt-10 xl:w-[1300px] m-auto">
+                    {dolar.map((item, key) => (
+                        <ChangesCard
+                            titulo={item.nombre}
+                            compra={item.compra}
+                            venta={item.venta}
+                            key={key}
+                            cotizaciones={
+                              {
+                                status: cotizacionesStatus,
+                                data: filtrarPorCasa(cotizaciones, item.casa)
+                              }
+                            }
+                        />
+                    ))}
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
-    )
+            )}
+        </section>
+    );
 }
