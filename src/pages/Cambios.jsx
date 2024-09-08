@@ -10,7 +10,7 @@ export default function Cambios() {
     const [dolarStatus, setDolarStatus] = useState('loading');
     const [cotizaciones, setCotizaciones] = useState([]);
     const [cotizacionesStatus, setCotizacionesStatus] = useState('loading');
-
+    
     const filtrarUltimoMes = (cotizaciones) => {
         const lastMonthDate = getLastMonthDate();
         const today = new Date();
@@ -42,6 +42,8 @@ export default function Cambios() {
         fetching();
     }, []);
 
+    console.log(dolar)
+
     return (
         <section className="pt-[100px]">
             <h2 className="text-4xl text-center text-black font-bold py-8" style={{ textShadow: '2px 2px 2px #eee' }}>
@@ -60,6 +62,7 @@ export default function Cambios() {
                             titulo={item.nombre}
                             compra={item.compra}
                             venta={item.venta}
+                            fecha={item.fechaActualizacion}
                             key={key}
                             cotizaciones={
                               {

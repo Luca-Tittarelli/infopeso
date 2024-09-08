@@ -5,6 +5,7 @@ import DifferenceIcon from "../../utils/DifferenceIcons";
 
 export function MacroCard({ titulo, valor, desc, fecha, id }) {
     const [difference, setDifference] = useState(0)
+    const [differenceStatus, setDifferenceStatus] = useState('loading')
 
     const getLastMonthDate = () => {
         const today = new Date();
@@ -63,6 +64,9 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
                         }`}
                     >
                         <DifferenceIcon dif={difference}/>
+                        {differenceStatus === 'loading' &&(
+                            <div className="loading"></div>
+                        )}
                         {difference}% en el último mes
                     </span>
                 </h3>
