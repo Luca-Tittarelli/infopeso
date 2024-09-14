@@ -23,8 +23,17 @@ export const getYesterdayDate = () => {
     return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
 };
 
+export const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0'); 
 
-export const diferenciaTiempo = (fechaActualizacion)=>{
+    return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+};
+
+
+export const getTimeDifference = (fechaActualizacion)=>{
     const ahora = new Date();
     const diferencia = ahora - new Date(fechaActualizacion); // Diferencia en milisegundos
     const segundos = Math.floor(diferencia / 1000);

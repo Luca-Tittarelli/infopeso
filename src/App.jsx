@@ -4,6 +4,7 @@ import Macro from "./pages/Macro";
 import Cambios from "./pages/Cambios";
 import LineChart from "./pages/Market";
 import Index from "./pages/Index";
+import { Footer } from "./components/Footer";
 function App() {
   return (
     <BrowserRouter>
@@ -14,6 +15,7 @@ function App() {
         <Route path="/Cambios" element={<Cambios />}></Route>
         <Route path="/Mercado" element={<LineChart />}></Route>
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

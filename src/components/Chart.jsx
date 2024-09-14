@@ -1,7 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import { color } from 'chart.js/helpers';
 
 // Registramos los componentes necesarios de Chart.js
 ChartJS.register(
@@ -14,7 +13,7 @@ ChartJS.register(
   Legend
 );
 
-const LineChart = ({labels, dataset, height, color}) => {
+const LineChart = ({ labels, dataset, height, color }) => {
   // Datos y configuración del gráfico
   const data = {
     labels: labels, // Ejemplo de labels
@@ -44,6 +43,18 @@ const LineChart = ({labels, dataset, height, color}) => {
         grid: {
           display: false, // Elimina las líneas de referencia en el eje y
         },
+        ticks: {
+          callback: function(value) {
+            // Redondea el valor para mostrar un máximo de seis dígitos incluyendo separadores de miles
+            let numStr = value.toLocaleString('es-AR');
+            if (numStr.length > 6) {
+              const parts = numStr.split('.');
+              // Devolver solo la parte antes del segundo separador
+              numStr = parts.length > 1 ? parts[0] + ',' + parts[1] : parts[0];
+            }
+            return numStr
+          }
+        }
       },
     },
     plugins: {
@@ -77,10 +88,10 @@ const LineChart = ({labels, dataset, height, color}) => {
       },
     },
   };
-  
+
   return (
     <div className='m-auto'>
-      <Line data={data} options={options} height={height}/>
+      <Line data={data} options={options} height={height} />
     </div>
   );
 };

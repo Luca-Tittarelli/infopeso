@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { dolarAPI, dolarHistorico, otros } from "../apis";
 import { Loading } from "../components/LoadingAnim";
-import { ChangesCard } from "../components/cambios/InfoCard";
+import { ChangesCard } from "../components/cambios/CambiosInfoCard"
 import { fetchData } from "../utils/Fetch";
 import { getLastMonthDate } from "../utils/functions";
 import { ErrorComponent } from "../components/Error";
@@ -63,7 +63,7 @@ export default function Cambios() {
             <h2 className="text-4xl text-center text-black dark:text-slate-200 font-bold py-8">
                 Tipos de cambio
             </h2>
-            <hr className="w-[70%] bg-gray-200 h-[1px] m-auto mt-8 mb-8" />
+            <hr className="xl:w-[1300px] dark:bg-slate-900 bg-gray-200 h-[1px] m-auto mt-8 mb-8 border-none" />
             <div>
                 <h3 className="text-2xl m-auto font-bold text-center dark:text-slate-200">Dólar</h3>
                 {dolarStatus === "loading" && <Loading />}

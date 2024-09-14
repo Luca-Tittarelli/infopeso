@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MacroCard } from '../components/macro/InfoCard';
+import { MacroCard } from '../components/macro/MacroInfoCard';
 import { macroAPI } from '../apis';
 import { Loading } from '../components/LoadingAnim';
 import { fetchData } from '../utils/Fetch';
@@ -30,7 +30,7 @@ export default function Macro(){
               key={index} 
               titulo={data.descripcion.split('(')[0].trim()} 
               valor={data.valor} 
-              desc={data.descripcion.replace(/[()]/g, '')} 
+              desc={data.descripcion.split('(')[1]?.replace(/[()]/g, '')} 
               fecha={data.fecha}
               id={data.idVariable}
             />
