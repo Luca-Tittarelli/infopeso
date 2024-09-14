@@ -16,13 +16,11 @@ ChartJS.register(
 
 const LineChart = ({labels, dataset, height, color}) => {
   // Datos y configuración del gráfico
-  console.log(color)
   const data = {
     labels: labels, // Ejemplo de labels
     datasets: [
       {
         type: 'line',
-        label: 'Ventas en 2024',
         data: dataset, // Ejemplo de dataset
         pointRadius: 0,
         borderColor: color,
@@ -36,7 +34,7 @@ const LineChart = ({labels, dataset, height, color}) => {
     scales: {
       x: {
         ticks: {
-            display: false // Oculta las etiquetas del eje x
+          display: false // Oculta las etiquetas del eje x
         },
         grid: {
           display: false, // Elimina las líneas de referencia en el eje x
@@ -53,7 +51,20 @@ const LineChart = ({labels, dataset, height, color}) => {
         display: false, // Oculta la leyenda
       },
       tooltip: {
-        enabled: false, // Deshabilita el hover de los puntos
+        enabled: true, // Habilita el tooltip
+        intersect: false, // Muestra el tooltip en cualquier parte del gráfico
+        mode: 'index', // Tooltip se activa basado en el índice más cercano
+        callbacks: {
+          title: (tooltipItems) => {
+            // Muestra el label del eje X (fecha o día) en el título del tooltip
+            return `Fecha: ${tooltipItems[0].label}`;
+          },
+          label: (tooltipItem) => {
+            // Muestra el valor en el tooltip
+            return `Valor: ${tooltipItem.raw}`;
+          }
+        },
+        displayColors: false, // Elimina los cuadrados de color en el tooltip
       },
       title: {
         display: true,
@@ -61,15 +72,15 @@ const LineChart = ({labels, dataset, height, color}) => {
         font: {
           size: 14,
           weight: 'bold',
-          color: '#000'
-        }
-      }
+          color: '#000',
+        },
+      },
     },
   };
-
+  
   return (
     <div className='m-auto'>
-      <Line data={data} options={options} height={"auto"} height={height}/>
+      <Line data={data} options={options} height={height}/>
     </div>
   );
 };

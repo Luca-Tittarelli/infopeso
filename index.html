@@ -8,12 +8,21 @@
     <style>
       body{
         background-image: radial-gradient(circle at center center, rgb(221,221,221),rgb(255,255,255));
-        background-position: fixed;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        height: 100vh;
+      }
+      .dark body{
+        background-image: radial-gradient(circle at center center, rgb(0, 5, 41),rgb(0, 2, 29));
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        height: 100vh;
       }
     </style>
   </head>
   <body>
     <div id="root"></div>
+    <div class="background"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -9,6 +9,7 @@ export const fetchData = async (url) => {
     } catch (err) {
       console.error(err);
       status = 'error';
+      responseData = ''
     }
     return { data: responseData, status: status };
 };

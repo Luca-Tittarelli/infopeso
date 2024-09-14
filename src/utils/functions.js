@@ -4,22 +4,26 @@ export const getLastMonthDate = () => {
 
     lastMonth.setMonth(today.getMonth() - 1);
 
+    // Si al ajustar el mes, el día resulta inválido, JavaScript ajusta el mes y día automáticamente.
+    // Ahora necesitamos asegurar que el día no exceda los días disponibles en el mes anterior.
     const year = lastMonth.getFullYear();
-    const month = String(lastMonth.getMonth() + 1).padStart(2, '0'); // Meses empiezan desde 0
-    const day = String(today.getDate()).padStart(2, '0'); // Mantenemos el día actual
+    const month = String(lastMonth.getMonth() + 1).padStart(2, '0');
+    const day = String(lastMonth.getDate()).padStart(2, '0'); // Corregido para obtener el día válido del mes pasado
 
     return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
 };
-export const getLastDayDate = () => {
+export const getYesterdayDate = () => {
     const today = new Date();
-    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 0); // Primer día del mes actual menos un mes
+    today.setDate(today.getDate() - 1); // Restamos un día a la fecha actual
 
-    const year = lastMonth.getFullYear();
-    const month = String(lastMonth.getMonth() + 1).padStart(2, '0'); // Meses empiezan desde 0
-    const day = String(lastMonth.getDate()).padStart(2, '0'); // Día del último día del mes anterior
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Meses empiezan desde 0
+    const day = String(today.getDate()).padStart(2, '0'); // Día de ayer
 
     return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
 };
+
+
 export const diferenciaTiempo = (fechaActualizacion)=>{
     const ahora = new Date();
     const diferencia = ahora - new Date(fechaActualizacion); // Diferencia en milisegundos

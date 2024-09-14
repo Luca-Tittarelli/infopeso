@@ -26,7 +26,7 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
             let date = getLastMonthDate();
             try {
                 const res = await fetchData(variableAPI(id, date, date));
-                console.log(res)
+                console.log(variableAPI(id, date, date))
                 const previousValue = res.data.results[0]?.valor || 0;
     
                 // Calcular diferencia si previousValue no es 0
@@ -49,11 +49,11 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
     }, [id, valor]); // Agregado 'valor' como dependencia para recalcular si cambia
 
     return(
-        <article className="w-[90vw] sm:h-[300px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white felx flex-col justify-between">
+        <article className="w-[90vw] sm:h-[300px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 felx flex-col justify-between">
             <div>
-                <h2 className="text-xl font-bold mb-2 truncate">{titulo}</h2>
-                <h3 className="text-4xl font-extrabold text-gray-800 mb-4">
-                    {valor.toLocaleString()}
+                <h2 className="text-xl font-bold mb-2 truncate dark:text-slate-200">{titulo}</h2>
+                <h3 className="text-4xl font-extrabold text-gray-800 dark:text-slate-100 mb-4">
+                    <h4 className="dark:text-slate-200">{valor.toLocaleString()}</h4>
                     <span
                         className={`text-base flex items-center ${
                             difference > 0
@@ -70,10 +70,10 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
                         {difference}% en el último mes
                     </span>
                 </h3>
-                <p className="text-gray-600 mb-6 text-base">{desc}</p>
+                <p className="text-gray-600 mb-6 text-base dark:text-slate-400">{desc}</p>
             </div>
             <div>
-                <span className="text-sm text-gray-500">{fecha}</span>
+                <span className="text-sm text-gray-500 dark:text-slate-400">{fecha}</span>
             </div>
         </article>
     );

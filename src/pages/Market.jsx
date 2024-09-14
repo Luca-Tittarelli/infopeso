@@ -1,5 +1,10 @@
+import { ErrorComponent } from "../components/Error";
+import { Loading } from "../components/LoadingAnim";
+
 export default function Market(){
   return(
-    <h1>Holaa</h1>
+    <section className="pt-[100px]">
+      <Loading />
+    </section>
   )
 }
