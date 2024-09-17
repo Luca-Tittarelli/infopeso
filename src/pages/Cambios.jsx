@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { dolarAPI, dolarHistorico, otros } from "../apis";
+import { dolarAPI, dolarHistoricoAPI, cotizacionesAPI } from "../apis";
 import { Loading } from "../components/LoadingAnim";
 import { ChangesCard } from "../components/cambios/CambiosInfoCard"
 import { fetchData } from "../utils/Fetch";
@@ -39,7 +39,7 @@ export default function Cambios() {
 
     useEffect(() => {
         const fetching = async () => {
-            const res = await fetchData(dolarHistorico);
+            const res = await fetchData(dolarHistoricoAPI);
             setCotizaciones(filtrarUltimoMes(res.data));
             setCotizacionesStatus(res.status);
         };
@@ -48,7 +48,7 @@ export default function Cambios() {
 
     useEffect(() => {
         const fetching = async () => {
-            const res = await fetchData(otros);
+            const res = await fetchData(cotizacionesAPI);
             setOthers(res.data);
             setOthersStatus(res.status);
         };
