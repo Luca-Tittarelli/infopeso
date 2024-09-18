@@ -33,7 +33,7 @@ export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart 
     console.log(cotizaciones)
 
     return (
-        <article className="w-[90vw] h-[330px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col items-stretch justify-between">
+        <article className="w-[90vw] h-[330px] xsm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col items-stretch justify-between">
             <h3 className="text-xl font-bold mb-2 dark:text-slate-200 truncate">{titulo}</h3>
             {chart && cotizaciones?.data?.length > 0 && (
                 <div className="h-max-[50px]">

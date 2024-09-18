@@ -2,6 +2,17 @@ import ThemeButton from "../ThemeButton";
 import { useState, useEffect } from "react";
 
 export default function Header(){
+    const [headerStatus, setHeaderStatus] = useState('close');
+    
+    const responsiveStyles = headerStatus === 'close' 
+        ? 'max-sm:translate-y-[-20vh] sm:translate-y-0' 
+        : 'max-sm:translate-y-[calc(90px+50px)]';
+
+    const handleHeaderStatus = () => {
+        const status = headerStatus === 'close' ? 'open' : 'close';
+        setHeaderStatus(status);
+    };
+
     const getInitialTheme = () => {
         const savedTheme = localStorage.getItem("theme");
         if (savedTheme) {
@@ -21,26 +32,37 @@ export default function Header(){
         setTheme(prevTheme => prevTheme === "dark" ? "light" : "dark");
     };
 
+    console.log(headerStatus);
+
     return(
-        <header className="h-[90px] w-full fixed shadow-lg dark:bg-slate-900 dark:text-white bg-white flex justify-between items-center px-2">
-            <div className="flex basis-0 grow">
+        <header className="h-[90px] w-full fixed shadow-lg dark:bg-slate-900 dark:text-white bg-white flex justify-between items-center sm:px-3">
+            <div className="sm:hidden block w-full h-full absolute bg-inherit"></div>
+            <div className="flex basis-0 grow max-sm:absolute">
                 <h1>Datonómicos</h1>
             </div>
-            <nav>
-                <ul className="flex basis-0 grow text-l [&>li]:px-4 [&>li]:font-bold">
+            <nav className={`max-sm:h-[200px] max-sm:w-screen flex max-sm:items-center  justify-center sm:translate-y-0 ${responsiveStyles} transition-transform duration-300 max-sm:bg-gray-100 max-sm:dark:bg-slate-800 -z-10`}>
+                <ul className="flex flex-col sm:flex-row basis-0 grow sm:text-base max-sm:items-center max-sm:justify-between text-lg max-sm:[&>li]:p-2 max-sm:py-3 [&>li]:px-4 [&>li]:font-bold max-sm:[&>li]:text-xl text-center h-full w-full">
                     <li><a href="/">Inicio</a></li>
-                    <li><a href="/Macro">Macro</a></li>
+                    <li><a href="/Economia">Economía</a></li>
                     <li><a href="/Cambios">Tipo de cambios</a></li>
                     <li><a href="/Mercado">Mercado</a></li>
                 </ul>
             </nav>
-            <div className="flex basis-0 grow justify-end">
+            <div className="flex basis-0 grow justify-end max-sm:absolute right-1">
                 <ThemeButton
                     isDark={1}
                     invertedIconLogic={theme === 'dark' ? true : false} // Asigna la propiedad condicionalmente
-                    onChange={handleChangeTheme} 
+                    onChange={handleChangeTheme}
                 />
+                <button className="sm:hidden mx-2" onClick={handleHeaderStatus}>
+                    <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round"  className="icon icon-tabler icon-tabler-menu-2 text-black dark:text-white h-12">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M4 6l16 0" />
+                        <path d="M4 12l16 0" />
+                        <path d="M4 18l16 0" />
+                    </svg>
+                </button>
             </div>
         </header>
-    )
+    );
 }

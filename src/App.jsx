@@ -11,7 +11,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Index />}></Route>
-        <Route path="/Macro" element={<Macro />}></Route>
+        <Route path="/Economia" element={<Macro />}></Route>
         <Route path="/Cambios" element={<Cambios />}></Route>
         <Route path="/Mercado" element={<LineChart />}></Route>
       </Routes>

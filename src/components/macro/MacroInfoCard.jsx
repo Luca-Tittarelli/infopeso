@@ -3,7 +3,7 @@ import { variableAPI } from "../../apis";
 import { fetchData } from "../../utils/Fetch";
 import DifferenceIcon from "../../utils/DifferenceIcons";
 import LineChart from "../Chart";
-import { getLastMonthDate, getTodayDate } from "../../utils/functions";
+import { getDatesRange, getLastMonthDate, getTodayDate } from "../../utils/functions";
 
 export function MacroCard({ titulo, valor, desc, fecha, id }) {
     const [difference, setDifference] = useState(0);
@@ -22,10 +22,9 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
 
     useEffect(() => {
         const fetchVariable = async () => {
-            let date = getLastMonthDate();
+            let dates = getDatesRange();
             try {
-                const res = await fetchData(variableAPI(id, date, date));
-                console.log(variableAPI(id, date, date));
+                const res = await fetchData(variableAPI(id, dates[0], dates[1]));
                 const previousValue = res.data.results[0]?.valor || 0;
 
                 // Calcular diferencia si previousValue no es 0
@@ -57,7 +56,6 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
         fetching();
     }, [id]);
 
-    console.log(getValues);
 
     return (
         <article className="w-[90vw] sm:h-[330px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between">

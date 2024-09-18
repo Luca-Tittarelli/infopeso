@@ -59,31 +59,34 @@ export default function Cambios() {
     console.log();
 
     return (
-        <section className="pt-[100px]">
-            <h2 className="text-4xl text-center text-black dark:text-slate-200 font-bold py-8">
+        <section className="pt-[100px] w-full xl:w-[1250px] m-auto">
+            <h2 className="text-3xl text-center text-black dark:text-slate-200 font-bold py-8">
                 Tipos de cambio
             </h2>
-            <hr className="xl:w-[1300px] dark:bg-slate-900 bg-gray-200 h-[1px] m-auto mt-8 mb-8 border-none" />
+            <hr className="xl:w-full w-[90%] dark:bg-slate-900 bg-gray-300 h-[1px] m-auto mt-8 mb-8 border-none" />
             <div>
                 <h3 className="text-2xl m-auto font-bold text-center dark:text-slate-200">Dólar</h3>
                 {dolarStatus === "loading" && <Loading />}
                 {dolarStatus === "error" && <ErrorComponent message={"Error al obtener los datos del dólar"}/>}
                 {dolarStatus === "success" && dolar && (
-                    <div className="grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-10 pt-10 xl:w-[1300px] m-auto">
-                        {dolar.map((item, key) => (
-                            <ChangesCard
-                                titulo={item.nombre}
-                                compra={item.compra}
-                                venta={item.venta}
-                                fecha={item.fechaActualizacion}
-                                key={key}
-                                chart={true}
-                                cotizaciones={{
-                                    status: cotizacionesStatus,
-                                    data: filtrarPorCasa(cotizaciones, item.casa)
-                                }}
-                            />
-                        ))}
+                    <div className="grid xl:grid-cols-3 2md:grid-cols-2 grid-cols-1 gap-4 xl:gap-8 pt-10 w-full m-auto">
+                        {dolar.map((item, key) => {
+                            if (item.casa === 'mayorista') return null;
+                            return (
+                                <ChangesCard
+                                    titulo={item.nombre}
+                                    compra={item.compra}
+                                    venta={item.venta}
+                                    fecha={item.fechaActualizacion}
+                                    key={key}
+                                    chart={true}
+                                    cotizaciones={{
+                                        status: cotizacionesStatus,
+                                        data: filtrarPorCasa(cotizaciones, item.casa)
+                                    }}
+                                />
+                            );
+                        })}
                     </div>
                 )}
             </div>
@@ -92,7 +95,7 @@ export default function Cambios() {
                 {othersStatus === "loading" && <Loading />}
                 {othersStatus === "error" && <ErrorComponent message={"Error al obtener los datos de otras cotizaciones"}/>}
                 {othersStatus === "success" && dolar && (
-                    <div className="grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-10 pt-10 xl:w-[1300px] m-auto">
+                    <div className="grid xl:grid-cols-3 2md:grid-cols-2 grid-cols-1 gap-4 xl:gap-8 pt-10 w-full m-auto">
                         {others.map((item, key) => (
                             <ChangesCard
                                 titulo={item.nombre}

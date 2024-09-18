@@ -31,7 +31,25 @@ export const getTodayDate = () => {
 
     return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
 };
+export const getDatesRange = ()=>{
+    const today = new Date();
+    
+    // Obtener la misma fecha del mes pasado
+    const lastMonth = new Date(today);
+    lastMonth.setMonth(today.getMonth() - 1);
+    
+    // Asegurar que la fecha sea válida (por ejemplo, manejar meses con menos días)
+    if (lastMonth.getMonth() === today.getMonth() - 1 || (today.getMonth() === 0 && lastMonth.getMonth() === 11)) {
+        const validDay = Math.min(today.getDate(), new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0).getDate());
+        lastMonth.setDate(validDay);
+    }
+    
+    // Obtener fecha 4 días después de la fecha anterior
+    const fourDaysLater = new Date(lastMonth);
+    fourDaysLater.setDate(lastMonth.getDate() + 4);
 
+    return [lastMonth, fourDaysLater].map(date => date.toISOString().split('T')[0]); // Formato YYYY-MM-DD
+}
 
 export const getTimeDifference = (fechaActualizacion)=>{
     const ahora = new Date();
