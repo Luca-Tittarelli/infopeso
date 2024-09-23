@@ -91,7 +91,7 @@ const LineChart = ({ labels, dataset, height, color }) => {
 
   return (
     <div className='m-auto'>
-      <Line data={data} options={options} height={height} />
+      <Line data={data} options={options} height={height} width={'auto'}/>
     </div>
   );
 };

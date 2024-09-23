@@ -38,14 +38,14 @@ export default function Header(){
         <header className="h-[90px] w-full fixed shadow-lg dark:bg-slate-900 dark:text-white bg-white flex justify-between items-center sm:px-3">
             <div className="sm:hidden block w-full h-full absolute bg-inherit"></div>
             <div className="flex basis-0 grow max-sm:absolute">
-                <h1>Datonómicos</h1>
+                <h1>Ecoacá</h1>
             </div>
             <nav className={`max-sm:h-[200px] max-sm:w-screen flex max-sm:items-center  justify-center sm:translate-y-0 ${responsiveStyles} transition-transform duration-300 max-sm:bg-gray-100 max-sm:dark:bg-slate-800 -z-10`}>
-                <ul className="flex flex-col sm:flex-row basis-0 grow sm:text-base max-sm:items-center max-sm:justify-between text-lg max-sm:[&>li]:p-2 max-sm:py-3 [&>li]:px-4 [&>li]:font-bold max-sm:[&>li]:text-xl text-center h-full w-full">
+                <ul className="flex flex-col sm:flex-row basis-0 grow sm:text-base max-sm:items-center max-sm:justify-between [&>li>a]:hover:scale-105 [&>li>a]:hover:text-gray-700 [&>li>a]:hover:dark:text-slate-200 text-lg max-sm:[&>li]:p-2 max-sm:py-3 [&>li]:px-4 [&>li]:font-bold max-sm:[&>li]:text-xl text-center h-full w-full">
                     <li><a href="/">Inicio</a></li>
                     <li><a href="/Economia">Economía</a></li>
                     <li><a href="/Cambios">Tipo de cambios</a></li>
-                    <li><a href="/Mercado">Mercado</a></li>
+                    {/* <li><a href="/Mercado">Mercado</a></li> */}
                 </ul>
             </nav>
             <div className="flex basis-0 grow justify-end max-sm:absolute right-1">

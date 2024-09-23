@@ -68,3 +68,13 @@ export const getTimeDifference = (fechaActualizacion)=>{
     if (segundos === 1) return `Actualizado hace 1 segundo`;
     return `Actualizado hace ${segundos} segundos`;
 }
+
+export const filtrarUltimoMes = (cotizaciones) => {
+    const lastMonthDate = getLastMonthDate();
+    const today = new Date();
+
+    return cotizaciones.filter(cotizacion => {
+        const fechaCotizacion = new Date(cotizacion.fecha);
+        return fechaCotizacion >= new Date(lastMonthDate) && fechaCotizacion <= today;
+    });
+};

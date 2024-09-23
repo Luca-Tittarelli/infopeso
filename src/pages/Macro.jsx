@@ -51,6 +51,7 @@ export default function Macro() {
                     />
                 ))}
             </div>
+            <h4 className='text-lg dark:text-slate-400 m-auto text-center my-4'>Información de <a href="">BCRA</a> y <a href="">ArgentinaDatos API</a></h4>
         </section>
     );
 }

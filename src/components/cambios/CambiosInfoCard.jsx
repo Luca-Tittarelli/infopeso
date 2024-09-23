@@ -18,8 +18,7 @@ export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart 
             : '#6b7280'; // Default color if no data is available
 
     // Obtén el valor de venta del último elemento de cotizaciones
-    const ventaAnterior =
-        cotizaciones?.data?.length > 0 ? cotizaciones.data[cotizaciones.data.length - 1].venta : 0;
+    const ventaAnterior = cotizaciones?.data?.length > 0 ? cotizaciones.data[cotizaciones.data.length - 1].venta : 0;
 
     useEffect(() => {
         // Verifica si `ventaAnterior` y `venta` son diferentes de 0 para evitar divisiones por cero

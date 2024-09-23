@@ -4,12 +4,14 @@ import { fetchData } from "../../utils/Fetch";
 import DifferenceIcon from "../../utils/DifferenceIcons";
 import LineChart from "../Chart";
 import { getDatesRange, getLastMonthDate, getTodayDate } from "../../utils/functions";
+import { Loading } from "../LoadingAnim";
+import { ErrorComponent } from "../Error";
 
 export function MacroCard({ titulo, valor, desc, fecha, id }) {
     const [difference, setDifference] = useState(0);
     const [differenceStatus, setDifferenceStatus] = useState("loading");
     const [chartData, setChartData] = useState([]);
-    const getDates = chartData.map(item => item?.fecha);
+    const [chartDataStatus, setChartDataStatus] = useState('loading');    const getDates = chartData.map(item => item?.fecha);
     const getValues = chartData.map(item => item?.valor);
 
     const chartColor = chartData?.length > 0
@@ -52,22 +54,28 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
             const today = getTodayDate();
             const res = await fetchData(variableAPI(id, lastMonthDate, today));
             setChartData(res.data.results ? res.data.results : []);
+            setChartDataStatus(res.status)
         };
         fetching();
     }, [id]);
 
+    console.log(chartDataStatus)
 
     return (
         <article className="w-[90vw] sm:h-[330px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between">
             <div>
                 <h2 className="text-xl font-bold mb-2 truncate dark:text-slate-200">{titulo}</h2>
-                <div>
-                    <LineChart
-                        labels={getDates}
-                        dataset={getValues}
-                        height={100}
-                        color={chartColor}
-                    />
+                <div className="h-[135px] flex flex-col items-center justify-center">
+                    {chartDataStatus === 'loading' && <Loading />}
+                    {chartDataStatus === 'error' && <p className="text-black dark:text-slate-400">No hay gráfico disponible...</p>}
+                    {chartDataStatus === 'success' && (
+                        <LineChart
+                            labels={getDates}
+                            dataset={getValues}
+                            height={120}
+                            color={chartColor}
+                        />
+                    )}
                 </div>
                 <h3 className="text-3xl font-extrabold text-gray-800 dark:text-slate-100 mb-4 flex justify-between">
                     <span className="dark:text-slate-200">{valor.toLocaleString()}</span>

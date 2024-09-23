@@ -3,8 +3,8 @@ import { dolarAPI, dolarHistoricoAPI, cotizacionesAPI } from "../apis";
 import { Loading } from "../components/LoadingAnim";
 import { ChangesCard } from "../components/cambios/CambiosInfoCard"
 import { fetchData } from "../utils/Fetch";
-import { getLastMonthDate } from "../utils/functions";
 import { ErrorComponent } from "../components/Error";
+import { filtrarUltimoMes } from "../utils/functions";
 
 export default function Cambios() {
     const [dolar, setDolar] = useState(null);
@@ -13,16 +13,6 @@ export default function Cambios() {
     const [othersStatus, setOthersStatus] = useState('loading');
     const [cotizaciones, setCotizaciones] = useState([]);
     const [cotizacionesStatus, setCotizacionesStatus] = useState('loading');
-
-    const filtrarUltimoMes = (cotizaciones) => {
-        const lastMonthDate = getLastMonthDate();
-        const today = new Date();
-
-        return cotizaciones.filter(cotizacion => {
-            const fechaCotizacion = new Date(cotizacion.fecha);
-            return fechaCotizacion >= new Date(lastMonthDate) && fechaCotizacion <= today;
-        });
-    };
 
     const filtrarPorCasa = (data, casa) => {
         return data.filter(cotizacion => cotizacion.casa === casa);
