@@ -78,3 +78,7 @@ export const filtrarUltimoMes = (cotizaciones) => {
         return fechaCotizacion >= new Date(lastMonthDate) && fechaCotizacion <= today;
     });
 };
+export const getInitialTheme = () => {
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+};

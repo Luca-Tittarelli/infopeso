@@ -34,7 +34,7 @@ export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart 
     return (
         <article className="w-[90vw] h-[330px] xsm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col items-stretch justify-between">
             <h3 className="text-xl font-bold mb-2 dark:text-slate-200 truncate">{titulo}</h3>
-            {chart && cotizaciones?.data?.length > 0 && (
+            {chart && cotizaciones?.data?.length > 0 ? (
                 <div className="h-max-[50px]">
                     <LineChart
                         dataset={precioMes(cotizaciones.data)}
@@ -43,7 +43,10 @@ export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart 
                         color={chartColor}
                     />
                 </div>
+            ) : (
+                <p className="text-gray-600 dark:text-slate-400 m-auto text-center">No hay gráfico disponible...</p>
             )}
+
             <div className="flex justify-between text-center">
                 <span className="text-xl font-bold text-gray-800 dark:text-slate-200 mb-4">
                     Compra

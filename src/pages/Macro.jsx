@@ -33,25 +33,28 @@ export default function Macro() {
     console.log(response);
 
     return (
-        <section id="macro" className="pt-[100px]">
+        <section id="macro" className="pt-[100px] min-h-[100vh]">
+            <title>Argendata - Economía</title>
             <h2 className="text-4xl text-center text-black dark:text-zinc-300 font-bold py-8">
                 Datos de la economía argentina
             </h2>
             {status === "loading" && <Loading />}
             {status === 'error' && <ErrorComponent message={"Error al obtener la información"} />}
-            <div className="info__container grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-10 pt-10 xl:w-[1300px] m-auto">
-                {status === 'success' && response && response.map((data, index) => (
-                    <MacroCard
-                        key={index}
-                        titulo={data.descripcion.split('(')[0].trim()}
-                        valor={data.valor}
-                        desc={data.descripcion.split('(')[1]?.replace(/[()]/g, '')}
-                        fecha={data.fecha}
-                        id={data.idVariable}
-                    />
-                ))}
-            </div>
-            <h4 className='text-lg dark:text-slate-400 m-auto text-center my-4'>Información de <a href="">BCRA</a> y <a href="">ArgentinaDatos API</a></h4>
+            {status === 'success' && response && (
+                <div className="info__container grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-10 pt-10 xl:w-[1300px] m-auto">
+                    {response.map((data, index) => (
+                        <MacroCard
+                            key={index}
+                            titulo={data.descripcion.split('(')[0].trim()}
+                            valor={data.valor}
+                            desc={data.descripcion.split('(')[1]?.replace(/[()]/g, '')}
+                            fecha={data.fecha}
+                            id={data.idVariable}
+                        />
+                    ))}
+                </div>
+            )}
+            <h4 className='text-lg dark:text-slate-400 text-gray-800 m-auto text-center mt-8'>Información de <a href="">BCRA</a> y <a href="">ArgentinaDatos API</a></h4>
         </section>
     );
 }

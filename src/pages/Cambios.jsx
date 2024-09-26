@@ -49,7 +49,9 @@ export default function Cambios() {
     console.log();
 
     return (
-        <section className="pt-[100px] w-full xl:w-[1250px] m-auto">
+        <section className="pt-[100px] min-h-[100vh] w-full xl:w-[1250px] m-auto">
+            
+        <title>Argendata - Tipos de cambio</title>
             <h2 className="text-3xl text-center text-black dark:text-slate-200 font-bold py-8">
                 Tipos de cambio
             </h2>
@@ -85,17 +87,20 @@ export default function Cambios() {
                 {othersStatus === "loading" && <Loading />}
                 {othersStatus === "error" && <ErrorComponent message={"Error al obtener los datos de otras cotizaciones"}/>}
                 {othersStatus === "success" && dolar && (
-                    <div className="grid xl:grid-cols-3 2md:grid-cols-2 grid-cols-1 gap-4 xl:gap-8 pt-10 w-full m-auto">
-                        {others.map((item, key) => (
-                            <ChangesCard
-                                titulo={item.nombre}
-                                compra={item.compra.toFixed(1)}
-                                venta={item.venta.toFixed(1)}
-                                fecha={item.fechaActualizacion}
-                                key={key}
-                                chart={false}
-                            />
-                        ))}
+                    <div>
+                        <div className="grid xl:grid-cols-3 2md:grid-cols-2 grid-cols-1 gap-4 xl:gap-8 pt-10 w-full m-auto">
+                            {others.map((item, key) => (
+                                <ChangesCard
+                                    titulo={item.nombre}
+                                    compra={item.compra.toFixed(1)}
+                                    venta={item.venta.toFixed(1)}
+                                    fecha={item.fechaActualizacion}
+                                    key={key}
+                                    chart={false}
+                                />
+                            ))}
+                        </div>
+                        <h4 className='text-lg dark:text-slate-400 text-gray-800 m-auto text-center my-4'>Información de <a href="https://dolarapi.com">DolarAPI</a></h4>
                     </div>
                 )}
             </div>

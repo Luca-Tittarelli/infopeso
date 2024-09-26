@@ -1,6 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+  font-family: 'Roboto';
+  src: url(../public/inter.woff2);
+}
 :root {
   --color-toggle-light: yellow;
   --color-toggle-dark: bisque;

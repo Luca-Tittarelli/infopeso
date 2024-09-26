@@ -25,25 +25,22 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
     useEffect(() => {
         const fetchVariable = async () => {
             let dates = getDatesRange();
-            try {
-                const res = await fetchData(variableAPI(id, dates[0], dates[1]));
-                const previousValue = res.data.results[0]?.valor || 0;
+            const res = await fetchData(variableAPI(id, dates[0], dates[1]));
+            const previousValue = res.data.results[0]?.valor || 0;
 
-                // Calcular diferencia si previousValue no es 0
-                if (previousValue !== 0) {
-                    if (id === 17) {
-                        const diffPercentage = ((valor - (previousValue * 1000)) / (previousValue * 1000)) * 100;
-                        setDifference(diffPercentage.toFixed(2));
-                    } else {
-                        const diffPercentage = ((valor - previousValue) / previousValue) * 100;
-                        setDifference(diffPercentage.toFixed(2));
-                    }
+            // Calcular diferencia si previousValue no es 0
+            if (previousValue !== 0) {
+                if (id === 17) {
+                    const diffPercentage = ((valor - (previousValue * 1000)) / (previousValue * 1000)) * 100;
+                    setDifference(diffPercentage.toFixed(2));
                 } else {
-                    setDifference(0); // Si el valor anterior es 0, no se puede calcular la diferencia
+                    const diffPercentage = ((valor - previousValue) / previousValue) * 100;
+                    setDifference(diffPercentage.toFixed(2));
                 }
-            } catch (e) {
-                console.error(e);
+            } else {
+                setDifference(0); // Si el valor anterior es 0, no se puede calcular la diferencia
             }
+            setDifferenceStatus(res.status)
         };
         fetchVariable();
     }, [id, valor]); // Agregado 'valor' como dependencia para recalcular si cambia
@@ -67,7 +64,7 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
                 <h2 className="text-xl font-bold mb-2 truncate dark:text-slate-200">{titulo}</h2>
                 <div className="h-[135px] flex flex-col items-center justify-center">
                     {chartDataStatus === 'loading' && <Loading />}
-                    {chartDataStatus === 'error' && <p className="text-black dark:text-slate-400">No hay gráfico disponible...</p>}
+                    {chartDataStatus === 'error' && <p className="text-gray-600 dark:text-slate-400">No hay gráfico disponible...</p>}
                     {chartDataStatus === 'success' && (
                         <LineChart
                             labels={getDates}
