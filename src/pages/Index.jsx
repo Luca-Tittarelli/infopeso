@@ -35,7 +35,7 @@ export default function Index() {
         <main className="min-h-screen">
             <section className="h-screen flex flex-col sm:justify-center max-sm:pt-[120px] xl:p-20 md:p-12 index">
                 <h2 className="sm:pl-28 text-6xl max-sm:text-center text-[#0049AD] font-bold">
-                    ARGENDATA
+                    INFOPESO
                 </h2>
                 <div className="flex sm:items-center max-sm:text-center max-sm:mx-auto">
                     <div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import DifferenceIcon from "../../utils/DifferenceIcons";
-import LineChart from "../Chart";
+import LineChart from "../../charts/Chart";
 import { getTimeDifference } from "../../utils/functions";
 
 export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart }) {

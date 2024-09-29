@@ -23,7 +23,7 @@ export default function Header() {
     useEffect(() => {
         const logo = document.querySelector('#logo');
         if (logo) {
-            logo.src = theme === "dark" ? 'white-logo.png' : 'logo.png';
+            logo.src = theme === "dark" ? 'white-logo.avif' : 'logo.avif';
         }
     }, [theme]);
 

@@ -2,16 +2,17 @@ import { useEffect, useState } from "react";
 import { variableAPI } from "../../apis";
 import { fetchData } from "../../utils/Fetch";
 import DifferenceIcon from "../../utils/DifferenceIcons";
-import LineChart from "../Chart";
-import { getDatesRange, getLastMonthDate, getTodayDate } from "../../utils/functions";
+import LineChart from "../../charts/Chart";
+import BarsChar from '../../charts/ChartBars'
+import { getDatesRange, getLastMonthDate, getLastYearDate, getTodayDate } from "../../utils/functions";
 import { Loading } from "../LoadingAnim";
-import { ErrorComponent } from "../Error";
 
-export function MacroCard({ titulo, valor, desc, fecha, id }) {
+export function MacroCard({ titulo, valor, desc, fecha, id, chart }) {
     const [difference, setDifference] = useState(0);
     const [differenceStatus, setDifferenceStatus] = useState("loading");
     const [chartData, setChartData] = useState([]);
-    const [chartDataStatus, setChartDataStatus] = useState('loading');    const getDates = chartData.map(item => item?.fecha);
+    const [chartDataStatus, setChartDataStatus] = useState('loading');    
+    const getDates = chartData.map(item => item?.fecha);
     const getValues = chartData.map(item => item?.valor);
 
     const chartColor = chartData?.length > 0
@@ -25,6 +26,9 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
     useEffect(() => {
         const fetchVariable = async () => {
             let dates = getDatesRange();
+            if(chart === 'bars'){
+                dates = [getLastYearDate(), getTodayDate()]
+            }
             const res = await fetchData(variableAPI(id, dates[0], dates[1]));
             const previousValue = res.data.results[0]?.valor || 0;
 
@@ -41,22 +45,26 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
                 setDifference(0); // Si el valor anterior es 0, no se puede calcular la diferencia
             }
             setDifferenceStatus(res.status)
+            
         };
         fetchVariable();
-    }, [id, valor]); // Agregado 'valor' como dependencia para recalcular si cambia
+    }, [id, valor, chart]); // Agregado 'valor' como dependencia para recalcular si cambia
 
     useEffect(() => {
         const fetching = async () => {
-            const lastMonthDate = getLastMonthDate();
+            let firstDate = getLastMonthDate();
+            if(chart === 'bars'){
+                firstDate = getLastYearDate()
+            }
             const today = getTodayDate();
-            const res = await fetchData(variableAPI(id, lastMonthDate, today));
+            const res = await fetchData(variableAPI(id, firstDate, today));
             setChartData(res.data.results ? res.data.results : []);
             setChartDataStatus(res.status)
         };
         fetching();
     }, [id]);
 
-    console.log(chartDataStatus)
+    console.log(chartData)
 
     return (
         <article className="w-[90vw] sm:h-[330px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between">
@@ -66,12 +74,21 @@ export function MacroCard({ titulo, valor, desc, fecha, id }) {
                     {chartDataStatus === 'loading' && <Loading />}
                     {chartDataStatus === 'error' && <p className="text-gray-600 dark:text-slate-400">No hay gráfico disponible...</p>}
                     {chartDataStatus === 'success' && (
-                        <LineChart
-                            labels={getDates}
-                            dataset={getValues}
-                            height={120}
-                            color={chartColor}
-                        />
+                        chart === 'bars' ? (
+                            <BarsChar 
+                                labels={getDates}
+                                dataset={getValues}
+                                height={120}
+                                color={chartColor}
+                            />
+                        ) : (
+                            <LineChart
+                                labels={getDates}
+                                dataset={getValues}
+                                height={120}
+                                color={chartColor}
+                            />
+                        )
                     )}
                 </div>
                 <h3 className="text-3xl font-extrabold text-gray-800 dark:text-slate-100 mb-4 flex justify-between">

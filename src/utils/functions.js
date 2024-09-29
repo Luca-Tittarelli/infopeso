@@ -22,6 +22,17 @@ export const getYesterdayDate = () => {
 
     return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
 };
+export const getLastYearDate = () => {
+    const today = new Date();
+    const lastYear = new Date(today.setFullYear(today.getFullYear() - 1)); // Restamos un año
+
+    const year = lastYear.getFullYear();
+    const month = String(lastYear.getMonth() + 1).padStart(2, '0'); // Meses empiezan desde 0
+    const day = String(lastYear.getDate()).padStart(2, '0'); // Día del año pasado
+
+    return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+};
+
 
 export const getTodayDate = () => {
     const today = new Date();
