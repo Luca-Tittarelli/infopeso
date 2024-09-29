@@ -7,9 +7,8 @@ import BarsChar from '../../charts/ChartBars'
 import { getDatesRange, getLastMonthDate, getLastYearDate, getTodayDate } from "../../utils/functions";
 import { Loading } from "../LoadingAnim";
 
-export function MacroCard({ titulo, valor, desc, fecha, id, chart }) {
+export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, type } }) {
     const [difference, setDifference] = useState(0);
-    const [differenceStatus, setDifferenceStatus] = useState("loading");
     const [chartData, setChartData] = useState([]);
     const [chartDataStatus, setChartDataStatus] = useState('loading');    
     const getDates = chartData.map(item => item?.fecha);
@@ -24,15 +23,25 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart }) {
         : '#6b7280'; // Default color if no data is available
 
     useEffect(() => {
-        const fetchVariable = async () => {
-            let dates = getDatesRange();
-            if(chart === 'bars'){
-                dates = [getLastYearDate(), getTodayDate()]
+        const fetching = async () => {
+            let firstDate = getLastMonthDate();
+            if (duration === 'year') {
+                firstDate = getLastYearDate();
             }
-            const res = await fetchData(variableAPI(id, dates[0], dates[1]));
-            const previousValue = res.data.results[0]?.valor || 0;
+            const today = getTodayDate();
+            const res = await fetchData(variableAPI(id, firstDate, today));
+            setChartData(res.data.results ? res.data.results : []);
+            setChartDataStatus(res.status);
+        };
+        fetching();
+    }, [id, duration]);
 
-            // Calcular diferencia si previousValue no es 0
+    //useEffect para obtener la diferencia, ya sea mensual o anual
+
+    useEffect(() => {
+        const fetchVariable = async () => {
+            const previousValue = chartData[0]?.valor || 0;
+
             if (previousValue !== 0) {
                 if (id === 17) {
                     const diffPercentage = ((valor - (previousValue * 1000)) / (previousValue * 1000)) * 100;
@@ -42,29 +51,13 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart }) {
                     setDifference(diffPercentage.toFixed(2));
                 }
             } else {
-                setDifference(0); // Si el valor anterior es 0, no se puede calcular la diferencia
+                setDifference(0);
             }
-            setDifferenceStatus(res.status)
-            
         };
         fetchVariable();
-    }, [id, valor, chart]); // Agregado 'valor' como dependencia para recalcular si cambia
+    }, [id, valor, chartData]);
 
-    useEffect(() => {
-        const fetching = async () => {
-            let firstDate = getLastMonthDate();
-            if(chart === 'bars'){
-                firstDate = getLastYearDate()
-            }
-            const today = getTodayDate();
-            const res = await fetchData(variableAPI(id, firstDate, today));
-            setChartData(res.data.results ? res.data.results : []);
-            setChartDataStatus(res.status)
-        };
-        fetching();
-    }, [id]);
-
-    console.log(chartData)
+    console.log()
 
     return (
         <article className="w-[90vw] sm:h-[330px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between">
@@ -74,7 +67,7 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart }) {
                     {chartDataStatus === 'loading' && <Loading />}
                     {chartDataStatus === 'error' && <p className="text-gray-600 dark:text-slate-400">No hay gráfico disponible...</p>}
                     {chartDataStatus === 'success' && (
-                        chart === 'bars' ? (
+                        type === 'bars' ? (
                             <BarsChar 
                                 labels={getDates}
                                 dataset={getValues}
@@ -103,10 +96,7 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart }) {
                         }`}
                     >
                         <DifferenceIcon dif={difference} />
-                        {differenceStatus === "loading" && (
-                            <div className="loading"></div>
-                        )}
-                        {difference}% Mensual
+                        {difference}% {duration === 'year' ? 'Anual' : 'Mensual'}
                     </span>
                 </h3>
                 <p className="text-sm dark:text-slate-400 text-gray-600 mb-6 truncate first-letter:uppercase">{desc}</p>
