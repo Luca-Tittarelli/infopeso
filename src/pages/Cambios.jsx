@@ -14,6 +14,7 @@ export default function Cambios() {
     const [cotizaciones, setCotizaciones] = useState([]);
     const [cotizacionesStatus, setCotizacionesStatus] = useState('loading');
 
+
     const filtrarPorCasa = (data, casa) => {
         return data.filter(cotizacion => cotizacion.casa === casa);
     };
@@ -44,6 +45,7 @@ export default function Cambios() {
         };
         fetching();
     }, []);
+    
     
     
     console.log();

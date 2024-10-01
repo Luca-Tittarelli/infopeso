@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { MacroCard } from '../components/macro/MacroInfoCard';
-import { macroAPI, RiesgoPaisAPI } from '../apis';
+import { macroAPI, RiesgoPaisAPI, RiesgoPaisHistoricoAPI } from '../apis';
 import { Loading } from '../components/LoadingAnim';
 import { fetchData } from '../utils/Fetch';
 import { ErrorComponent } from '../components/Error';
 import { categories } from '../MacroFilters';
+import { filtrarUltimoMes } from '../utils/functions';
 
 function MacroSection({title, data, chart= {type, duration}}){
     return(
@@ -36,7 +37,7 @@ export default function Macro() {
     const filter = (categorie) => response?.filter(item => categorie.includes(item.idVariable)) || [];
     const allCategories = Object.values(categories).flat()
     const notIncludes = response?.filter(item => !allCategories.includes(item.idVariable));
-
+    const rpID = response?.[response.length - 1].idVariable
 
     useEffect(() => {
         const fetching = async () => {
@@ -58,7 +59,7 @@ export default function Macro() {
         };
         fetching();
     }, []);
-
+    
     console.log(response);
 
     return (
