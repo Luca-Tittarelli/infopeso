@@ -71,11 +71,11 @@ export default function Macro() {
             {status === 'error' && <ErrorComponent message={"Error al obtener la información"} />}
             {status === 'success' && response && (
                 <div>
-                    <MacroSection title={"Inflación"} data={filter(categories.inflacion)} chart={{type: "bars", duration:"year"}}/>
                     <MacroSection title={"BCRA"} data={filter(categories.bcra)} chart={{type: "line", duration:"month"}}/>
                     <MacroSection title={"Base Monetaria y circulación"} data={filter(categories.baseMonetaria)} chart={{type: "line", duration:"month"}}/>
-                    <MacroSection title={"Unidades Financieras"} data={filter(categories.unidadesFinancieras)} chart={{type: "line", duration:"month"}}/>
+                    <MacroSection title={"Inflación"} data={filter(categories.inflacion)} chart={{type: "bars", duration:"year"}}/>
                     <MacroSection title={"Tasas de interés"} data={filter(categories.tasas)} chart={{type: "line", duration:"month"}}/>
+                    <MacroSection title={"Unidades Financieras"} data={filter(categories.unidadesFinancieras)} chart={{type: "line", duration:"month"}}/>
                     <MacroSection title={"Otros"} data={notIncludes} chart={{type: "line", duration:"month"}}/>
                 </div>
             )}

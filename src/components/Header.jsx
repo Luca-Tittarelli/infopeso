@@ -40,10 +40,10 @@ export default function Header() {
                 <img src="" alt="" className="h-[80%]" id="logo" style={{filter: `drop-shadow(5px 5px 10px ${shadow}`}}/>
             </div>
             <nav className={`max-sm:h-[200px] max-sm:w-screen flex max-sm:items-center justify-center sm:translate-y-0 ${responsiveStyles} transition-transform duration-300 max-sm:bg-gray-100 max-sm:dark:bg-slate-800 -z-10`}>
-                <ul className="flex flex-col sm:flex-row basis-0 grow sm:text-base max-sm:items-center max-sm:justify-between [&>li>a]:hover:text-gray-700 [&>li>a]:hover:dark:text-slate-200 [&>li]:text-lg max-sm:[&>li]:p-2 max-sm:py-3 [&>li]:px-4 [&>li]:font-semibold max-sm:[&>li]:text-xl text-center h-full w-full">
-                    <li><a href="/">Inicio</a></li>
-                    <li><a href="/Economia">Economía</a></li>
-                    <li><a href="/Cambios">Tipo de cambios</a></li>
+                <ul className="flex flex-col sm:flex-row basis-0 grow sm:text-base max-sm:items-center max-sm:justify-between [&>li]:text-lg max-sm:[&>li]:p-2 max-sm:py-3 [&>li]:px-4 [&>li]:font-semibold max-sm:[&>li]:text-xl text-center h-full w-full">
+                    <li><a href="/" className="hover:dark:text-slate-200 hover:text-gray-700">Inicio</a></li>
+                    <li><a href="/Economia" className="hover:dark:text-slate-200 hover:text-gray-700">Economía</a></li>
+                    <li><a href="/Cambios" className="hover:dark:text-slate-200 hover:text-gray-700">Tipo de cambios</a></li>
                 </ul>
             </nav>
             <div className="flex basis-0 grow justify-end max-sm:absolute right-1">

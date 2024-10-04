@@ -114,7 +114,10 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, t
                 </h3>
                 <p className="text-sm dark:text-slate-400 text-gray-600 mb-6 truncate first-letter:uppercase">{desc}</p>
             </div>
-            <span className="text-sm dark:text-slate-400 text-gray-500 ">{fecha}</span>
+            <div className="flex justify-between">
+                <span className="text-sm dark:text-slate-400 text-gray-500 ">{fecha}</span>
+                <span className="text-sm dark:text-slate-400 text-gray-500 ">Fuente: {id === 44 ? "ArgentinaDatosAPI" : "BCRA"}</span>
+            </div>
         </article>
     );
 }

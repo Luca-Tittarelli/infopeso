@@ -6,6 +6,6 @@
   src: url(../public/inter.woff2);
 }
 :root {
-  --color-toggle-light: yellow;
+  --color-toggle-light: rgb(255, 217, 0);
   --color-toggle-dark: bisque;
 }

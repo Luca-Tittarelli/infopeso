@@ -1,10 +1,22 @@
 import { useEffect, useState } from "react";
 import { getInitialTheme } from "../utils/functions";
+import { fetchData } from "../utils/Fetch";
+import { dolarAPI, RiesgoPaisAPI } from "../apis";
 
 export default function Index() {
     const [gradient, setGradient] = useState('#aaa'); // Valor inicial
     const [view, setView] = useState('desktop');
     const [theme, setTheme] = useState('light');
+    const [data, setData] = useState([])
+    const [dataStatus, setDataStatus] = useState("loading")
+
+    useEffect(()=>{
+        const fetching = async()=>{
+            const dolares = await fetchData(dolarAPI)
+            const rp = await fetchData(RiesgoPaisAPI)
+
+        }
+    },[])
 
     const handleResize = () => {
         if (window.innerWidth < 648) {
@@ -48,7 +60,6 @@ export default function Index() {
                         </h2>
                     </div>
                 </div>
-
                 <style jsx>{`
                     @keyframes typing {
                         from { width: 0; }
@@ -72,6 +83,9 @@ export default function Index() {
                         background-position: 55%;
                     }
                 `}</style>
+            </section>
+            <section className="pt-6">
+                <h3 className="text-2xl font-semibold text-center m-auto dark:text-slate-200">Principales Variables</h3>
             </section>
         </main>
     );
