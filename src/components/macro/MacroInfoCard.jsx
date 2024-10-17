@@ -68,9 +68,6 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, t
             setRpChartData(filtrarUltimoMes(res.data))
         };fetching()
     }, [])
-    
-    console.log(chartData)
-    console.log(id)
 
     return (
         <article className="w-[90vw] sm:h-[330px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between">
