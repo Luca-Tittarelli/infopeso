@@ -37,7 +37,6 @@ export default function Macro() {
     const filter = (categorie) => response?.filter(item => categorie.includes(item.idVariable)) || [];
     const allCategories = Object.values(categories).flat()
     const notIncludes = response?.filter(item => !allCategories.includes(item.idVariable));
-    const rpID = response?.[response.length - 1].idVariable
 
     useEffect(() => {
         const fetching = async () => {

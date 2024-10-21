@@ -1,23 +1,36 @@
 import { useEffect, useState } from "react";
-import { getInitialTheme } from "../utils/functions";
+import { filtrarUltimoMes, getInitialTheme } from "../utils/functions";
 import { fetchData } from "../utils/Fetch";
-import { dolarAPI, macroAPI, RiesgoPaisAPI } from "../apis";
+import { dolarAPI, dolarHistoricoAPI, macroAPI, RiesgoPaisAPI } from "../apis";
 import { ChangesCard } from "../components/cambios/CambiosInfoCard";
 import { ErrorComponent } from "../components/Error";
 import { Loading } from "../components/LoadingAnim";
 import { MacroCard } from "../components/macro/MacroInfoCard";
-import { categories } from "../MacroFilters";
+import { indexCategories } from "../MacroFilters";
 
 export default function Index() {
     const [gradient, setGradient] = useState('#aaa'); // Valor inicial
-    const [view, setView] = useState('desktop');
-    const [theme, setTheme] = useState('light');
-    const [macroData, setMacroData] = useState([])
-    const [macroDataStatus, setMacroDataStatus] = useState("loading")
-    const [dolarData, setDolarData] = useState([])
-    const [dolarDataStatus, setDolarDataStatus] = useState('loading')
-    const filter = (categorie, object) => object?.filter(item => categorie.includes(item.idVariable)) || [];
-
+    const [view, setView] = useState('desktop'); //estado para cambiar el gradiente según el dispositivo
+    const [theme, setTheme] = useState('light'); //estado que controla el tema de la página
+    const [macroData, setMacroData] = useState([]) //estado para cargar la data macroeconomica
+    const [macroDataStatus, setMacroDataStatus] = useState("loading") //estado que maneja la carga de este
+    const [dolarData, setDolarData] = useState([]) //estado que maneja la data del dolar
+    const [dolarDataStatus, setDolarDataStatus] = useState('loading') //estado que maneja la carga del dolar
+    const [cotizaciones, setCotizaciones] = useState([]); //estado que maneja las cotizaciones históricas del dolar
+    const [cotizacionesStatus, setCotizacionesStatus] = useState('loading'); //estado que maneja la carga de las cotizaciones históricas del dolar
+    const filter = (categorie, object) => object?.filter(item => categorie.includes(item.idVariable)) || []; //función que filtra los datos según su categoría
+    //funcion que filtra el dola histórico segun su casa
+    const filtrarPorCasa = (data, casa) => {
+        return data.filter(cotizacion => cotizacion.casa === casa);
+    };
+    //funcion que maneja el resize y establece el tipo de dispositivo
+    const handleResize = () => {
+        if (window.innerWidth < 648) {
+            setView('mobile');
+        } else {
+            setView('desktop');
+        }
+    };
 
 
     useEffect(()=>{
@@ -45,16 +58,17 @@ export default function Index() {
             const res = await fetchData(dolarAPI)
             setDolarData(res.data)
             setDolarDataStatus(res.status)
-        };fetching
+        };fetching()
     },[])
 
-    const handleResize = () => {
-        if (window.innerWidth < 648) {
-            setView('mobile');
-        } else {
-            setView('desktop');
-        }
-    };
+    useEffect(() => {
+        const fetching = async () => {
+            const res = await fetchData(dolarHistoricoAPI);
+            setCotizaciones(filtrarUltimoMes(res.data));
+            setCotizacionesStatus(res.status);
+        };
+        fetching();
+    }, []);
 
     // useEffect para añadir el listener de resize
     useEffect(() => {
@@ -125,17 +139,17 @@ export default function Index() {
                 {dolarDataStatus === 'error' && <ErrorComponent message={"Error al cargar los datos"}/>}
                 {dolarDataStatus === 'loading' && <Loading />}
                 <div className="info__container grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-10 xl:w-[1300px] m-auto">
-                {dolarDataStatus === 'success' && dolarData.map((element, index)=> (
+                {dolarDataStatus === 'success' && dolarData.map((item, key)=> (
                         <ChangesCard
-                            key={index}
-                            titulo={element.descripcion.split('(')[0].trim()}
-                            valor={element.valor}
-                            desc={element.descripcion.split('(')[1]?.replace(/[()]/g, '')}
-                            fecha={element.fecha}
-                            id={element.idVariable}
-                            chart={{
-                                type: "line",
-                                duration: "month"
+                            titulo={item.nombre}
+                            compra={item.compra}
+                            venta={item.venta}
+                            fecha={item.fechaActualizacion}
+                            key={key}
+                            chart={true}
+                            cotizaciones={{
+                                status: cotizacionesStatus,
+                                data: filtrarPorCasa(cotizaciones, item.casa)
                             }}
                         />
                     ))}
@@ -148,7 +162,7 @@ export default function Index() {
                 {macroDataStatus === 'error' && <ErrorComponent message={"Error al cargar los datos"}/>}
                 {macroDataStatus === 'loading' && <Loading />}
                 <div className="info__container grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-10 xl:w-[1300px] m-auto">
-                {macroDataStatus === 'success' && filter(categories.index ,macroData).map((element, index)=> (
+                {macroDataStatus === 'success' && filter(indexCategories ,macroData).map((element, index)=> (
                         <MacroCard
                             key={index}
                             titulo={element.descripcion.split('(')[0].trim()}
