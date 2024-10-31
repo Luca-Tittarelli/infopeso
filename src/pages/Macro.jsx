@@ -11,7 +11,7 @@ function MacroSection({title, data, chart= {type, duration}}){
     return(
         <>
         <h3 className="text-2xl m-auto font-bold text-center dark:text-slate-200 py-12">{title}</h3>
-        <div className="info__container grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-10 xl:w-[1300px] m-auto">
+        <div className="info__container grid xl:grid-cols-3 2md:grid-cols-2 grid-cols-1 gap-4 xl:gap-x-3 xl:gap-y-6 pt-10 w-full m-auto">
             {data.map((element, index)=> (
                 <MacroCard
                     key={index}
@@ -62,7 +62,7 @@ export default function Macro() {
     console.log(response);
 
     return (
-        <section id="macro" className="pt-[100px] min-h-[100vh]">
+        <section id="macro" className="pt-[100px] min-h-[100vh] w-full xl:w-[1250px] m-auto">
             <h2 className="text-4xl text-center text-black dark:text-zinc-300 font-bold py-8">
                 Datos de la economía argentina
             </h2>

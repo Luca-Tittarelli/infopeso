@@ -63,7 +63,7 @@ export default function Cambios() {
                 {dolarStatus === "loading" && <Loading />}
                 {dolarStatus === "error" && <ErrorComponent message={"Error al obtener los datos del dólar"}/>}
                 {dolarStatus === "success" && dolar && (
-                    <div className="grid xl:grid-cols-3 2md:grid-cols-2 grid-cols-1 gap-4 xl:gap-8 pt-10 w-full m-auto">
+                    <div className="grid xl:grid-cols-3 2md:grid-cols-2 grid-cols-1 gap-4 xl:gap-x-3 xl:gap-y-6 pt-10 w-full m-auto">
                         {dolar.map((item, key) => {
                             if (item.casa === 'mayorista') return null;
                             return (
@@ -90,7 +90,7 @@ export default function Cambios() {
                 {othersStatus === "error" && <ErrorComponent message={"Error al obtener los datos de otras cotizaciones"}/>}
                 {othersStatus === "success" && dolar && (
                     <div>
-                        <div className="grid xl:grid-cols-3 2md:grid-cols-2 grid-cols-1 gap-4 xl:gap-8 pt-10 w-full m-auto">
+                        <div className="grid xl:grid-cols-3 2md:grid-cols-2 grid-cols-1 gap-4 xl:gap-x-3 xl:gap-y-6 pt-10 w-full m-auto">
                             {others.map((item, key) => (
                                 <ChangesCard
                                     titulo={item.nombre}

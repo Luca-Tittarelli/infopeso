@@ -1,28 +1,24 @@
 import { useEffect, useState } from "react";
-import { filtrarUltimoMes, getInitialTheme } from "../utils/functions";
+import { filtrarUltimoMes, getDatesRange, getInitialTheme, getLastMonthDate, getYesterdayDate } from "../utils/functions";
 import { fetchData } from "../utils/Fetch";
-import { dolarAPI, dolarHistoricoAPI, macroAPI, RiesgoPaisAPI } from "../apis";
-import { ChangesCard } from "../components/cambios/CambiosInfoCard";
+import { dolarAPI, macroAPI, RiesgoPaisAPI, dolarFechaAPI, variableAPI, RiesgoPaisHistoricoAPI } from "../apis";
 import { ErrorComponent } from "../components/Error";
 import { Loading } from "../components/LoadingAnim";
 import { MacroCard } from "../components/macro/MacroInfoCard";
 import { indexCategories } from "../MacroFilters";
+import { SimplyCard } from "../components/index/SimplyInfoCard";
 
 export default function Index() {
     const [gradient, setGradient] = useState('#aaa'); // Valor inicial
     const [view, setView] = useState('desktop'); //estado para cambiar el gradiente según el dispositivo
     const [theme, setTheme] = useState('light'); //estado que controla el tema de la página
     const [macroData, setMacroData] = useState([]) //estado para cargar la data macroeconomica
+    const [lastMacro, setLastMacro] = useState([]) //estado que maneja las anteriores cotizaciones del dolar
     const [macroDataStatus, setMacroDataStatus] = useState("loading") //estado que maneja la carga de este
     const [dolarData, setDolarData] = useState([]) //estado que maneja la data del dolar
+    const [lastDolar, setLastDolar] = useState([])
     const [dolarDataStatus, setDolarDataStatus] = useState('loading') //estado que maneja la carga del dolar
-    const [cotizaciones, setCotizaciones] = useState([]); //estado que maneja las cotizaciones históricas del dolar
-    const [cotizacionesStatus, setCotizacionesStatus] = useState('loading'); //estado que maneja la carga de las cotizaciones históricas del dolar
     const filter = (categorie, object) => object?.filter(item => categorie.includes(item.idVariable)) || []; //función que filtra los datos según su categoría
-    //funcion que filtra el dola histórico segun su casa
-    const filtrarPorCasa = (data, casa) => {
-        return data.filter(cotizacion => cotizacion.casa === casa);
-    };
     //funcion que maneja el resize y establece el tipo de dispositivo
     const handleResize = () => {
         if (window.innerWidth < 648) {
@@ -31,8 +27,32 @@ export default function Index() {
             setView('desktop');
         }
     };
+    // Funcion que maneja el fetch en los dolares anteriores
+    const handleFetchDolar = async(casa)=>{
+        const res = await fetchData(dolarFechaAPI(casa, getYesterdayDate().replace(/-/g, '/')))
+        setLastDolar(prevLastDolar => [...prevLastDolar, res.data]);
+    }
+    //Funcion que obtiene la data anterior de los componentes macro
+    const handleFetchMacro = async(id)=>{
+        if(id == 44){
+            const res = await fetchData(RiesgoPaisHistoricoAPI)
+            const rp = filtrarUltimoMes(res.data)[0]
+            const newID = macroData[macroData.length - 1].idVariable
 
-
+            const newElement = {
+                idVariable: newID, // Genera un ID único
+                fecha: rp.fecha,
+                valor: rp.valor,
+            };
+            console.log(newElement)
+            setLastMacro(prevLastMacro => [...prevLastMacro, newElement]);
+        }else{
+            const dates = getDatesRange()
+            const res = await fetchData(variableAPI(id, dates[0], dates[1]))
+            setLastMacro(prevLastMacro => [...prevLastMacro, res.data.results[0]]);
+        }
+    }
+    //Efecto para obtener la data macro necesaria
     useEffect(()=>{
         const fetching = async()=>{
             const variables = await fetchData(macroAPI)
@@ -52,7 +72,13 @@ export default function Index() {
             setMacroDataStatus(variables.status);
         };fetching()
     },[])
-
+    //Efecto que obtiene los anteriores valores macro
+    useEffect(()=>{
+        if(macroDataStatus === 'success'){
+            filter(indexCategories ,macroData).map( i => handleFetchMacro(i.idVariable))
+        }
+    },[macroData, macroDataStatus])
+    //Efecto que obtiene la data del dolar
     useEffect(()=>{
         const fetching = async()=>{
             const res = await fetchData(dolarAPI)
@@ -60,16 +86,12 @@ export default function Index() {
             setDolarDataStatus(res.status)
         };fetching()
     },[])
-
+    // useEffect para obtener los datos anteriores del dolar
     useEffect(() => {
-        const fetching = async () => {
-            const res = await fetchData(dolarHistoricoAPI);
-            setCotizaciones(filtrarUltimoMes(res.data));
-            setCotizacionesStatus(res.status);
-        };
-        fetching();
-    }, []);
-
+        if (dolarDataStatus === 'success') {
+            dolarData.forEach(item => handleFetchDolar(item.casa));
+        }
+    }, [dolarData, dolarDataStatus]);
     // useEffect para añadir el listener de resize
     useEffect(() => {
         handleResize(); // Ejecuta la función inicialmente
@@ -87,7 +109,7 @@ export default function Index() {
         setGradient(theme === "dark" ? '#0F172A' : '#aaa');
     }, [theme]);
 
-    console.log(macroData, dolarData)
+    console.log(lastMacro)
 
     return (
         <main className="min-h-screen">
@@ -106,7 +128,7 @@ export default function Index() {
                         </h2>
                     </div>
                 </div>
-                <style jsx>{`
+                <style>{`
                     @keyframes typing {
                         from { width: 0; }
                         to { width: 100%; }
@@ -130,52 +152,52 @@ export default function Index() {
                     }
                 `}</style>
             </section>
-            <section className="pt-6">
-                <h3 className="text-3xl font-semibold text-center m-auto dark:text-slate-200 py-6">
+            <section className="pt-6 w-full xl:w-[1250px] m-auto">
+                <h3 className="text-3xl font-semibold text-center m-auto dark:text-slate-200 py-10">
                     <a href="Cambios">
                         Dólares
                     </a>
                 </h3>
                 {dolarDataStatus === 'error' && <ErrorComponent message={"Error al cargar los datos"}/>}
                 {dolarDataStatus === 'loading' && <Loading />}
-                <div className="info__container grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-10 xl:w-[1300px] m-auto">
-                {dolarDataStatus === 'success' && dolarData.map((item, key)=> (
-                        <ChangesCard
+                <div className="info__container grid xl:grid-cols-3 2md:grid-cols-2 grid-cols-1 gap-4 xl:gap-x-3 xl:gap-y-6 w-full m-auto">
+                {dolarDataStatus === 'success' && dolarData.map((item, key) => {
+                    const lastValue = lastDolar.find(d => d.casa === item.casa)?.venta;
+                    if(item.casa === 'mayorista') return
+                    return (
+                        <SimplyCard
                             titulo={item.nombre}
-                            compra={item.compra}
-                            venta={item.venta}
+                            valor={item.venta}
+                            valorAnterior={lastValue}
                             fecha={item.fechaActualizacion}
                             key={key}
-                            chart={true}
-                            cotizaciones={{
-                                status: cotizacionesStatus,
-                                data: filtrarPorCasa(cotizaciones, item.casa)
-                            }}
                         />
-                    ))}
+                    );
+                })}
+
                 </div>
-                <h3 className="text-3xl font-semibold text-center m-auto dark:text-slate-200 py-6">
+                <h3 className="text-3xl font-semibold text-center m-auto dark:text-slate-200 py-10">
                     <a href="Economia">
                         Principales Variables
                     </a>
                 </h3>
                 {macroDataStatus === 'error' && <ErrorComponent message={"Error al cargar los datos"}/>}
                 {macroDataStatus === 'loading' && <Loading />}
-                <div className="info__container grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-10 xl:w-[1300px] m-auto">
-                {macroDataStatus === 'success' && filter(indexCategories ,macroData).map((element, index)=> (
-                        <MacroCard
-                            key={index}
+                <div className="info__container grid xl:grid-cols-3 2md:grid-cols-2 grid-cols-1 gap-4 xl:gap-x-3 xl:gap-y-6 w-full m-auto">
+                {macroDataStatus === 'success' && filter(indexCategories ,macroData).map((element, index) => {
+                    const lastValue = lastMacro.find(m => m.idVariable === element.idVariable)?.valor;
+                    return(
+                        <SimplyCard
                             titulo={element.descripcion.split('(')[0].trim()}
                             valor={element.valor}
-                            desc={element.descripcion.split('(')[1]?.replace(/[()]/g, '')}
+                            valorAnterior={lastValue}
                             fecha={element.fecha}
                             id={element.idVariable}
-                            chart={{
-                                type: "line",
-                                duration: "month"
-                            }}
+                            key={index}
+                            isMonthly
                         />
-                    ))}
+                    )
+                })}
                 </div>
             </section>
         </main>
