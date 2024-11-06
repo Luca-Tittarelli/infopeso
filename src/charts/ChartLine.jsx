@@ -13,7 +13,8 @@ ChartJS.register(
   Legend
 );
 
-const LineChart = ({ labels, dataset, height, color }) => {
+const LineChart = ({ labels, dataset, height, color, duration }) => {
+  const title = duration === 'month' ? 'Gráfico Intermensual' : 'Gráfico Interanual';
   // Datos y configuración del gráfico
   const data = {
     labels: labels, // Ejemplo de labels
@@ -79,7 +80,7 @@ const LineChart = ({ labels, dataset, height, color }) => {
       },
       title: {
         display: true,
-        text: 'Gráfico Intermensual',
+        text: title,
         font: {
           size: 14,
           weight: 'bold',

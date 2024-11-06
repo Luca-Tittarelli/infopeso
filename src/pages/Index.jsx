@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { filtrarUltimoMes, getDatesRange, getInitialTheme, getLastMonthDate, getYesterdayDate } from "../utils/functions";
+import { filtrarUltimoMes, getDatesRange, getInitialTheme, getYesterdayDate } from "../utils/functions";
 import { fetchData } from "../utils/Fetch";
 import { dolarAPI, macroAPI, RiesgoPaisAPI, dolarFechaAPI, variableAPI, RiesgoPaisHistoricoAPI } from "../apis";
 import { ErrorComponent } from "../components/Error";
 import { Loading } from "../components/LoadingAnim";
-import { MacroCard } from "../components/macro/MacroInfoCard";
 import { indexCategories } from "../MacroFilters";
-import { SimplyCard } from "../components/index/SimplyInfoCard";
+import { SimplyCard } from "../components/cards/SimplyInfoCard";
 
 export default function Index() {
     const [gradient, setGradient] = useState('#aaa'); // Valor inicial

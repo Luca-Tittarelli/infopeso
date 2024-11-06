@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import DifferenceIcon from "../../utils/DifferenceIcons";
-import LineChart from "../../charts/Chart";
+import LineChart from "../../charts/ChartLine";
 import { getTimeDifference } from "../../utils/functions";
 
-export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart }) {
+export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart: { duration, type } }) {
     const [difference, setDifference] = useState(0);
 
     const precioMes = (precios) => precios.map(item => item.venta);
@@ -37,10 +37,11 @@ export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart 
             {chart && cotizaciones?.data?.length > 0 ? (
                 <div className="h-max-[50px]">
                     <LineChart
-                        dataset={precioMes(cotizaciones.data)}
-                        labels={labels(cotizaciones.data)}
+                        dataset={precioMes(cotizaciones?.data)}
+                        labels={labels(cotizaciones?.data)}
                         height={130}
                         color={chartColor}
+                        duration={duration}
                     />
                 </div>
             ) : (

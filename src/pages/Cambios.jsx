@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { dolarAPI, dolarHistoricoAPI, cotizacionesAPI } from "../apis";
 import { Loading } from "../components/LoadingAnim";
-import { ChangesCard } from "../components/cambios/CambiosInfoCard"
+import { ChangesCard } from "../components/cards/CambiosInfoCard";
 import { fetchData } from "../utils/Fetch";
 import { ErrorComponent } from "../components/Error";
 import { filtrarUltimoMes } from "../utils/functions";
@@ -73,7 +73,10 @@ export default function Cambios() {
                                     venta={item.venta}
                                     fecha={item.fechaActualizacion}
                                     key={key}
-                                    chart={true}
+                                    chart={{
+                                        type: 'line',
+                                        duration: 'month'
+                                    }}
                                     cotizaciones={{
                                         status: cotizacionesStatus,
                                         data: filtrarPorCasa(cotizaciones, item.casa)

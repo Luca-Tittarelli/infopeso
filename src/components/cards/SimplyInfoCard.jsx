@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import DifferenceIcon from "../../utils/DifferenceIcons";
-import { fetchData } from "../../utils/Fetch";
 import { getTimeDifference } from "../../utils/functions";
 
-export function SimplyCard({ titulo, valor, valorAnterior ,fecha, isMonthly }){
+export function SimplyCard({ titulo, valor = 0 , valorAnterior = 0 , fecha, isMonthly }){
     const [difference, setDifference] = useState(0);
 
-    useEffect(()=>{
-        setDifference(((valor - valorAnterior) / valorAnterior) * 100);
-    },[valorAnterior, valor])
+    useEffect(() => {
+        if (valorAnterior !== 0 && valor) {
+            setDifference(((valor - valorAnterior) / valorAnterior) * 100);
+        } else {
+            setDifference(0); // O cualquier otro valor predeterminado
+        }
+    }, [valorAnterior, valor]);
+    
 
     return(        
         <article className="w-[90vw] h-auto sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between">
@@ -33,7 +37,6 @@ export function SimplyCard({ titulo, valor, valorAnterior ,fecha, isMonthly }){
             </div>
             <div className="flex justify-between">
                 <span className="text-sm dark:text-slate-400 text-gray-500 ">{getTimeDifference(fecha)}</span>
-                {/* <span className="text-sm dark:text-slate-400 text-gray-500 ">Fuente: {id === 44 ? "ArgentinaDatosAPI" : "BCRA"}</span> */}
             </div>
         </article>
 )

@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { RiesgoPaisHistoricoAPI, variableAPI } from "../../apis";
 import { fetchData } from "../../utils/Fetch";
 import DifferenceIcon from "../../utils/DifferenceIcons";
-import LineChart from "../../charts/Chart";
+import LineChart from "../../charts/ChartLine";
 import BarsChar from '../../charts/ChartBars'
-import { filtrarUltimoMes, getDatesRange, getLastMonthDate, getLastYearDate, getTodayDate } from "../../utils/functions";
+import { filtrarUltimoMes, getLastMonthDate, getLastYearDate, getTodayDate } from "../../utils/functions";
 import { Loading } from "../LoadingAnim";
 
 export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, type } }) {
@@ -69,6 +69,8 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, t
         };fetching()
     }, [])
 
+    console.log(duration)
+
     return (
         <article className="w-[90vw] sm:h-[330px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between">
             <div>
@@ -83,6 +85,7 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, t
                                 dataset={getValues}
                                 height={120}
                                 color={chartColor}
+                                duration={duration}
                             />
                         ) : (
                             <LineChart
@@ -90,6 +93,7 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, t
                                 dataset={getValues}
                                 height={120}
                                 color={chartColor}
+                                duration={duration}
                             />
                         )
                     )}

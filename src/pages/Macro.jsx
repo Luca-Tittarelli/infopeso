@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { MacroCard } from '../components/macro/MacroInfoCard';
-import { macroAPI, RiesgoPaisAPI, RiesgoPaisHistoricoAPI } from '../apis';
+import { MacroCard } from '../components/cards/MacroInfoCard';
+import { macroAPI, RiesgoPaisAPI } from '../apis';
 import { Loading } from '../components/LoadingAnim';
 import { fetchData } from '../utils/Fetch';
 import { ErrorComponent } from '../components/Error';
 import { categories } from '../MacroFilters';
-import { filtrarUltimoMes } from '../utils/functions';
 
 function MacroSection({title, data, chart= {type, duration}}){
     return(

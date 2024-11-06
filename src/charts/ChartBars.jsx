@@ -12,7 +12,7 @@ ChartJS.register(
   Legend
 );
 
-const BarsChart = ({ labels, dataset, height, color }) => {
+const BarsChart = ({ labels, dataset, height, color, duration }) => {
   // Datos y configuración del gráfico
   const data = {
     labels: labels,
@@ -68,7 +68,7 @@ const BarsChart = ({ labels, dataset, height, color }) => {
       },
       title: {
         display: true,
-        text: 'Gráfico Interanual',
+        text: duration === 'month' ? 'Gráfico Intermensual' : 'Gráfico Interanual',
         font: {
           size: 14,
           weight: 'bold',
