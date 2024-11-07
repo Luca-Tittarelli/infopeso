@@ -31,6 +31,7 @@ export default function Cambios() {
     useEffect(() => {
         const fetching = async () => {
             const res = await fetchData(dolarHistoricoAPI);
+            console.log(dolarHistoricoAPI)
             setCotizaciones(filtrarUltimoMes(res.data));
             setCotizacionesStatus(res.status);
         };
