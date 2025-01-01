@@ -12,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Index />}></Route>
         <Route path="/Economia" element={<Macro />}></Route>
+        <Route path="/Economia/:id" element={<h1>hOLA</h1>}></Route>
         <Route path="/Cambios" element={<Cambios />}></Route>
         <Route path="/Mercado" element={<LineChart />}></Route>
       </Routes>

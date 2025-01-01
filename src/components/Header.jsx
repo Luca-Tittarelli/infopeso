@@ -1,4 +1,4 @@
-import ThemeButton from "../ThemeButton";
+import ThemeButton from './ThemeButton'
 import { useState, useEffect } from "react";
 import { getInitialTheme } from "../utils/functions";
 

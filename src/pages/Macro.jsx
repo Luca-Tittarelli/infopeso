@@ -77,7 +77,7 @@ export default function Macro() {
                     <MacroSection title={"Otros"} data={notIncludes} chart={{type: "line", duration:"month"}}/>
                 </div>
             )}
-            <h4 className='text-lg dark:text-slate-400 text-gray-800 m-auto text-center mt-8'>Información de <a href="">BCRA</a> y <a href="">ArgentinaDatos API</a></h4>
+            <h4 className='text-lg dark:text-slate-400 text-gray-800 m-auto text-center mt-8'>Información de <a href="https://bcra.gob.ar/Catalogo/apis.asp?fileName=principales-variables-v2&sectionName=Estad%EDsticas">BCRA</a> y <a href="https://argentinadatos.com/">ArgentinaDatos API</a></h4>
         </section>
     );
 }
