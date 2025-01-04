@@ -15,13 +15,13 @@ export function SimplyCard({ titulo, valor = 0 , valorAnterior = 0 , fecha, isMo
     
 
     return(        
-        <article className="w-[90vw] h-auto sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between">
+        <article className="h-auto w-full m-auto px-6 py-3 rounded-lg shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between">
             <div>
-                <h2 className="text-xl font-bold mb-2 truncate dark:text-slate-200">{titulo}</h2>
-                <h3 className="text-2xl font-bold text-gray-800 dark:text-slate-100 mb-4 flex justify-between">
-                    <span className="dark:text-slate-200">{valor.toLocaleString()}</span>
+                <h2 className="text-lg font-bold mb-2 truncate dark:text-slate-200">{titulo}</h2>
+                <h3 className="text-xl font-bold text-gray-800 dark:text-slate-100 mb-1 flex justify-between">
+                    <span className="dark:text-slate-200 text-xl">{valor.toLocaleString()}</span>
                     <span
-                        className={`text-base flex items-center ${
+                        className={`text-sm flex items-center ${
                             difference > 0
                                 ? 'text-green-500'
                                 : difference < 0
@@ -30,14 +30,12 @@ export function SimplyCard({ titulo, valor = 0 , valorAnterior = 0 , fecha, isMo
                         }`}
                     >
                         <DifferenceIcon dif={difference} />
-                        {difference.toFixed(2)}% 
+                        {difference.toFixed(2)}%&nbsp;
                         {isMonthly ? 'Mensual' : 'Hoy'}
                     </span>
                 </h3>
             </div>
-            <div className="flex justify-between">
-                <span className="text-sm dark:text-slate-400 text-gray-500 ">{getTimeDifference(fecha)}</span>
-            </div>
+            <span className="text-sm dark:text-slate-500 text-gray-400">{getTimeDifference(fecha)}</span>
         </article>
 )
 }

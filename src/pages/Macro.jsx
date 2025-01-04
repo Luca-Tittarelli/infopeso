@@ -57,8 +57,13 @@ export default function Macro() {
         };
         fetching();
     }, []);
-    
-    console.log(response);
+    //Efecto del SEO
+    useEffect(()=> {
+        document.title = `Infopeso - Variables al ${new Date().toLocaleDateString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`
+        document.querySelector('meta[name="description"]')?.setAttribute('content', 
+            'Accede a indicadores clave de la economía argentina: inflación, tasas de interés, reservas, riesgo país y más. Información precisa y actualizada para entender el panorama económico.'
+        )
+    },[])
 
     return (
         <section id="macro" className="pt-[100px] min-h-[100vh] w-full xl:w-[1250px] m-auto">

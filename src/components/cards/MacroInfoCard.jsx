@@ -48,13 +48,8 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, t
             const previousValue = chartData[0]?.valor || 0;
 
             if (previousValue !== 0) {
-                if (id === 17) {
-                    const diffPercentage = ((valor - (previousValue * 1000)) / (previousValue * 1000)) * 100;
-                    setDifference(diffPercentage.toFixed(2));
-                } else {
-                    const diffPercentage = ((valor - previousValue) / previousValue) * 100;
-                    setDifference(diffPercentage.toFixed(2));
-                }
+                const diffPercentage = ((valor - previousValue) / previousValue) * 100;
+                setDifference(diffPercentage.toFixed(2));
             } else {
                 setDifference(0);
             }
@@ -69,7 +64,6 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, t
         };fetching()
     }, [])
 
-    console.log(duration)
 
     return (
         <article className="w-[90vw] sm:h-[330px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between">

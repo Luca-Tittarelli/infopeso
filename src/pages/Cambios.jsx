@@ -47,9 +47,13 @@ export default function Cambios() {
         fetching();
     }, []);
     
-    
-    
-    console.log();
+    //Efecto del SEO
+    useEffect(()=> {
+        document.title = `Infopeso - Cotizaciones al ${new Date().toLocaleDateString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`
+        document.querySelector('meta[name="description"]')?.setAttribute('content', 
+            'Consulta las cotizaciones actualizadas del dólar en Argentina, incluyendo Oficial, Blue, CCL, MEP y otras monedas. Datos confiables y análisis en tiempo real para tomar mejores decisiones financieras.'
+        )
+    },[])
 
     return (
         <section className="pt-[100px] min-h-[100vh] w-full xl:w-[1250px] m-auto">

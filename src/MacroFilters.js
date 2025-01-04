@@ -5,4 +5,4 @@ export const categories = {
     tasas: [6, 7, 8, 9, 10, 11, 12, 13, 14, 34, 35, 41, 43],
     bcra: [1, 4, 5, 42]
 }
-export const indexCategories = [44, 1, 6, 30, 31, 32]
+export const indexCategories = [46, 1, 6, 30, 31, 32]
