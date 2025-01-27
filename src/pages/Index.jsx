@@ -1,12 +1,15 @@
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 import { useEffect, useState } from "react";
 import { filtrarUltimoMes, getDatesRange, getInitialTheme, getYesterdayDate } from "../utils/functions";
 import { fetchData } from "../utils/Fetch";
 import { dolarAPI, macroAPI, RiesgoPaisAPI, dolarFechaAPI, variableAPI, RiesgoPaisHistoricoAPI } from "../apis";
 import { ErrorComponent } from "../components/Error";
-import { Loading } from "../components/LoadingAnim";
 import { indexCategories } from "../MacroFilters";
 import { SimplyCard } from "../components/cards/SimplyInfoCard";
 import { LoadingCard } from "../components/LoadingCard";
+import { useDolar } from "../hooks/useDolar";
 
 export default function Index() {
     const [gradient, setGradient] = useState('#EDEDED'); // Valor inicial
@@ -15,9 +18,8 @@ export default function Index() {
     const [macroData, setMacroData] = useState([]) //estado para cargar la data macroeconomica
     const [lastMacro, setLastMacro] = useState([]) //estado que maneja las anteriores cotizaciones del dolar
     const [macroDataStatus, setMacroDataStatus] = useState("loading") //estado que maneja la carga de este
-    const [dolarData, setDolarData] = useState([]) //estado que maneja la data del dolar
     const [lastDolar, setLastDolar] = useState([])
-    const [dolarDataStatus, setDolarDataStatus] = useState('loading') //estado que maneja la carga del dolar
+    const {dolar, dolarStatus} = useDolar() // Hook para usar la información del dolar
     const filter = (categorie, object) => object?.filter(item => categorie.includes(item.idVariable)) || []; //función que filtra los datos según su categoría
     //funcion que maneja el resize y establece el tipo de dispositivo
     const handleResize = () => {
@@ -88,10 +90,10 @@ export default function Index() {
     },[])
     // useEffect para obtener los datos anteriores del dolar
     useEffect(() => {
-        if (dolarDataStatus === 'success') {
-            dolarData.forEach(item => handleFetchDolar(item.casa));
+        if (dolarStatus === 'success') {
+            dolar.forEach(item => handleFetchDolar(item.casa));
         }
-    }, [dolarData, dolarDataStatus]);
+    }, [dolar, dolarStatus]);
     // useEffect para añadir el listener de resize
     useEffect(() => {
         handleResize(); // Ejecuta la función inicialmente
@@ -115,6 +117,15 @@ export default function Index() {
             'Infopeso ofrece datos actualizados de economía y finanzas de Argentina, incluyendo cotizaciones y variables de la economía argentina.'
         )
     },[])
+    //Efecto de animación del section
+    useEffect(() => {
+        AOS.init({
+            once: true, // La animación solo se ejecuta una vez
+        });
+    }, []);
+
+
+    console.log(lastDolar)
 
     return (
         <main className="min-h-screen">
@@ -137,16 +148,16 @@ export default function Index() {
                     <h3 className="text-3xl font-semibold text-center m-auto dark:text-slate-200 py-4">
                         Panel general
                     </h3>
-                    {dolarDataStatus === 'error' || macroDataStatus === 'error' && <ErrorComponent message={"Error al cargar los datos"}/>}
+                    {dolarStatus === 'error' || macroDataStatus === 'error' && <ErrorComponent message={"Error al cargar los datos"}/>}
                     <div className="info__container grid gap-2 w-full m-auto px-4"
                         style={{ gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))" }}>
-                    {dolarDataStatus === 'loading' || macroDataStatus === 'loading' && (
+                    {dolarStatus === 'loading' || macroDataStatus === 'loading' && (
                         Array.from({ length: 12 }).map((_, i) => <LoadingCard key={i} />)
                     )}
 
-                    {dolarDataStatus === 'success' && macroDataStatus === 'success' && (
+                    {dolarStatus === 'success' && macroDataStatus === 'success' && (
                         <>
-                            {dolarData.map((item, key) => {
+                            {dolar.map((item, key) => {
                                 const lastValue = lastDolar.find(d => d.casa === item.casa)?.venta;
 
                                 // Excluir elementos con "casa" igual a "mayorista"
@@ -213,6 +224,63 @@ export default function Index() {
                         background-position: 55%;
                     }
                 `}</style>
+            </section>
+            <section className="dark:text-slate-300 bg-inherit [&>p>span]:font-semibold max-w-[1200px] m-auto [&>p]:sm:text-lg px-4">
+                <h2 className="text-3xl m-auto text-center font-semibold py-4">
+                    ¿Qué es Infopeso?
+                </h2>
+                <div
+                    className="w-full p-4 bg-inherit rounded"
+                    data-aos="fade-up"
+                    data-aos-duration="700"
+                >
+                    <p className="text-lg">
+                        Infopeso es una plataforma digital diseñada para ofrecerte los{" "}
+                        <span className="text-lg font-bold">
+                            datos financieros más relevantes de Argentina
+                        </span>
+                        , de manera centralizada y accesible. Nuestro objetivo es{" "}
+                        <span className="text-lg font-bold">
+                            facilitar la toma de decisiones informadas
+                        </span>{" "}
+                        al brindarte información actualizada sobre las principales
+                        variables económicas del país. Además, proporcionamos
+                        herramientas interactivas que te permitirán explorar datos
+                        históricos, para que puedas tomar decisiones
+                        más precisas.
+                    </p>
+                </div>
+                <div
+                    className="w-full p-4 bg-inherit rounded"
+                    data-aos="fade-up"
+                    data-aos-duration="700"
+                    data-aos-delay="300"
+                >
+                    <p className="text-lg">
+                    Nuestra misión es acercar los datos a las personas, haciéndo la economía un poco más comprensible para todos, desde inversores y empresarios hasta ciudadanos interesados en los cambios financieros que afectan su día a día. Infopeso es más que una herramienta; es tu aliado para mantenerte informado en un entorno económico en constante movimiento. Todo lo que necesitas, al alcance de un clic. Nuestra plataforma no ofrece pronósticos futuros, sino que te proporciona un acceso claro y directo a la información más relevante y actualizada de la economía.
+                    </p>
+                </div>
+                <div
+                    className="w-full p-4 bg-inherit rounded"
+                    data-aos="fade-up"
+                    data-aos-duration="700"
+                    data-aos-delay="600"
+                >
+                    <p className="text-lg">
+                    Infopeso surgió de la pasión por unir dos mundos fascinantes: la programación y las finanzas. Lo que comenzó como un proyecto personal impulsado por la curiosidad y el entusiasmo, ha evolucionado hasta convertirse en una plataforma innovadora que continúa expandiendo sus horizontes. Con un crecimiento constante y una visión clara.
+                    </p>
+                </div>
+                <img src="banner.png" alt="" className="rounded-xl w-full"/>
+                <a href="https://x.com/infopeso" 
+                    className="flex items-center justify-center text-xl font-semibold px-4 py-2 w-fit border rounded-lg shadow-md bg-white text-slate-800 border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all m-auto mt-10">
+                    Seguinos en
+                    <svg className="h-6 w-6 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                        <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                    </svg>
+                </a>
+
             </section>
         </main>
     );

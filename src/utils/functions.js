@@ -1,3 +1,15 @@
+export const getLastWeekDate = () => {
+    const today = new Date();
+    const lastWeek = new Date(today);
+
+    lastWeek.setDate(today.getDate() - 6); // Restamos 7 días para obtener la fecha de hace una semana
+
+    const year = lastWeek.getFullYear();
+    const month = String(lastWeek.getMonth() + 1).padStart(2, '0'); // Meses empiezan desde 0
+    const day = String(lastWeek.getDate()).padStart(2, '0'); // Día de la semana pasada
+
+    return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+};
 export const getLastMonthDate = () => {
     const today = new Date();
     const lastMonth = new Date(today);
@@ -12,6 +24,16 @@ export const getLastMonthDate = () => {
 
     return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
 };
+export const getLastYearDate = () => {
+    const today = new Date();
+    const lastYear = new Date(today.setFullYear(today.getFullYear() - 1)); // Restamos un año
+    
+    const year = lastYear.getFullYear();
+    const month = String(lastYear.getMonth() + 1).padStart(2, '0'); // Meses empiezan desde 0
+    const day = String(lastYear.getDate()).padStart(2, '0'); // Día del año pasado
+    
+    return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+};
 export const getYesterdayDate = () => {
     const today = new Date();
     today.setDate(today.getDate() - 1); // Restamos un día a la fecha actual
@@ -19,16 +41,6 @@ export const getYesterdayDate = () => {
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0'); // Meses empiezan desde 0
     const day = String(today.getDate()).padStart(2, '0'); // Día de ayer
-
-    return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
-};
-export const getLastYearDate = () => {
-    const today = new Date();
-    const lastYear = new Date(today.setFullYear(today.getFullYear() - 1)); // Restamos un año
-
-    const year = lastYear.getFullYear();
-    const month = String(lastYear.getMonth() + 1).padStart(2, '0'); // Meses empiezan desde 0
-    const day = String(lastYear.getDate()).padStart(2, '0'); // Día del año pasado
 
     return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
 };
@@ -87,6 +99,24 @@ export const filtrarUltimoMes = (cotizaciones) => {
     return cotizaciones.filter(cotizacion => {
         const fechaCotizacion = new Date(cotizacion.fecha);
         return fechaCotizacion >= new Date(lastMonthDate) && fechaCotizacion <= today;
+    });
+};
+export const filtrarUltimoAño = (cotizaciones) => {
+    const lastYearDate = getLastYearDate();
+    const today = new Date();
+
+    return cotizaciones.filter(cotizacion => {
+        const fechaCotizacion = new Date(cotizacion.fecha);
+        return fechaCotizacion >= new Date(lastYearDate) && fechaCotizacion <= today;
+    });
+};
+export const filtrarUltimaSemana = (cotizaciones) => {
+    const lastWeekDate = getLastWeekDate();
+    const today = new Date();
+
+    return cotizaciones.filter(cotizacion => {
+        const fechaCotizacion = new Date(cotizacion.fecha);
+        return fechaCotizacion >= new Date(lastWeekDate) && fechaCotizacion <= today;
     });
 };
 export const getInitialTheme = () => {

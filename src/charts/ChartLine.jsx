@@ -14,7 +14,7 @@ ChartJS.register(
 );
 
 const LineChart = ({ labels, dataset, height, color, duration }) => {
-  const title = duration === 'month' ? 'Gráfico Intermensual' : 'Gráfico Interanual';
+  const title = duration === 'month' ? 'Gráfico Mensual' : duration === 'week' ? 'Gráfico Semanal': 'Gráfico Anual';
   // Datos y configuración del gráfico
   const data = {
     labels: labels, // Ejemplo de labels
@@ -91,7 +91,7 @@ const LineChart = ({ labels, dataset, height, color, duration }) => {
   };
 
   return (
-    <div className='m-auto'>
+    <div className='m-auto w-full'>
       <Line data={data} options={options} height={height} width={'auto'}/>
     </div>
   );

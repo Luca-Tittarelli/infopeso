@@ -33,7 +33,7 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, t
             const res = await fetchData(variableAPI(id, firstDate, today));
             setChartData(res.data.results ? res.data.results : []);
             setChartDataStatus(res.status);
-            if(id === 44){
+            if(id === 46){
                 setChartData(rpChartData)
                 setChartDataStatus('success')
             }
@@ -64,9 +64,10 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, t
         };fetching()
     }, [])
 
-
     return (
-        <article className="w-[90vw] sm:h-[330px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between">
+        <article className="w-[90vw] sm:h-[330px] sm:w-[400px] m-auto p-6 rounded-[15px] shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between"
+            // onClick={()=> window.location.href = `Economia/${id}`}
+        >
             <div>
                 <h2 className="text-xl font-bold mb-2 truncate dark:text-slate-200">{titulo}</h2>
                 <div className="h-[135px] flex flex-col items-center justify-center">

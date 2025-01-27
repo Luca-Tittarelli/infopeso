@@ -1,6 +1,7 @@
 import ThemeButton from './ThemeButton'
 import { useState, useEffect } from "react";
 import { getInitialTheme } from "../utils/functions";
+import { Link } from 'react-router-dom';
 
 export default function Header() {
     const [headerStatus, setHeaderStatus] = useState('close');
@@ -41,9 +42,9 @@ export default function Header() {
             </div>
             <nav className={`max-sm:h-[200px] max-sm:w-screen flex max-sm:items-center justify-center sm:translate-y-0 ${responsiveStyles} transition-transform duration-300 max-sm:bg-gray-100 max-sm:dark:bg-slate-800 -z-10`}>
                 <ul className="flex flex-col sm:flex-row basis-0 grow sm:text-base max-sm:items-center max-sm:justify-between [&>li]:text-lg max-sm:[&>li]:p-2 max-sm:py-3 [&>li]:px-4 [&>li]:font-semibold max-sm:[&>li]:text-xl text-center h-full w-full">
-                    <li><a href="/" className="hover:dark:text-slate-200 hover:text-gray-700">Inicio</a></li>
-                    <li><a href="/Economia" className="hover:dark:text-slate-200 hover:text-gray-700">Economía</a></li>
-                    <li><a href="/Cambios" className="hover:dark:text-slate-200 hover:text-gray-700">Tipo de cambios</a></li>
+                    <li><Link to="/" className="hover:dark:text-slate-200 hover:text-gray-700">Inicio</Link></li>
+                    <li><Link to="/Economia" className="hover:dark:text-slate-200 hover:text-gray-700">Economía</Link></li>
+                    <li><Link to="/Cambios" className="hover:dark:text-slate-200 hover:text-gray-700">Tipo de cambios</Link></li>
                 </ul>
             </nav>
             <div className="flex basis-0 grow justify-end max-sm:absolute right-1">

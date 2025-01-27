@@ -4,40 +4,18 @@ import { Loading } from "../components/LoadingAnim";
 import { ChangesCard } from "../components/cards/CambiosInfoCard";
 import { fetchData } from "../utils/Fetch";
 import { ErrorComponent } from "../components/Error";
-import { filtrarUltimoMes } from "../utils/functions";
+import { filtrarUltimoAño, filtrarUltimoMes } from "../utils/functions";
+import { useDolar } from "../hooks/useDolar";
 
 export default function Cambios() {
-    const [dolar, setDolar] = useState(null);
-    const [dolarStatus, setDolarStatus] = useState('loading');
+    const {dolar, dolarStatus, cotizaciones, cotizacionesStatus} = useDolar()
     const [others, setOthers] = useState(null);
     const [othersStatus, setOthersStatus] = useState('loading');
-    const [cotizaciones, setCotizaciones] = useState([]);
-    const [cotizacionesStatus, setCotizacionesStatus] = useState('loading');
-
-
+    
     const filtrarPorCasa = (data, casa) => {
         return data.filter(cotizacion => cotizacion.casa === casa);
     };
-
-    useEffect(() => {
-        const fetching = async () => {
-            const res = await fetchData(dolarAPI);
-            setDolar(res.data);
-            setDolarStatus(res.status);
-        };
-        fetching();
-    }, []);
-
-    useEffect(() => {
-        const fetching = async () => {
-            const res = await fetchData(dolarHistoricoAPI);
-            console.log(dolarHistoricoAPI)
-            setCotizaciones(filtrarUltimoMes(res.data));
-            setCotizacionesStatus(res.status);
-        };
-        fetching();
-    }, []);
-
+        
     useEffect(() => {
         const fetching = async () => {
             const res = await fetchData(cotizacionesAPI);
@@ -59,12 +37,11 @@ export default function Cambios() {
         <section className="pt-[100px] min-h-[100vh] w-full xl:w-[1250px] m-auto">
             
         <title>Argendata - Tipos de cambio</title>
-            <h2 className="text-3xl text-center text-black dark:text-slate-200 font-bold py-8">
+            <h2 className="text-4xl text-center text-black dark:text-slate-200 font-bold py-8">
                 Tipos de cambio
             </h2>
-            <hr className="xl:w-full w-[90%] dark:bg-slate-900 bg-gray-300 h-[1px] m-auto mt-8 mb-8 border-none" />
             <div>
-                <h3 className="text-2xl m-auto font-bold text-center dark:text-slate-200">Dólar</h3>
+                <h3 className="text-2xl m-auto font-bold text-center dark:text-slate-200 py-12">Dólar</h3>
                 {dolarStatus === "loading" && <Loading />}
                 {dolarStatus === "error" && <ErrorComponent message={"Error al obtener los datos del dólar"}/>}
                 {dolarStatus === "success" && dolar && (
@@ -84,7 +61,10 @@ export default function Cambios() {
                                     }}
                                     cotizaciones={{
                                         status: cotizacionesStatus,
-                                        data: filtrarPorCasa(cotizaciones, item.casa)
+                                        data: filtrarPorCasa(
+                                            filtrarUltimoMes(cotizaciones),
+                                            item.casa
+                                        )
                                     }}
                                 />
                             );
