@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { MacroCard } from '../components/cards/MacroInfoCard';
-import { macroAPI, RiesgoPaisAPI } from '../apis';
 import { Loading } from '../components/LoadingAnim';
-import { fetchData } from '../utils/Fetch';
 import { ErrorComponent } from '../components/Error';
 import { categories } from '../MacroFilters';
+import { useMacro } from '../hooks/useMacro';
 
 function MacroSection({title, data, chart= {type, duration}}){
     return(
@@ -31,32 +30,11 @@ function MacroSection({title, data, chart= {type, duration}}){
 }
 
 export default function Economia() {
-    const [response, setResponse] = useState(null);
-    const [status, setStatus] = useState('loading');
-    const filter = (categorie) => response?.filter(item => categorie.includes(item.idVariable)) || [];
+    const { variables, variablesStatus} = useMacro()
+    const filter = (categorie) => variables?.filter(item => categorie.includes(item.idVariable)) || [];
     const allCategories = Object.values(categories).flat()
-    const notIncludes = response?.filter(item => !allCategories.includes(item.idVariable));
+    const notIncludes = variables?.filter(item => !allCategories.includes(item.idVariable));
 
-    useEffect(() => {
-        const fetching = async () => {
-            const macroData = await fetchData(macroAPI);
-            const riesgoPaisData = await fetchData(RiesgoPaisAPI);
-            const newID = macroData.data.results[macroData.data.results.length - 1].idVariable + 1
-
-            // Crear un nuevo elemento con un ID único
-            const newElement = {
-                idVariable: newID, // Genera un ID único
-                cdSerie: 5678,
-                descripcion: 'Riesgo País',
-                fecha: riesgoPaisData.data.fecha,
-                valor: riesgoPaisData.data.valor,
-            };
-
-            setResponse([...macroData.data.results, newElement]);
-            setStatus(macroData.status);
-        };
-        fetching();
-    }, []);
     //Efecto del SEO
     useEffect(()=> {
         document.title = `Infopeso - Variables al ${new Date().toLocaleDateString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`
@@ -70,9 +48,9 @@ export default function Economia() {
             <h2 className="text-4xl text-center text-black dark:text-zinc-300 font-bold py-8">
                 Datos de la economía argentina
             </h2>
-            {status === "loading" && <Loading />}
-            {status === 'error' && <ErrorComponent message={"Error al obtener la información"} />}
-            {status === 'success' && response && (
+            {variablesStatus === "loading" && <Loading />}
+            {variablesStatus === 'error' && <ErrorComponent message={"Error al obtener la información"} />}
+            {variablesStatus === 'success' && variables && (
                 <div>
                     <MacroSection title={"BCRA"} data={filter(categories.bcra)} chart={{type: "line", duration:"month"}}/>
                     <MacroSection title={"Base Monetaria y circulación"} data={filter(categories.baseMonetaria)} chart={{type: "line", duration:"month"}}/>

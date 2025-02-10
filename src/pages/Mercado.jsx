@@ -1,6 +1,4 @@
 import BarsChart from "../charts/ChartBars";
-import { ErrorComponent } from "../components/Error";
-import { Loading } from "../components/LoadingAnim";
 
 export default function Mercado(){
   return(

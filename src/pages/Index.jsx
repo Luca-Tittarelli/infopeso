@@ -4,20 +4,20 @@ import "aos/dist/aos.css";
 import { useEffect, useState } from "react";
 import { filtrarUltimoMes, getDatesRange, getInitialTheme, getYesterdayDate } from "../utils/functions";
 import { fetchData } from "../utils/Fetch";
-import { dolarAPI, macroAPI, RiesgoPaisAPI, dolarFechaAPI, variableAPI, RiesgoPaisHistoricoAPI } from "../apis";
+import { dolarFechaAPI, variableAPI, RiesgoPaisHistoricoAPI } from "../apis";
 import { ErrorComponent } from "../components/Error";
 import { indexCategories } from "../MacroFilters";
 import { SimplyCard } from "../components/cards/SimplyInfoCard";
 import { LoadingCard } from "../components/LoadingCard";
 import { useDolar } from "../hooks/useDolar";
+import { useMacro } from "../hooks/useMacro";
 
 export default function Index() {
     const [gradient, setGradient] = useState('#EDEDED'); // Valor inicial
     const [view, setView] = useState('desktop'); //estado para cambiar el gradiente según el dispositivo
     const [theme, setTheme] = useState('light'); //estado que controla el tema de la página
-    const [macroData, setMacroData] = useState([]) //estado para cargar la data macroeconomica
+    const {variables, variablesStatus} = useMacro()
     const [lastMacro, setLastMacro] = useState([]) //estado que maneja las anteriores cotizaciones del dolar
-    const [macroDataStatus, setMacroDataStatus] = useState("loading") //estado que maneja la carga de este
     const [lastDolar, setLastDolar] = useState([])
     const {dolar, dolarStatus} = useDolar() // Hook para usar la información del dolar
     const filter = (categorie, object) => object?.filter(item => categorie.includes(item.idVariable)) || []; //función que filtra los datos según su categoría
@@ -54,40 +54,12 @@ export default function Index() {
             setLastMacro(prevLastMacro => [...prevLastMacro, res.data.results[0]]);
         }
     }
-    //Efecto para obtener la data macro necesaria
-    useEffect(()=>{
-        const fetching = async()=>{
-            const variables = await fetchData(macroAPI)
-            const rp = await fetchData(RiesgoPaisAPI)
-            const newID = variables.data.results[variables.data.results.length - 1].idVariable + 1
-
-            // Crear un nuevo elemento con un ID único
-            const newElement = {
-                idVariable: newID, // Genera un ID único
-                cdSerie: 5678,
-                descripcion: 'Riesgo País',
-                fecha: rp.data.fecha,
-                valor: rp.data.valor,
-            };
-
-            setMacroData([...variables.data.results, newElement]);
-            setMacroDataStatus(variables.status);
-        };fetching()
-    },[])
     //Efecto que obtiene los anteriores valores macro
     useEffect(()=>{
-        if(macroDataStatus === 'success'){
-            filter(indexCategories ,macroData).map( i => handleFetchMacro(i.idVariable))
+        if(variablesStatus === 'success'){
+            filter(indexCategories ,variables).map( i => handleFetchMacro(i.idVariable))
         }
-    },[macroData, macroDataStatus])
-    //Efecto que obtiene la data del dolar
-    useEffect(()=>{
-        const fetching = async()=>{
-            const res = await fetchData(dolarAPI)
-            setDolarData(res.data)
-            setDolarDataStatus(res.status)
-        };fetching()
-    },[])
+    },[variables, variablesStatus])
     // useEffect para obtener los datos anteriores del dolar
     useEffect(() => {
         if (dolarStatus === 'success') {
@@ -110,6 +82,7 @@ export default function Index() {
     useEffect(() => {
         setGradient(theme === "dark" ? '#000320' : '#EDEDED');
     }, [theme]);
+
     //Efecto del SEO
     useEffect(()=> {
         document.title = 'Infopeso - Datos económicos y cotizaciones de Argentina.'
@@ -148,14 +121,14 @@ export default function Index() {
                     <h3 className="text-3xl font-semibold text-center m-auto dark:text-slate-200 py-4">
                         Panel general
                     </h3>
-                    {dolarStatus === 'error' || macroDataStatus === 'error' && <ErrorComponent message={"Error al cargar los datos"}/>}
+                    {dolarStatus === 'error' || variablesStatus === 'error' && <ErrorComponent message={"Error al cargar los datos"}/>}
                     <div className="info__container grid gap-2 w-full m-auto px-4"
                         style={{ gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))" }}>
-                    {dolarStatus === 'loading' || macroDataStatus === 'loading' && (
+                    {dolarStatus === 'loading' || variablesStatus === 'loading' && (
                         Array.from({ length: 12 }).map((_, i) => <LoadingCard key={i} />)
                     )}
 
-                    {dolarStatus === 'success' && macroDataStatus === 'success' && (
+                    {dolarStatus === 'success' && variablesStatus === 'success' && (
                         <>
                             {dolar.map((item, key) => {
                                 const lastValue = lastDolar.find(d => d.casa === item.casa)?.venta;
@@ -173,7 +146,7 @@ export default function Index() {
                                 );
                             })}
 
-                            {filter(indexCategories, macroData).map((element, index) => {
+                            {filter(indexCategories, variables).map((element, index) => {
                                 const lastValue = lastMacro.find(m => m.idVariable === element.idVariable)?.valor;
 
                                 return (

@@ -37,8 +37,6 @@ export default function EconomiaDetalle(){
         };fetching()
     },[])
 
-    console.log(chartDataStatus, dataStatus)  
-
     return(
         <main className="pt-24 min-h-[70vh]">
             {(chartDataStatus === 'loading' || dataStatus === 'loading') && <Loading />}
