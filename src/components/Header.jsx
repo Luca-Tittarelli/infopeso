@@ -1,9 +1,10 @@
 import ThemeButton from './ThemeButton'
 import { useState, useEffect } from "react";
-import { getInitialTheme } from "../utils/functions";
 import { Link } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
 
 export default function Header() {
+    const [theme, changeTheme] = useTheme()
     const [headerStatus, setHeaderStatus] = useState('close');
     
     const responsiveStyles = headerStatus === 'close' 
@@ -13,8 +14,6 @@ export default function Header() {
     const handleHeaderStatus = () => {
         setHeaderStatus(prevStatus => prevStatus === 'close' ? 'open' : 'close');
     };
-
-    const [theme, setTheme] = useState(getInitialTheme);
 
     useEffect(() => {
         document.querySelector('html').classList.toggle("dark", theme === "dark");
@@ -29,10 +28,6 @@ export default function Header() {
     }, [theme]);
 
     const shadow = theme === 'dark' ? "#ccc3" : "#1113"
-
-    const handleChangeTheme = () => {
-        setTheme(prevTheme => prevTheme === "dark" ? "light" : "dark");
-    };
 
     return (
         <header className="h-[90px] w-full fixed shadow-lg dark:bg-slate-900 dark:text-white bg-white flex justify-between items-center sm:px-3 z-20">
@@ -51,7 +46,7 @@ export default function Header() {
                 <ThemeButton
                     isDark={1}
                     invertedIconLogic={theme === 'dark'} // Ajuste para lógica de icono invertido
-                    onChange={handleChangeTheme}
+                    onChange={changeTheme}
                 />
                 <button className="sm:hidden mx-2" onClick={handleHeaderStatus}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icon-tabler-menu-2 text-black dark:text-white h-12">

@@ -98,7 +98,7 @@ export const filtrarUltimoMes = (cotizaciones) => {
 
     return cotizaciones.filter(cotizacion => {
         const fechaCotizacion = new Date(cotizacion.fecha);
-        return fechaCotizacion >= new Date(lastMonthDate) && fechaCotizacion <= today;
+        return fechaCotizacion >= new Date(lastMonthDate);
     });
 };
 export const filtrarUltimoAño = (cotizaciones) => {
@@ -107,7 +107,7 @@ export const filtrarUltimoAño = (cotizaciones) => {
 
     return cotizaciones.filter(cotizacion => {
         const fechaCotizacion = new Date(cotizacion.fecha);
-        return fechaCotizacion >= new Date(lastYearDate) && fechaCotizacion <= today;
+        return fechaCotizacion >= new Date(lastYearDate);
     });
 };
 export const filtrarUltimaSemana = (cotizaciones) => {
@@ -116,10 +116,6 @@ export const filtrarUltimaSemana = (cotizaciones) => {
 
     return cotizaciones.filter(cotizacion => {
         const fechaCotizacion = new Date(cotizacion.fecha);
-        return fechaCotizacion >= new Date(lastWeekDate) && fechaCotizacion <= today;
+        return fechaCotizacion >= new Date(lastWeekDate);
     });
-};
-export const getInitialTheme = () => {
-    const savedTheme = localStorage.getItem("theme");
-    return savedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
 };

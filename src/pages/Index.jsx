@@ -2,7 +2,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import { useEffect, useState } from "react";
-import { filtrarUltimoMes, getDatesRange, getInitialTheme, getYesterdayDate } from "../utils/functions";
+import { filtrarUltimoMes, getDatesRange, getYesterdayDate } from "../utils/functions";
 import { fetchData } from "../utils/Fetch";
 import { dolarFechaAPI, variableAPI, RiesgoPaisHistoricoAPI } from "../apis";
 import { ErrorComponent } from "../components/Error";
@@ -11,11 +11,12 @@ import { SimplyCard } from "../components/cards/SimplyInfoCard";
 import { LoadingCard } from "../components/LoadingCard";
 import { useDolar } from "../hooks/useDolar";
 import { useMacro } from "../hooks/useMacro";
+import { useTheme } from "../hooks/useTheme";
 
 export default function Index() {
     const [gradient, setGradient] = useState('#EDEDED'); // Valor inicial
     const [view, setView] = useState('desktop'); //estado para cambiar el gradiente según el dispositivo
-    const [theme, setTheme] = useState('light'); //estado que controla el tema de la página
+    const [theme] = useTheme()
     const {variables, variablesStatus} = useMacro()
     const [lastMacro, setLastMacro] = useState([]) //estado que maneja las anteriores cotizaciones del dolar
     const [lastDolar, setLastDolar] = useState([])
@@ -39,12 +40,14 @@ export default function Index() {
         if(id == 46){
             const res = await fetchData(RiesgoPaisHistoricoAPI)
             const rp = filtrarUltimoMes(res.data)[0]
-            const newID = macroData[macroData.length - 1].idVariable
+            const newID = variables[variables.length - 1].idVariable
+
+            console.log(res)
 
             const newElement = {
                 idVariable: newID, // Genera un ID único
-                fecha: rp.fecha,
-                valor: rp.valor,
+                fecha: rp?.fecha,
+                valor: rp?.valor,
             };
             console.log(newElement)
             setLastMacro(prevLastMacro => [...prevLastMacro, newElement]);
@@ -76,10 +79,6 @@ export default function Index() {
     }, []);
 
     useEffect(() => {
-        setTheme(getInitialTheme());
-    }, []);
-
-    useEffect(() => {
         setGradient(theme === "dark" ? '#000320' : '#EDEDED');
     }, [theme]);
 
@@ -96,9 +95,6 @@ export default function Index() {
             once: true, // La animación solo se ejecuta una vez
         });
     }, []);
-
-
-    console.log(lastDolar)
 
     return (
         <main className="min-h-screen">
@@ -198,7 +194,7 @@ export default function Index() {
                     }
                 `}</style>
             </section>
-            <section className="dark:text-slate-300 bg-inherit [&>p>span]:font-semibold max-w-[1200px] m-auto [&>p]:sm:text-lg px-4">
+            <section className="dark:text-light bg-inherit [&>p>span]:font-semibold max-w-[1200px] m-auto [&>p]:sm:text-lg px-4">
                 <h2 className="text-3xl m-auto text-center font-semibold py-4">
                     ¿Qué es Infopeso?
                 </h2>
@@ -227,7 +223,7 @@ export default function Index() {
                     className="w-full p-4 bg-inherit rounded"
                     data-aos="fade-up"
                     data-aos-duration="700"
-                    data-aos-delay="300"
+                    data-aos-delay="200"
                 >
                     <p className="text-lg">
                     Nuestra misión es acercar los datos a las personas, haciéndo la economía un poco más comprensible para todos, desde inversores y empresarios hasta ciudadanos interesados en los cambios financieros que afectan su día a día. Infopeso es más que una herramienta; es tu aliado para mantenerte informado en un entorno económico en constante movimiento. Todo lo que necesitas, al alcance de un clic. Nuestra plataforma no ofrece pronósticos futuros, sino que te proporciona un acceso claro y directo a la información más relevante y actualizada de la economía.
@@ -237,7 +233,7 @@ export default function Index() {
                     className="w-full p-4 bg-inherit rounded"
                     data-aos="fade-up"
                     data-aos-duration="700"
-                    data-aos-delay="600"
+                    data-aos-delay="400"
                 >
                     <p className="text-lg">
                     Infopeso surgió de la pasión por unir dos mundos fascinantes: la programación y las finanzas. Lo que comenzó como un proyecto personal impulsado por la curiosidad y el entusiasmo, ha evolucionado hasta convertirse en una plataforma innovadora que continúa expandiendo sus horizontes. Con un crecimiento constante y una visión clara.
@@ -247,7 +243,7 @@ export default function Index() {
                     className="rounded-xl w-full"
                     data-aos="fade-up"
                     data-aos-duration="700"
-                    data-aos-delay="900"
+                    data-aos-delay="600"
                 />
                 <a href="https://x.com/infopeso" 
                     className="flex items-center justify-center text-xl font-semibold px-4 py-2 w-fit border rounded-lg shadow-md bg-white text-slate-800 border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all m-auto mt-10">

@@ -5,7 +5,7 @@ import { ErrorComponent } from '../components/Error';
 import { categories } from '../MacroFilters';
 import { useMacro } from '../hooks/useMacro';
 
-function MacroSection({title, data, chart= {type, duration}}){
+function MacroSection({title, data, chart = {type, duration}}){
     return(
         <>
         <h3 className="text-2xl m-auto font-bold text-center dark:text-slate-200 py-12">{title}</h3>
@@ -42,6 +42,8 @@ export default function Economia() {
             'Accede a indicadores clave de la economía argentina: inflación, tasas de interés, reservas, riesgo país y más. Información precisa y actualizada para entender el panorama económico.'
         )
     },[])
+
+    console.log(variables)
 
     return (
         <section id="macro" className="pt-[100px] min-h-[100vh] w-full xl:w-[1250px] m-auto">
