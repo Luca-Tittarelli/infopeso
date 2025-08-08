@@ -40,13 +40,13 @@ export default function EconomiaDetalle(){
                 const lastYearDate = getLastYearDate()
                 const todayDate = getTodayDate()
                 const res = await fetchData(variableAPI(params.id, lastYearDate, todayDate))
-                setChartData(res.data.results)
+                setChartData(res.data.results.reverse())
                 setChartDataStatus(res.status)
             }
         };fetching()
     },[])
 
-    console.log(variable)
+    console.log(chartData)
 
     return(
         <main className="pt-24 min-h-[70vh]">

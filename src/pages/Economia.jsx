@@ -43,7 +43,7 @@ export default function Economia() {
         )
     },[])
 
-    console.log(variables)
+    // console.log(variables)
 
     return (
         <section id="macro" className="pt-[100px] min-h-[100vh] w-full xl:w-[1250px] m-auto">

@@ -33,20 +33,22 @@ export function MacroCard({ titulo, valor, desc, fecha, id, chart: { duration, t
 
             if(id === 46){
                 const res = await fetchData(RiesgoPaisHistoricoAPI)
-                setChartData(filtrarUltimoMes(res.data))
+                setChartData(filtrarUltimoMes(res.data).reverse())
                 setChartDataStatus(res.status)
             }
 
             else{
                 const today = getTodayDate();
                 const res = await fetchData(variableAPI(id, firstDate, today));
-                setChartData(res.data.results ? res.data.results : []);
+                setChartData(res.data.results ? res.data.results.reverse() : []);
                 setChartDataStatus(res.status);
             }
         };
         fetching();
     }, [id, duration]);
     
+    
+    console.log(chartData)
     //useEffect para obtener la diferencia, ya sea mensual o anual
     
     useEffect(() => {
