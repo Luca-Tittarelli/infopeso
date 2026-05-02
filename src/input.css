@@ -1,11 +1,243 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@font-face {
-  font-family: 'Roboto';
-  src: url(../public/inter.woff2);
-}
+
+/* ─── Font Import (Fontshare CDN) ───────────────────────────── */
+/* Note: @import must come before other rules in PostCSS — 
+   fonts are also linked via <link> in index.html as fallback */
+
+/* ─── CSS Custom Properties ─────────────────────────────────── */
 :root {
+  /* Backgrounds */
+  --bg-page:            #FAFBFC;
+  --bg-surface:         #FFFFFF;
+  --bg-surface-hover:   #F4F6F8;
+
+  /* Borders */
+  --border-subtle:      #E8ECF1;
+
+  /* Text */
+  --text-primary:       #0F1419;
+  --text-secondary:     #536471;
+  --text-tertiary:      #8B98A5;
+
+  /* Accent */
+  --accent:             #0066FF;
+  --accent-soft:        #EBF2FF;
+
+  /* Semantic */
+  --positive:           #00C853;
+  --positive-soft:      #E6FAF0;
+  --negative:           #FF1744;
+  --negative-soft:      #FFEEF1;
+
+  /* Header */
+  --header-bg:          rgba(250, 251, 252, 0.82);
+  --header-border:      rgba(232, 236, 241, 1);
+
+  /* Shimmer */
+  --shimmer-base:       #F0F4F8;
+  --shimmer-shine:      #E4EAF0;
+
+  /* Toggle */
   --color-toggle-light: rgb(255, 217, 0);
-  --color-toggle-dark: bisque;
+  --color-toggle-dark:  bisque;
+}
+
+.dark {
+  --bg-page:            #0A0E17;
+  --bg-surface:         #141B2D;
+  --bg-surface-hover:   #1C2540;
+  --border-subtle:      #1E293B;
+  --text-primary:       #F0F4F8;
+  --text-secondary:     #94A3B8;
+  --text-tertiary:      #64748B;
+  --accent:             #3B82F6;
+  --accent-soft:        #1E3A5F;
+  --positive:           #04D361;
+  --positive-soft:      #0A2E1A;
+  --negative:           #FF4560;
+  --negative-soft:      #2E0A12;
+  --header-bg:          rgba(10, 14, 23, 0.88);
+  --header-border:      rgba(30, 41, 59, 1);
+  --shimmer-base:       #1E293B;
+  --shimmer-shine:      #263348;
+}
+
+/* ─── Base Resets ──────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: 'General Sans', 'Satoshi', system-ui, sans-serif;
+  transition: background-color 0.4s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove old dark body overrides */
+.dark body {
+  background-color: var(--bg-page);
+}
+
+/* ─── Selection ─────────────────────────────────────────────── */
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-subtle) transparent;
+}
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* ─── Keyframes ─────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes fade-up {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slide-in-bottom {
+  0%   { opacity: 0; transform: translateY(100%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Components ─────────────────────────────────────────────── */
+@layer components {
+
+  /* Skeleton shimmer */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--shimmer-base) 25%,
+      var(--shimmer-shine) 50%,
+      var(--shimmer-base) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+    border-radius: 6px;
+  }
+
+  /* Card base */
+  .card-base {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .card-base:hover {
+    background: var(--bg-surface-hover);
+  }
+
+  /* Pill buttons */
+  .pill-active {
+    background-color: var(--accent);
+    color: #fff;
+    border-radius: 9999px;
+    padding: 4px 14px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .pill-inactive {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border-radius: 9999px;
+    padding: 4px 14px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+  }
+  .pill-inactive:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-surface-hover);
+  }
+
+  /* Stagger animation for grid items */
+  .stagger-1 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 50ms  both; }
+  .stagger-2 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 100ms both; }
+  .stagger-3 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 150ms both; }
+  .stagger-4 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 200ms both; }
+  .stagger-5 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 250ms both; }
+  .stagger-6 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 300ms both; }
+
+  /* Badge source */
+  .source-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    background: var(--bg-surface-hover);
+    color: var(--text-tertiary);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* Nav underline link */
+  .nav-link {
+    position: relative;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    letter-spacing: -0.01em;
+    transition: color 0.15s ease;
+    padding-bottom: 2px;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    right: 50%;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: left 0.2s ease, right 0.2s ease;
+  }
+  .nav-link:hover {
+    color: var(--text-primary);
+  }
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    left: 0;
+    right: 0;
+  }
+  .nav-link.active {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* Positive / Negative text utilities */
+  .text-positive { color: var(--positive); }
+  .text-negative { color: var(--negative); }
+  .text-neutral  { color: var(--text-tertiary); }
 }

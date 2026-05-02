@@ -1,15 +1,29 @@
-export function LoadingCard(){
-    return(
-        <article className="h-auto w-full m-auto px-6 py-3 rounded-lg shadow-xl border-[1px] border-gray-300 bg-white dark:border-gray-900 dark:bg-slate-900 flex flex-col justify-between animate-pulse">
-            <div>
-                <div className="h-5 w-3/4 bg-gray-300 dark:bg-gray-700 rounded mb-2"></div>
-                <div className="flex justify-between items-center mb-1">
-                    <div className="h-7 w-1/2 bg-gray-300 dark:bg-gray-700 rounded"></div>
-                    <div className="h-5 w-1/4 bg-gray-300 dark:bg-gray-700 rounded"></div>
-                </div>
+export function LoadingCard() {
+    return (
+        <article
+            className="w-full p-5 rounded-[12px]"
+            style={{
+                background: 'var(--bg-surface)',
+                border: '1px solid var(--border-subtle)',
+            }}
+        >
+            {/* Title row */}
+            <div className="flex items-center justify-between mb-4">
+                <div className="skeleton h-4 w-2/5" />
+                <div className="skeleton h-5 w-12 rounded-full" />
             </div>
-            <div className="h-4 w-1/3 bg-gray-300 dark:bg-gray-700 rounded mt-3"></div>
-        </article>
 
-    )
+            {/* Sparkline placeholder */}
+            <div className="skeleton h-10 w-full mb-4 rounded-md" />
+
+            {/* Value */}
+            <div className="skeleton h-7 w-3/5 mb-2" />
+
+            {/* Variation + timestamp */}
+            <div className="flex items-center justify-between mt-3">
+                <div className="skeleton h-3.5 w-1/4" />
+                <div className="skeleton h-3.5 w-1/4" />
+            </div>
+        </article>
+    );
 }

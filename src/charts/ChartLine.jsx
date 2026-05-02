@@ -1,100 +1,124 @@
-import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
 
-// Registramos los componentes necesarios de Chart.js
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Title,
+    Tooltip,
+    Legend
 );
 
-const LineChart = ({ labels, dataset, height, color, duration }) => {
-  const title = duration === 'month' ? 'Gráfico Mensual' : duration === 'week' ? 'Gráfico Semanal': 'Gráfico Anual';
-  // Datos y configuración del gráfico
-  const data = {
-    labels: labels, // Ejemplo de labels
-    datasets: [
-      {
-        type: 'line',
-        data: dataset, // Ejemplo de dataset
-        pointRadius: 0,
-        borderColor: color,
-      },
-    ],
-  };
+const LineChart = ({ labels, dataset, height = 100, color = '#0066FF', duration }) => {
+    // Build gradient fill
+    const getGradient = (ctx, chartArea) => {
+        if (!chartArea) return color + '33';
+        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        gradient.addColorStop(0, color + '55');
+        gradient.addColorStop(0.6, color + '18');
+        gradient.addColorStop(1, color + '00');
+        return gradient;
+    };
 
-  const options = {
-    type: 'line',
-    responsive: true,
-    scales: {
-      x: {
-        ticks: {
-          display: false // Oculta las etiquetas del eje x
-        },
-        grid: {
-          display: false, // Elimina las líneas de referencia en el eje x
-        },
-      },
-      y: {
-        grid: {
-          display: false, // Elimina las líneas de referencia en el eje y
-        },
-        ticks: {
-          callback: function(value) {
-            // Redondea el valor para mostrar un máximo de seis dígitos incluyendo separadores de miles
-            let numStr = value.toLocaleString('es-AR');
-            if (numStr.length > 6) {
-              const parts = numStr.split('.');
-              // Devolver solo la parte antes del segundo separador
-              numStr = parts.length > 1 ? parts[0] + ',' + parts[1] : parts[0];
-            }
-            return numStr
-          }
-        }
-      },
-    },
-    plugins: {
-      legend: {
-        display: false, // Oculta la leyenda
-      },
-      tooltip: {
-        enabled: true, // Habilita el tooltip
-        intersect: false, // Muestra el tooltip en cualquier parte del gráfico
-        mode: 'index', // Tooltip se activa basado en el índice más cercano
-        callbacks: {
-          title: (tooltipItems) => {
-            // Muestra el label del eje X (fecha o día) en el título del tooltip
-            return `Fecha: ${tooltipItems[0].label}`;
-          },
-          label: (tooltipItem) => {
-            // Muestra el valor en el tooltip
-            return `Valor: ${tooltipItem.raw}`;
-          }
-        },
-        displayColors: false, // Elimina los cuadrados de color en el tooltip
-      },
-      title: {
-        display: true,
-        text: title,
-        font: {
-          size: 14,
-          weight: 'bold',
-          color: '#000',
-        },
-      },
-    },
-  };
+    const data = {
+        labels,
+        datasets: [
+            {
+                data: dataset,
+                borderColor: color,
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                pointHoverBackgroundColor: color,
+                pointHoverBorderColor: '#fff',
+                pointHoverBorderWidth: 2,
+                fill: true,
+                backgroundColor: function (context) {
+                    const chart = context.chart;
+                    const { ctx, chartArea } = chart;
+                    if (!chartArea) return color + '22';
+                    return getGradient(ctx, chartArea);
+                },
+                tension: 0.35,
+            },
+        ],
+    };
 
-  return (
-    <div className='m-auto w-full'>
-      <Line data={data} options={options} height={height} width={'auto'}/>
-    </div>
-  );
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
+        scales: {
+            x: {
+                display: false,
+                grid: { display: false },
+            },
+            y: {
+                display: true,
+                position: 'right',
+                grid: { display: false },
+                border: { display: false },
+                ticks: {
+                    maxTicksLimit: 3,
+                    color: '#8B98A5',
+                    font: { size: 10, family: 'General Sans' },
+                    callback: (value) => {
+                        if (Math.abs(value) >= 1_000_000)
+                            return (value / 1_000_000).toFixed(1) + 'M';
+                        if (Math.abs(value) >= 1_000)
+                            return (value / 1_000).toFixed(0) + 'k';
+                        return value.toLocaleString('es-AR');
+                    },
+                },
+            },
+        },
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                enabled: true,
+                backgroundColor: 'rgba(10,14,23,0.88)',
+                titleColor: '#94A3B8',
+                bodyColor: '#F0F4F8',
+                padding: 10,
+                cornerRadius: 8,
+                displayColors: false,
+                titleFont: { size: 11, family: 'General Sans' },
+                bodyFont: { size: 13, family: 'Satoshi', weight: '600' },
+                callbacks: {
+                    title: (items) => items[0]?.label || '',
+                    label: (item) => {
+                        const val = item.raw;
+                        if (Math.abs(val) >= 1_000_000)
+                            return (val / 1_000_000).toFixed(2) + 'M';
+                        return val.toLocaleString('es-AR');
+                    },
+                },
+            },
+            title: { display: false },
+        },
+    };
+
+    return (
+        <div style={{ width: '100%', height: `${height}px` }}>
+            <Line data={data} options={options} />
+        </div>
+    );
 };
 
 export default LineChart;

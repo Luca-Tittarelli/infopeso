@@ -1,25 +1,5 @@
-import React from "react";
-import styles from "../styles.module.css";
-
-const defaultOptions = {
-  invertedIconLogic: false
-};
-
-function ThemeButton({isDark,onChange,invertedIconLogic = defaultOptions.invertedIconLogic}){
-  return(
-    <label
-      className={styles.container}
-      title={isDark ? "Activate light mode" : "Activate dark mode"}
-      aria-label={isDark ? "Activate light mode" : "Activate dark mode"}
-    >
-      <input
-        type="checkbox"
-        defaultChecked={invertedIconLogic ? !isDark : isDark}
-        onChange={onChange}
-      />
-      <div />
-    </label>
-  )
+// ThemeButton is no longer used in the redesigned Header.
+// Kept as a stub to avoid import errors from any remaining references.
+export default function ThemeButton({ onChange, isDark, invertedIconLogic }) {
+    return null;
 }
-
-export default ThemeButton;

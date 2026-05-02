@@ -10,18 +10,27 @@ export function useMacro(){
         const fetching = async () => {
             const macroData = await fetchData(macroAPI);
             const riesgoPaisData = await fetchData(RiesgoPaisAPI);
-            const newID = macroData.data.results[macroData.data.results.length - 1].idVariable + 1
+
+            // Fetch the results and map the new v4.0 properties to the expected ones
+            const mappedResults = macroData.data.results ? macroData.data.results.map((item) => ({
+                ...item,
+                valor: item.ultValorInformado,
+                fecha: item.ultFechaInformada,
+            })) : [];
+
+            // Prevent error if macroData failed
+            const lastId = mappedResults.length > 0 ? mappedResults[mappedResults.length - 1].idVariable : 0;
 
             // Crear un nuevo elemento con un ID único
             const newElement = {
-                idVariable: newID, // Genera un ID único
+                idVariable: 'riesgo-pais', // Genera un ID único preventivo
                 cdSerie: 5678,
                 descripcion: 'Riesgo País',
-                fecha: riesgoPaisData.data.fecha,
-                valor: riesgoPaisData.data.valor,
+                fecha: riesgoPaisData.data?.fecha || '',
+                valor: riesgoPaisData.data?.valor || 0,
             };
 
-            setResponse([...macroData.data.results, newElement]);
+            setResponse([...mappedResults, newElement]);
             setStatus(macroData.status);
         };
         fetching();

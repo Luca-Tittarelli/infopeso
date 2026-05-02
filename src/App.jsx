@@ -5,6 +5,8 @@ import Economia from "./pages/Economia";
 import Index from "./pages/Index";
 import { Footer } from "./components/Footer";
 import EconomiaDetalle from "./pages/Economia[id]";
+import Mercado from "./pages/Mercado";
+import RentaFija from "./pages/RentaFija";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path="/Economia" element={<Economia />}></Route>
         <Route path="/Economia/:id" element={<EconomiaDetalle />}></Route>
         <Route path="/Cambios" element={<Cambios />}></Route>
+        <Route path="/Mercado" element={<Mercado />}></Route>
+        <Route path="/RentaFija" element={<RentaFija />}></Route>
       </Routes>
       <Footer />
     </BrowserRouter>

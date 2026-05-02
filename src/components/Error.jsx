@@ -1,14 +1,51 @@
-import React from 'react';
+export function ErrorComponent({ message, onRetry }) {
+    return (
+        <div
+            className="flex flex-col items-center gap-3 py-10 px-6 rounded-xl w-full max-w-sm mx-auto text-center"
+            style={{
+                background: 'var(--negative-soft)',
+                border: '1px solid var(--negative)',
+                borderOpacity: 0.3,
+            }}
+        >
+            {/* Icon */}
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="28" height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ color: 'var(--negative)' }}
+            >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M12 9v4m0 4h.01" />
+                <path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
+            </svg>
 
-export function ErrorComponent({ message }){
-  return (
-    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative flex flex-col justify-center items-center w-[400px] m-auto" role="alert">
-      <svg className="fill-current w-6 h-6 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-        <title>Error</title>
-        <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm1 15a1 1 0 11-2 0V9a1 1 0 112 0v6zm-1-8a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" />
-      </svg>
-      <strong className="font-bold">Error</strong>
-      <span className="block sm:inline">{message}</span>
-    </div>
-  );
-};
+            <div>
+                <p className="font-semibold text-sm mb-0.5" style={{ color: 'var(--negative)' }}>
+                    Error al cargar
+                </p>
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    {message || 'No se pudo obtener información'}
+                </p>
+            </div>
+
+            {onRetry && (
+                <button
+                    onClick={onRetry}
+                    className="mt-1 px-4 py-1.5 rounded-lg text-sm font-medium transition-all"
+                    style={{
+                        background: 'var(--negative)',
+                        color: 'white',
+                    }}
+                >
+                    Reintentar
+                </button>
+            )}
+        </div>
+    );
+}
