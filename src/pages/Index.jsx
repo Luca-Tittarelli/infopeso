@@ -12,6 +12,8 @@ import { DenseRowItem } from "../components/cards/DenseRowItem";
 import { MiniChart } from "react-ts-tradingview-widgets";
 import { useTheme } from "../hooks/useTheme";
 import { NewsFeed } from "../components/news/NewsFeed";
+import { useFundamentals } from "../hooks/useFundamentals";
+import { CompanyFundamentalsCard } from "../components/cards/CompanyFundamentalsCard";
 
 // Bento Grid - Hero Metric Component
 function BentoHeroMetric({ valor, label, diff }) {
@@ -63,6 +65,10 @@ export default function Index() {
     const [lastDolar, setLastDolar] = useState([]);
     const { dolar, dolarStatus } = useDolar();
     const { variables, variablesStatus } = useMacro();
+    
+    // Get last viewed company or default to GGAL.BA
+    const featuredSymbol = localStorage.getItem('lastViewedCompany') || 'GGAL.BA';
+    const { data: featuredData, status: featuredStatus } = useFundamentals(featuredSymbol);
 
     const filter = (categorie, object) => object?.filter(item => categorie.includes(item.idVariable)) || [];
 
@@ -162,6 +168,7 @@ export default function Index() {
                         </div>
                         <div className="text-right hidden sm:block">
                             <p className="text-[10px] font-medium" style={{ color: 'var(--text-tertiary)' }}>Argentina, {new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+                            <p className="text-[8px] font-medium opacity-60" style={{ color: 'var(--text-tertiary)' }}>Data: Multiple Sources</p>
                         </div>
                     </div>
 
@@ -252,6 +259,19 @@ export default function Index() {
                             </Link>
                         </div>
 
+                    </div>
+
+                    {/* ── Mid Row: Featured Company Fundamentals ────────── */}
+                    <div className="mt-2">
+                        <h2 className="text-[9px] font-semibold uppercase tracking-[0.1em] mb-2 px-1" style={{ color: 'var(--text-tertiary)' }}>
+                            Fundamentals Destacados · {featuredSymbol.split('.')[0]}
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
+                            <CompanyFundamentalsCard 
+                                data={featuredData} 
+                                status={featuredStatus}
+                            />
+                        </div>
                     </div>
 
                     {/* ── Bottom Row: Commodities Strip ───────────── */}
