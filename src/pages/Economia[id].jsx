@@ -84,7 +84,7 @@ export default function EconomiaDetalle() {
     const isLoading = chartDataStatus === 'loading' || variablesStatus === 'loading';
 
     return (
-        <main className="min-h-screen pt-16">
+        <main className="min-h-screen pt-14 pb-16 md:pb-12">
 
             {isLoading ? (
                 <Loading />
@@ -121,7 +121,7 @@ export default function EconomiaDetalle() {
                             <div>
                                 <h1
                                     className="text-xl sm:text-2xl font-bold tracking-tight mb-1"
-                                    style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}
+                                    style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}
                                 >
                                     {variable?.descripcion?.split('(')[0]?.trim() || '—'}
                                 </h1>
@@ -135,7 +135,7 @@ export default function EconomiaDetalle() {
                             <div className="flex flex-col items-start sm:items-end gap-1">
                                 <p
                                     className="text-3xl sm:text-4xl font-bold tracking-tight leading-none"
-                                    style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}
+                                    style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }}
                                 >
                                     {latestValue.toLocaleString('es-AR')}
                                 </p>

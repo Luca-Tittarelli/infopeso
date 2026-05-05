@@ -62,16 +62,18 @@ export default function Empresas() {
     }, []);
 
     return (
-        <main className="min-h-screen pt-16 pb-12">
+        <main className="min-h-screen pt-14 pb-16 md:pb-12">
             <div className="px-5 sm:px-8 py-8 border-b" style={{ borderColor: 'var(--border-subtle)' }}>
                 <div className="max-w-[1200px] mx-auto">
-                    <p className="text-xs font-semibold uppercase tracking-[0.12em] mb-1" style={{ color: 'var(--accent)', fontFamily: 'General Sans, system-ui' }}>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] mb-1"
+                       style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
                         Análisis Fundamental
                     </p>
-                    <h1 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}>
+                    <h1 className="text-3xl sm:text-4xl leading-tight"
+                        style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
                         Empresas y Ratios
                     </h1>
-                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
                         Métricas clave para inversores de valor y análisis corporativo.
                     </p>
                 </div>

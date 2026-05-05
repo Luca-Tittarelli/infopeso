@@ -62,7 +62,7 @@ export function SimplyCard({ titulo, valor = 0, valorAnterior = 0, fecha, isMont
             <div className="flex items-start justify-between gap-2">
                 <h2
                     className="text-sm font-semibold leading-tight line-clamp-2"
-                    style={{ color: 'var(--text-secondary)', fontFamily: 'General Sans, system-ui' }}
+                    style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}
                 >
                     {titulo}
                 </h2>
@@ -82,8 +82,8 @@ export function SimplyCard({ titulo, valor = 0, valorAnterior = 0, fecha, isMont
             {/* Value */}
             <div>
                 <p
-                    className="text-2xl font-bold leading-none tracking-tight"
-                    style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}
+                    className="text-2xl font-medium leading-none tabular-nums"
+                    style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}
                 >
                     {typeof valor === 'number' ? valor.toLocaleString('es-AR') : valor}
                 </p>

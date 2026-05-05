@@ -63,7 +63,7 @@ function NewsCard({ item }) {
             {/* Title */}
             <h3
                 className="text-sm font-semibold leading-snug mb-auto line-clamp-3"
-                style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}
+                style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-ui)' }}
             >
                 {item.title}
             </h3>
@@ -104,13 +104,13 @@ export function NewsFeed() {
                     <div>
                         <p
                             className="text-xs font-semibold uppercase tracking-[0.12em] mb-1"
-                            style={{ color: 'var(--accent)', fontFamily: 'General Sans, system-ui' }}
+                            style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}
                         >
                             Google News · Últimas 72hs
                         </p>
                         <h2
                             className="text-xl sm:text-2xl font-bold tracking-tight"
-                            style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}
+                            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}
                         >
                             Noticias que mueven el mercado
                         </h2>

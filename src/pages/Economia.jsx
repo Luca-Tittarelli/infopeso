@@ -37,28 +37,21 @@ export default function Economia() {
     }, []);
 
     return (
-        <main className="min-h-screen pt-16">
+        <main className="min-h-screen pt-14 pb-16 md:pb-12">
 
-            {/* ── Page header ─────────────────────────────────── */}
-            <div
-                className="px-5 sm:px-8 py-8"
-                style={{ borderBottom: '1px solid var(--border-subtle)' }}
-            >
+            {/* ── Page header ─────────────────────── */}
+            <div className="px-5 sm:px-8 py-8" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                 <div className="max-w-[1200px] mx-auto">
-                    <p
-                        className="text-xs font-semibold uppercase tracking-[0.12em] mb-1"
-                        style={{ color: 'var(--accent)', fontFamily: 'General Sans, system-ui' }}
-                    >
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] mb-1"
+                       style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
                         BCRA · ArgentinaDatos
                     </p>
-                    <h1
-                        className="text-3xl sm:text-4xl font-bold tracking-tight"
-                        style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}
-                    >
-                        Variables de la economía
+                    <h1 className="text-3xl sm:text-4xl leading-tight"
+                        style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
+                        Indicadores Macro
                     </h1>
-                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                        Datos actualizados al {new Date().toLocaleDateString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', day: 'numeric', month: 'long', year: 'numeric' })}
+                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
+                        Variables monetarias y económicas del Banco Central
                     </p>
                 </div>
             </div>

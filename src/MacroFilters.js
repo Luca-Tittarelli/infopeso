@@ -10,8 +10,9 @@ export const categories = {
 
 // Data most relevant to investors for the Dashboard:
 // 'riesgo-pais' = Riesgo País
-// 27 = Inflación
-// 6 = Tasa Política Monetaria
-// 1 = Reservas Internacionales
-// 32 = CER (Coeficiente de Estabilización de Referencia)
-export const indexCategories = ['riesgo-pais', 27, 6, 1, 32]
+// 27 = Inflación mensual
+// 6  = Tasa Política Monetaria
+// 1  = Reservas Internacionales
+// 32 = CER
+// 15 = Base Monetaria (proxy de liquidez)
+export const indexCategories = ['riesgo-pais', 27, 6, 1, 32, 15]

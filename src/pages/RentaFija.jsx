@@ -29,7 +29,7 @@ export default function RentaFija() {
     }, [price, selectedBond]);
 
     return (
-        <main className="min-h-screen pt-16">
+        <main className="min-h-screen pt-14 pb-16 md:pb-12">
 
             {/* ── Page header ─────────────────────────────────── */}
             <div
@@ -37,19 +37,15 @@ export default function RentaFija() {
                 style={{ borderBottom: '1px solid var(--border-subtle)' }}
             >
                 <div className="max-w-[1200px] mx-auto">
-                    <p
-                        className="text-xs font-semibold uppercase tracking-[0.12em] mb-1"
-                        style={{ color: 'var(--accent)', fontFamily: 'General Sans, system-ui' }}
-                    >
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] mb-1"
+                       style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
                         TradingView · BCBA
                     </p>
-                    <h1
-                        className="text-3xl sm:text-4xl font-bold tracking-tight"
-                        style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}
-                    >
+                    <h1 className="text-3xl sm:text-4xl leading-tight"
+                        style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
                         Renta Fija
                     </h1>
-                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
                         Bonos soberanos y obligaciones negociables (ONs)
                     </p>
                 </div>
@@ -130,7 +126,7 @@ export default function RentaFija() {
                         >
                             <h2 
                                 className="text-xl font-bold mb-1"
-                                style={{ fontFamily: 'Satoshi, system-ui', color: 'var(--text-primary)' }}
+                                style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}
                             >
                                 Calculadora de TIR
                             </h2>
@@ -194,7 +190,7 @@ export default function RentaFija() {
                                     <p className="text-xs mb-1" style={{ color: 'var(--text-secondary)' }}>TIR (Rendimiento)</p>
                                     <p 
                                         className="text-2xl font-bold"
-                                        style={{ fontFamily: 'Satoshi, system-ui', color: metrics.tir > 0 ? 'var(--semantic-positive)' : 'var(--text-primary)' }}
+                                        style={{ fontFamily: 'var(--font-mono)', color: metrics.tir > 0 ? 'var(--semantic-positive)' : 'var(--text-primary)' }}
                                     >
                                         {price ? `${metrics.tir}%` : '--'}
                                     </p>
@@ -206,7 +202,7 @@ export default function RentaFija() {
                                     <p className="text-xs mb-1" style={{ color: 'var(--text-secondary)' }}>Paridad</p>
                                     <p 
                                         className="text-2xl font-bold"
-                                        style={{ fontFamily: 'Satoshi, system-ui', color: 'var(--text-primary)' }}
+                                        style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}
                                     >
                                         {price ? `${metrics.paridad}%` : '--'}
                                     </p>

@@ -32,7 +32,7 @@ export default function Cambios() {
     }, []);
 
     return (
-        <main className="min-h-screen pt-16">
+        <main className="min-h-screen pt-14 pb-16 md:pb-12">
 
             {/* ── Page header ─────────────────────────────────── */}
             <div
@@ -40,19 +40,15 @@ export default function Cambios() {
                 style={{ borderBottom: '1px solid var(--border-subtle)' }}
             >
                 <div className="max-w-[1200px] mx-auto">
-                    <p
-                        className="text-xs font-semibold uppercase tracking-[0.12em] mb-1"
-                        style={{ color: 'var(--accent)', fontFamily: 'General Sans, system-ui' }}
-                    >
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] mb-1"
+                       style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
                         DolarAPI · ArgentinaDatos
                     </p>
-                    <h1
-                        className="text-3xl sm:text-4xl font-bold tracking-tight"
-                        style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}
-                    >
+                    <h1 className="text-3xl sm:text-4xl leading-tight"
+                        style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
                         Tipos de cambio
                     </h1>
-                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
                         Precios de compra y venta actualizados al día de hoy
                     </p>
                 </div>
@@ -65,7 +61,7 @@ export default function Cambios() {
                     <div className="flex items-center gap-3 mb-4">
                         <h2
                             className="text-xs font-semibold uppercase tracking-[0.1em]"
-                            style={{ color: 'var(--text-tertiary)', fontFamily: 'General Sans, system-ui' }}
+                            style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}
                         >
                             Dólar
                         </h2>
@@ -110,7 +106,7 @@ export default function Cambios() {
                     <div className="flex items-center gap-3 mt-10 mb-4">
                         <h2
                             className="text-xs font-semibold uppercase tracking-[0.1em]"
-                            style={{ color: 'var(--text-tertiary)', fontFamily: 'General Sans, system-ui' }}
+                            style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}
                         >
                             Otras monedas
                         </h2>

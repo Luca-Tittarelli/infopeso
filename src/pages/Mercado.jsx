@@ -15,25 +15,18 @@ export default function Mercado() {
     return (
         <main className="min-h-screen pt-16">
 
-            {/* ── Page header ─────────────────────────────────── */}
-            <div
-                className="px-5 sm:px-8 py-8"
-                style={{ borderBottom: '1px solid var(--border-subtle)' }}
-            >
+            {/* ── Page header ─────────────────────── */}
+            <div className="px-5 sm:px-8 py-8" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                 <div className="max-w-[1200px] mx-auto">
-                    <p
-                        className="text-xs font-semibold uppercase tracking-[0.12em] mb-1"
-                        style={{ color: 'var(--accent)', fontFamily: 'General Sans, system-ui' }}
-                    >
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] mb-1"
+                       style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
                         TradingView · Tiempo real
                     </p>
-                    <h1
-                        className="text-3xl sm:text-4xl font-bold tracking-tight"
-                        style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}
-                    >
+                    <h1 className="text-3xl sm:text-4xl leading-tight"
+                        style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
                         Mercados financieros
                     </h1>
-                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
                         Merval, acciones, internacionales, cripto y commodities estratégicos
                     </p>
                 </div>

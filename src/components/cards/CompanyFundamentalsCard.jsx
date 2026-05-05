@@ -56,7 +56,7 @@ export function CompanyFundamentalsCard({ data, status }) {
                         {assetProfile?.sector || 'Sector'} · {assetProfile?.industry || 'Industria'}
                     </span>
                 </div>
-                <h2 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}>
+                <h2 className="text-2xl leading-tight" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
                     {assetProfile?.longName || 'Empresa'}
                 </h2>
                 <p className="text-xs line-clamp-2 mt-1" style={{ color: 'var(--text-tertiary)' }}>
@@ -75,7 +75,7 @@ export function CompanyFundamentalsCard({ data, status }) {
                         <span className="text-[9px] font-medium uppercase tracking-wider" style={{ color: 'var(--text-tertiary)' }}>
                             {stat.label}
                         </span>
-                        <span className="text-sm font-bold tabular-nums" style={{ color: 'var(--text-primary)', fontFamily: 'Satoshi, system-ui' }}>
+                        <span className="text-sm font-medium tabular-nums" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
                             {stat.value}
                         </span>
                     </div>

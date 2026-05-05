@@ -2,11 +2,23 @@ import { useEffect } from "react";
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
 
+const SunIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+    </svg>
+);
+
+const MoonIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+);
+
 export default function Header() {
     const [theme, changeTheme] = useTheme();
     const location = useLocation();
 
-    // Sync dark class on html
     useEffect(() => {
         document.documentElement.classList.toggle("dark", theme === "dark");
         localStorage.setItem("theme", theme);
@@ -26,9 +38,9 @@ export default function Header() {
 
     return (
         <>
-            {/* ── Main Header (Desktop & Mobile Top) ───────────── */}
+            {/* ── Main Header ───────────────────────────────── */}
             <header
-                className="h-16 w-full fixed top-0 z-50 flex items-center justify-between px-5 sm:px-8"
+                className="h-14 w-full fixed top-0 z-50 flex items-center justify-between px-5 sm:px-8"
                 style={{
                     background: 'var(--header-bg)',
                     borderBottom: '1px solid var(--header-border)',
@@ -41,8 +53,8 @@ export default function Header() {
                     <img
                         src={theme === 'dark' ? 'white-logo.avif' : 'logo.avif'}
                         alt="Infopeso"
-                        className="h-9"
-                        style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.12))' }}
+                        className="h-8"
+                        style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.10))' }}
                     />
                 </Link>
 
@@ -59,38 +71,32 @@ export default function Header() {
                     ))}
                 </nav>
 
-                {/* Right controls */}
-                <div className="flex items-center gap-2">
-                    {/* Theme toggle */}
-                    <button
-                        onClick={changeTheme}
-                        aria-label={theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'}
-                        className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 active:scale-90"
-                        style={{
-                            background: 'var(--bg-surface-hover)',
-                            border: '1px solid var(--border-subtle)',
-                            color: 'var(--text-secondary)',
-                        }}
-                    >
-                        <span
-                            className="text-base leading-none"
-                            style={{ display: 'block', transition: 'transform 0.4s ease', transform: theme === 'dark' ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                        >
-                            {theme === 'dark' ? '☀️' : '🌙'}
-                        </span>
-                    </button>
-                </div>
+                {/* Theme toggle */}
+                <button
+                    onClick={changeTheme}
+                    aria-label={theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'}
+                    className="w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 active:scale-90"
+                    style={{
+                        background: 'var(--bg-surface-hover)',
+                        border: '1px solid var(--border-subtle)',
+                        color: 'var(--text-secondary)',
+                    }}
+                >
+                    <span style={{ display: 'block', transition: 'transform 0.35s ease', transform: theme === 'dark' ? 'rotate(20deg)' : 'rotate(0deg)' }}>
+                        {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+                    </span>
+                </button>
             </header>
 
-            {/* ── Persistent Bottom Tab Bar (Mobile Only) ──────── */}
+            {/* ── Bottom Tab Bar — Mobile ────────────────────── */}
             <nav
-                className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around px-2 pb-safe pt-2"
+                className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around px-2 pt-2"
                 style={{
                     background: 'var(--header-bg)',
-                    borderTop: '1px solid var(--border-subtle)',
+                    borderTop: '1px solid var(--header-border)',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
-                    paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 8px)'
+                    paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 8px)',
                 }}
             >
                 {navLinks.map(({ to, label, icon }) => {
@@ -99,35 +105,19 @@ export default function Header() {
                         <Link
                             key={to}
                             to={to}
-                            className="flex flex-col items-center justify-center w-full py-1 gap-1 relative group active:scale-95 transition-transform"
+                            className="flex flex-col items-center justify-center w-full py-1 gap-1 relative active:scale-95 transition-transform"
                             style={{ color: active ? 'var(--accent)' : 'var(--text-tertiary)' }}
                         >
-                            {/* Animated active background pill */}
                             {active && (
-                                <span 
+                                <span
                                     className="absolute inset-0 mx-auto rounded-xl -z-10"
-                                    style={{ 
-                                        width: '48px', 
-                                        height: '48px', 
-                                        top: '-4px',
-                                        background: 'var(--accent-soft)',
-                                    }} 
+                                    style={{ width: '48px', height: '44px', top: '-4px', background: 'var(--accent-soft)' }}
                                 />
                             )}
-                            <svg 
-                                width="22" 
-                                height="22" 
-                                fill="none" 
-                                viewBox="0 0 24 24" 
-                                stroke="currentColor" 
-                                strokeWidth={active ? "2.5" : "1.8"}
-                                className="transition-all duration-200"
-                            >
+                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={active ? "2.2" : "1.7"} className="transition-all duration-200">
                                 <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
                             </svg>
-                            <span className="text-[10px] font-medium tracking-tight">
-                                {label}
-                            </span>
+                            <span className="text-[10px] font-medium tracking-tight">{label}</span>
                         </Link>
                     );
                 })}
