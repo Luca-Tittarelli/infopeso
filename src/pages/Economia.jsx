@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { MacroCard } from '../components/cards/MacroInfoCard';
+import { MacroListRow } from '../components/cards/MacroListRow';
 import { Loading } from '../components/LoadingAnim';
 import { ErrorComponent } from '../components/Error';
 import { categories } from '../MacroFilters';
 import { useMacro } from '../hooks/useMacro';
+import { usePBI } from '../hooks/usePBI';
 
 const TABS = [
+    { key: 'pbi',                label: 'PBI',               chart: { type: 'line', duration: 'year' } },
     { key: 'bcra',               label: 'BCRA',              chart: { type: 'line', duration: 'month' } },
     { key: 'baseMonetaria',      label: 'Base Monetaria',    chart: { type: 'line', duration: 'month' } },
     { key: 'inflacion',          label: 'Inflación',         chart: { type: 'bars', duration: 'year'  } },
@@ -17,7 +20,8 @@ const TABS = [
 
 export default function Economia() {
     const { variables, variablesStatus } = useMacro();
-    const [activeTab, setActiveTab] = useState('bcra');
+    const { pbiData, pbiStatus } = usePBI();
+    const [activeTab, setActiveTab] = useState('pbi');
     const [showOthers, setShowOthers] = useState(false);
 
     const filter = (categorie) =>
@@ -58,7 +62,7 @@ export default function Economia() {
 
             {/* ── Tab bar ─────────────────────────────────────── */}
             <div
-                className="sticky top-16 z-30 px-5 sm:px-8 py-3 overflow-x-auto"
+                className="sticky top-14 z-30 px-5 sm:px-8 py-3 overflow-x-auto"
                 style={{
                     background: 'var(--header-bg)',
                     backdropFilter: 'blur(12px)',
@@ -90,10 +94,44 @@ export default function Economia() {
             <section className="px-5 sm:px-8 py-8">
                 <div className="max-w-[1200px] mx-auto">
 
-                    {variablesStatus === 'loading' && <Loading />}
-                    {variablesStatus === 'error' && <ErrorComponent message="Error al obtener los datos del BCRA" />}
+                    {/* Loading / Error handling para Macro (solo si no es PBI) */}
+                    {activeTab !== 'pbi' && variablesStatus === 'loading' && <Loading />}
+                    {activeTab !== 'pbi' && variablesStatus === 'error' && <ErrorComponent message="Error al obtener los datos del BCRA" />}
+                    
+                    {/* Loading / Error handling para PBI */}
+                    {activeTab === 'pbi' && pbiStatus === 'loading' && <Loading />}
+                    {activeTab === 'pbi' && pbiStatus === 'error' && <ErrorComponent message="Error al obtener los datos del Banco Mundial" />}
 
-                    {variablesStatus === 'success' && (
+                    {activeTab === 'pbi' && pbiStatus === 'success' && (
+                        <div className="flex flex-col gap-2">
+                            {pbiData.length === 0 ? (
+                                <p className="text-sm text-center py-12" style={{ color: 'var(--text-tertiary)' }}>
+                                    Sin datos disponibles de PBI.
+                                </p>
+                            ) : (
+                                pbiData.map((element, index) => (
+                                    <div
+                                        key={index}
+                                        className="stagger-item w-full max-w-[800px] mx-auto"
+                                        style={{ animationDelay: `${index * 40}ms` }}
+                                    >
+                                        <MacroListRow
+                                            titulo={element.descripcion.split('(')[0].trim()}
+                                            valor={element.valor}
+                                            desc={element.descripcion.split('(')[1]?.replace(/[()]/g, '')}
+                                            fecha={element.fecha}
+                                            id={element.idVariable}
+                                            chart={{ type: 'line', duration: 'year' }}
+                                            historyData={element.history}
+                                            rawDiff={element.difference}
+                                        />
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    )}
+
+                    {activeTab !== 'pbi' && variablesStatus === 'success' && (
                         <>
                             {activeTab !== 'otros' ? (
                                 <>
@@ -102,17 +140,14 @@ export default function Economia() {
                                             Sin datos disponibles para esta categoría.
                                         </p>
                                     ) : (
-                                        <div
-                                            className="grid gap-4"
-                                            style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}
-                                        >
+                                        <div className="flex flex-col gap-2">
                                             {currentData.map((element, index) => (
                                                 <div
                                                     key={index}
-                                                    className="stagger-item"
+                                                    className="stagger-item w-full max-w-[800px] mx-auto"
                                                     style={{ animationDelay: `${index * 60}ms` }}
                                                 >
-                                                    <MacroCard
+                                                    <MacroListRow
                                                         titulo={element.descripcion.split('(')[0].trim()}
                                                         valor={element.valor}
                                                         desc={element.descripcion.split('(')[1]?.replace(/[()]/g, '')}
@@ -127,17 +162,14 @@ export default function Economia() {
                                 </>
                             ) : (
                                 /* "Otros" tab */
-                                <div
-                                    className="grid gap-4"
-                                    style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}
-                                >
+                                <div className="flex flex-col gap-2">
                                     {notIncludes.map((element, index) => (
                                         <div
                                             key={`otros-${index}`}
-                                            className="stagger-item"
+                                            className="stagger-item w-full max-w-[800px] mx-auto"
                                             style={{ animationDelay: `${index * 40}ms` }}
                                         >
-                                            <MacroCard
+                                            <MacroListRow
                                                 titulo={element.descripcion.split('(')[0].trim()}
                                                 valor={element.valor}
                                                 desc={element.descripcion.split('(')[1]?.replace(/[()]/g, '')}
@@ -153,9 +185,15 @@ export default function Economia() {
                             {/* Source attribution */}
                             <p className="text-xs text-center mt-10" style={{ color: 'var(--text-tertiary)' }}>
                                 Fuente:{' '}
-                                <a href="https://bcra.gob.ar/Catalogo/apis.asp" className="hover:underline" style={{ color: 'var(--accent)' }} target="_blank" rel="noopener noreferrer">BCRA</a>
-                                {' '}·{' '}
-                                <a href="https://argentinadatos.com/" className="hover:underline" style={{ color: 'var(--accent)' }} target="_blank" rel="noopener noreferrer">ArgentinaDatos API</a>
+                                {activeTab === 'pbi' ? (
+                                    <a href="https://data.worldbank.org/" className="hover:underline" style={{ color: 'var(--accent)' }} target="_blank" rel="noopener noreferrer">Banco Mundial</a>
+                                ) : (
+                                    <>
+                                        <a href="https://bcra.gob.ar/Catalogo/apis.asp" className="hover:underline" style={{ color: 'var(--accent)' }} target="_blank" rel="noopener noreferrer">BCRA</a>
+                                        {' '}·{' '}
+                                        <a href="https://argentinadatos.com/" className="hover:underline" style={{ color: 'var(--accent)' }} target="_blank" rel="noopener noreferrer">ArgentinaDatos API</a>
+                                    </>
+                                )}
                             </p>
                         </>
                     )}

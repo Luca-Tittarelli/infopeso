@@ -9,7 +9,7 @@ import { useDolar } from "../hooks/useDolar";
 import { useMacro } from "../hooks/useMacro";
 import { Link } from "react-router-dom";
 import { DenseRowItem } from "../components/cards/DenseRowItem";
-import { MiniChart, TickerTape } from "react-ts-tradingview-widgets";
+import { MiniChart, TickerTape, MarketData } from "react-ts-tradingview-widgets";
 import { useTheme } from "../hooks/useTheme";
 import { NewsFeed } from "../components/news/NewsFeed";
 import { CommodityTicker } from "../components/cards/CommodityTicker";
@@ -342,6 +342,26 @@ export default function Index() {
                 </div>
             </section>
 
+            {/* ── Ticker Tape (Commodities) ────────────────── */}
+            <section className="px-5 sm:px-8 pb-4">
+                <div className="max-w-[1400px] mx-auto rounded-lg overflow-hidden pointer-events-none" style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}>
+                    <TickerTape
+                        colorTheme={theme}
+                        displayMode="regular"
+                        locale="es"
+                        showSymbolLogo={true}
+                        symbols={[
+                            { description: "Soja",        proName: "CAPITALCOM:SOYBEAN" },
+                            { description: "Maíz",        proName: "CAPITALCOM:CORN" },
+                            { description: "Trigo",       proName: "CAPITALCOM:WHEAT" },
+                            { description: "Petróleo WTI",proName: "TVC:USOIL" },
+                            { description: "Oro",         proName: "OANDA:XAUUSD" },
+                            { description: "Plata",       proName: "OANDA:XAGUSD" },
+                        ]}
+                    />
+                </div>
+            </section>
+
             {hasError && (
                 <div className="px-5 sm:px-8 pb-4">
                     <div className="max-w-[1400px] mx-auto">
@@ -350,10 +370,9 @@ export default function Index() {
                 </div>
             )}
 
-            {/* ── Tier 1: Causas / Drivers Macro ───────────── */}
+            {/* ── Tier 1: Drivers Macro ───────────── */}
             <section className="px-5 sm:px-8 pb-5">
                 <div className="max-w-[1400px] mx-auto">
-                    <SectionHead label="Drivers Macro" />
                     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                         <PrimaryMetric
                             label="Tasa Política Monetaria"
@@ -400,118 +419,117 @@ export default function Index() {
                 </div>
             </section>
 
-            {/* ── Tier 2: Consecuencias / Riesgo + Bonos ───── */}
+            {/* ── Tier 2: Bento Grid (Cambios, Riesgo, Índices) ───────────── */}
             <section className="px-5 sm:px-8 pb-5">
-                <div className="max-w-[1400px] mx-auto">
-                    <SectionHead label="Mercado y Riesgo" />
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                        {/* Merval */}
-                        <div className="rounded-xl overflow-hidden flex flex-col"
-                             style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)', minHeight: '120px' }}>
-                            <div className="px-3 pt-2 pb-0.5 flex items-center justify-between">
-                                <p className="text-[9px] font-semibold uppercase tracking-[0.12em]"
-                                   style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                                    S&P Merval · Indice
-                                </p>
-                                <span className="source-badge">TradingView</span>
-                            </div>
-                            <div className="flex-1">
-                                <MiniChart colorTheme={theme} width="100%" height={90}
-                                           symbol="BCBA:IMV" locale="es" isTransparent={true} />
-                            </div>
-                        </div>
-
-                        {/* Riesgo País */}
-                        <MarketCard
-                            label="Riesgo País"
-                            sublabel="EMBI+ · JP Morgan"
-                            value={riesgoPaisVar?.valor}
-                            unit="pb"
-                            delta={rpDelta}
-                            deltaIsAbs
-                            source="ArgentinaDatos"
-                            loading={isLoading}
+                <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-3">
+                    
+                    {/* Columna 1: Tipos de Cambio */}
+                    <div className="lg:col-span-4 flex flex-col gap-2">
+                        <SectionHead
+                            label="Tipos de Cambio"
+                            right={
+                                <Link to="/Cambios"
+                                      className="text-[9px] font-semibold uppercase tracking-[0.1em] flex-shrink-0"
+                                      style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
+                                    Ver todo →
+                                </Link>
+                            }
                         />
-
-                        {/* Bonos Soberanos AL30 (TradingView) */}
-                        <div className="rounded-xl overflow-hidden flex flex-col"
-                             style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)', minHeight: '120px' }}>
-                            <div className="px-3 pt-2 pb-0.5 flex items-center justify-between">
-                                <p className="text-[9px] font-semibold uppercase tracking-[0.12em]"
-                                   style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                                    Bonos Soberanos · AL30
-                                </p>
-                                <span className="source-badge">TradingView</span>
-                            </div>
-                            <div className="flex-1">
-                                <MiniChart colorTheme={theme} width="100%" height={90}
-                                           symbol="BCBA:AL30" locale="es" isTransparent={true} />
-                            </div>
+                        <div className="rounded-xl overflow-hidden flex flex-col h-full"
+                             style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}>
+                            {isLoading ? (
+                                <div className="p-3 space-y-2">
+                                    {[1, 2, 3, 4, 5].map(i => <LoadingCard key={i} />)}
+                                </div>
+                            ) : (
+                                dolarList.map((item, i) => {
+                                    const lastVal = lastDolar.find(d => d.casa === item.casa)?.venta;
+                                    return (
+                                        <DenseRowItem
+                                            key={i}
+                                            titulo={item.nombre}
+                                            valor={item.venta}
+                                            valorAnterior={lastVal}
+                                            linkTo="/Cambios"
+                                        />
+                                    );
+                                })
+                            )}
                         </div>
                     </div>
-                </div>
-            </section>
 
-            {/* ── Tier 3: Commodities (TradingView) ───────────── */}
-            <section className="px-5 sm:px-8 pb-5">
-                <div className="max-w-[1400px] mx-auto">
-                    <SectionHead label="Commodities Estratégicos" />
-                    <div
-                        className="rounded-xl overflow-hidden pointer-events-none"
-                        style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}
-                    >
-                        <TickerTape
-                            colorTheme={theme}
-                            displayMode="regular"
-                            locale="es"
-                            showSymbolLogo={true}
-                            symbols={[
-                                { description: "Soja",        proName: "CAPITALCOM:SOYBEAN" },
-                                { description: "Maíz",        proName: "CAPITALCOM:CORN" },
-                                { description: "Trigo",       proName: "CAPITALCOM:WHEAT" },
-                                { description: "Petróleo WTI",proName: "TVC:USOIL" },
-                                { description: "Oro",         proName: "OANDA:XAUUSD" },
-                                { description: "Plata",       proName: "OANDA:XAGUSD" },
-                            ]}
-                        />
-                    </div>
-                </div>
-            </section>
-
-            {/* ── Tier 4: Referencias / Tipos de Cambio ────── */}
-            <section className="px-5 sm:px-8 pb-5">
-                <div className="max-w-[1400px] mx-auto">
-                    <SectionHead
-                        label="Tipos de Cambio"
-                        right={
-                            <Link to="/Cambios"
-                                  className="text-[9px] font-semibold uppercase tracking-[0.1em] flex-shrink-0"
-                                  style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
-                                Ver todo →
-                            </Link>
-                        }
-                    />
-                    <div className="rounded-xl overflow-hidden grid grid-cols-1 md:grid-cols-2"
-                         style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}>
-                        {isLoading ? (
-                            <div className="p-3 space-y-2">
-                                {[1, 2, 3, 4].map(i => <LoadingCard key={i} />)}
+                    {/* Columna 2: Mercado Local y Riesgo */}
+                    <div className="lg:col-span-4 flex flex-col gap-2">
+                        <SectionHead label="Mercado y Riesgo Local" />
+                        <div className="flex flex-col gap-2 h-full">
+                            <MarketCard
+                                label="Riesgo País"
+                                sublabel="EMBI+ · JP Morgan"
+                                value={riesgoPaisVar?.valor}
+                                unit="pb"
+                                delta={rpDelta}
+                                deltaIsAbs
+                                source="ArgentinaDatos"
+                                loading={isLoading}
+                            />
+                            
+                            <div className="rounded-xl overflow-hidden flex flex-col flex-1"
+                                 style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)', minHeight: '120px' }}>
+                                <div className="px-3 pt-2 pb-0.5 flex items-center justify-between">
+                                    <p className="text-[9px] font-semibold uppercase tracking-[0.12em]"
+                                       style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
+                                        S&P Merval · Indice
+                                    </p>
+                                    <span className="source-badge">TradingView</span>
+                                </div>
+                                <div className="flex-1 min-h-0">
+                                    <MiniChart colorTheme={theme} width="100%" height="100%"
+                                               symbol="BCBA:IMV" locale="es" isTransparent={true} />
+                                </div>
                             </div>
-                        ) : (
-                            dolarList.map((item, i) => {
-                                const lastVal = lastDolar.find(d => d.casa === item.casa)?.venta;
-                                return (
-                                    <DenseRowItem
-                                        key={i}
-                                        titulo={item.nombre}
-                                        valor={item.venta}
-                                        valorAnterior={lastVal}
-                                        linkTo="/Cambios"
-                                    />
-                                );
-                            })
-                        )}
+
+                            <div className="rounded-xl overflow-hidden flex flex-col flex-1"
+                                 style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)', minHeight: '120px' }}>
+                                <div className="px-3 pt-2 pb-0.5 flex items-center justify-between">
+                                    <p className="text-[9px] font-semibold uppercase tracking-[0.12em]"
+                                       style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
+                                        Bonos Soberanos · AL30
+                                    </p>
+                                    <span className="source-badge">TradingView</span>
+                                </div>
+                                <div className="flex-1 min-h-0">
+                                    <MiniChart colorTheme={theme} width="100%" height="100%"
+                                               symbol="BCBA:AL30" locale="es" isTransparent={true} />
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+                    {/* Columna 3: Índices Globales */}
+                    <div className="lg:col-span-4 flex flex-col gap-2">
+                        <SectionHead label="Índices Globales" />
+                        <div className="rounded-xl overflow-hidden flex flex-col h-full min-h-[380px]" style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}>
+                            <MarketData 
+                                colorTheme={theme} 
+                                width="100%" 
+                                height="100%" 
+                                locale="es" 
+                                isTransparent={true}
+                                symbolsGroups={[{
+                                    name: "Principales Mercados",
+                                    originalName: "Indices",
+                                    symbols: [
+                                        { name: "AMEX:SPY", displayName: "S&P 500 (EEUU)" },
+                                        { name: "BMFBOVESPA:IBOV", displayName: "Bovespa (Brasil)" },
+                                        { name: "OANDA:JP225USD", displayName: "Nikkei 225 (Japón)" },
+                                        { name: "SSE:000001", displayName: "Shanghai (China)" },
+                                        { name: "BCBA:IMV", displayName: "S&P Merval (Arg)" }
+                                    ]
+                                }]} 
+                            />
+                        </div>
+                    </div>
+
                 </div>
             </section>
 

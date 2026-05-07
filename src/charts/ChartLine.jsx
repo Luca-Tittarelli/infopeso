@@ -22,7 +22,7 @@ ChartJS.register(
     Legend
 );
 
-const LineChart = ({ labels, dataset, height = 100, color = '#0066FF', duration }) => {
+const LineChart = ({ labels, dataset, height = 100, color = '#0066FF', duration, showAxes = true }) => {
     // Build gradient fill
     const getGradient = (ctx, chartArea) => {
         if (!chartArea) return color + '33';
@@ -66,18 +66,31 @@ const LineChart = ({ labels, dataset, height = 100, color = '#0066FF', duration 
         },
         scales: {
             x: {
-                display: false,
+                display: showAxes,
                 grid: { display: false },
-            },
-            y: {
-                display: true,
-                position: 'right',
-                grid: { display: false },
-                border: { display: false },
                 ticks: {
-                    maxTicksLimit: 3,
                     color: '#8B98A5',
                     font: { size: 10, family: 'General Sans' },
+                    maxTicksLimit: 6,
+                    maxRotation: 0,
+                    autoSkip: true,
+                }
+            },
+            y: {
+                display: showAxes,
+                position: 'right',
+                beginAtZero: false,
+                grid: { 
+                    display: showAxes,
+                    color: 'rgba(139, 152, 165, 0.1)',
+                    drawBorder: false,
+                },
+                border: { display: false },
+                ticks: {
+                    maxTicksLimit: 5,
+                    color: '#8B98A5',
+                    font: { size: 10, family: 'General Sans' },
+                    padding: 8,
                     callback: (value) => {
                         if (Math.abs(value) >= 1_000_000)
                             return (value / 1_000_000).toFixed(1) + 'M';

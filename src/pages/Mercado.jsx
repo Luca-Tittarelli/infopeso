@@ -19,7 +19,7 @@ export default function Mercado() {
             <div className="px-5 sm:px-8 py-8" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                 <div className="max-w-[1200px] mx-auto">
                     <p className="text-[10px] font-semibold uppercase tracking-[0.14em] mb-1"
-                       style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
+                        style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
                         TradingView · Tiempo real
                     </p>
                     <h1 className="text-3xl sm:text-4xl leading-tight"
@@ -46,14 +46,14 @@ export default function Mercado() {
                             locale="es"
                             showSymbolLogo={true}
                             symbols={[
-                                { description: "S&P 500",     proName: "SP:SPX" },
-                                { description: "MERVAL",      proName: "BCBA:IMV" },
-                                { description: "Bitcoin",     proName: "BINANCE:BTCUSDT" },
-                                { description: "Soja",        proName: "CAPITALCOM:SOYBEAN" },
-                                { description: "Maíz",        proName: "CAPITALCOM:CORN" },
-                                { description: "Petróleo WTI",proName: "TVC:USOIL" },
-                                { description: "Oro",         proName: "OANDA:XAUUSD" },
-                                { description: "Cobre",       proName: "OANDA:XCUUSD" },
+                                { description: "S&P 500", proName: "SP:SP500" },
+                                { description: "MERVAL", proName: "BCBA:IMV" },
+                                { description: "Bitcoin", proName: "BINANCE:BTCUSDT" },
+                                { description: "Soja", proName: "CAPITALCOM:SOYBEAN" },
+                                { description: "Maíz", proName: "CAPITALCOM:CORN" },
+                                { description: "Petróleo WTI", proName: "TVC:USOIL" },
+                                { description: "Oro", proName: "OANDA:XAUUSD" },
+                                { description: "Cobre", proName: "OANDA:XCUUSD" },
                             ]}
                         />
                     </div>
@@ -77,31 +77,31 @@ export default function Mercado() {
                                 {
                                     title: "Mercado Argentino",
                                     symbols: [
-                                        { s: "BCBA:IMV",   d: "S&P Merval" },
-                                        { s: "BCBA:GGAL",  d: "Grupo Financiero Galicia" },
-                                        { s: "BCBA:YPFD",  d: "YPF S.A." },
-                                        { s: "BCBA:PAMP",  d: "Pampa Energía" },
-                                        { s: "BCBA:BMA",   d: "Banco Macro" },
-                                        { s: "BCBA:CEPU",  d: "Central Puerto" },
-                                        { s: "BCBA:TXAR",  d: "Ternium Argentina" },
-                                        { s: "BCBA:ALUA",  d: "Aluar" },
-                                        { s: "BCBA:COME",  d: "Soc. Comercial del Plata" },
+                                        { s: "BCBA:IMV", d: "S&P Merval" },
+                                        { s: "BCBA:GGAL", d: "Grupo Financiero Galicia" },
+                                        { s: "BCBA:YPFD", d: "YPF S.A." },
+                                        { s: "BCBA:PAMP", d: "Pampa Energía" },
+                                        { s: "BCBA:BMA", d: "Banco Macro" },
+                                        { s: "BCBA:CEPU", d: "Central Puerto" },
+                                        { s: "BCBA:TXAR", d: "Ternium Argentina" },
+                                        { s: "BCBA:ALUA", d: "Aluar" },
+                                        { s: "BCBA:COME", d: "Soc. Comercial del Plata" },
                                         { s: "BCBA:TECO2", d: "Telecom Argentina" },
                                     ],
                                 },
                                 {
                                     title: "Internacional",
                                     symbols: [
-                                        { s: "AMEX:SPY",    d: "SPDR S&P 500 ETF" },
-                                        { s: "NASDAQ:QQQ",  d: "Invesco QQQ Trust" },
+                                        { s: "AMEX:SPY", d: "SPDR S&P 500 ETF" },
+                                        { s: "NASDAQ:QQQ", d: "Invesco QQQ Trust" },
                                         { s: "NASDAQ:AAPL", d: "Apple Inc." },
                                         { s: "NASDAQ:MSFT", d: "Microsoft Corp." },
                                         { s: "NASDAQ:NVDA", d: "NVIDIA Corp." },
                                         { s: "NASDAQ:TSLA", d: "Tesla Inc." },
                                         { s: "NASDAQ:AMZN", d: "Amazon.com" },
                                         { s: "NASDAQ:META", d: "Meta Platforms" },
-                                        { s: "NASDAQ:GOOGL",d: "Alphabet Inc." },
-                                        { s: "NYSE:BRK.B",  d: "Berkshire Hathaway" },
+                                        { s: "NASDAQ:GOOGL", d: "Alphabet Inc." },
+                                        { s: "NYSE:BRK.B", d: "Berkshire Hathaway" },
                                     ],
                                 },
                                 {
@@ -109,16 +109,16 @@ export default function Mercado() {
                                     symbols: [
                                         // ── Granos / Oleaginosas ──
                                         { s: "CAPITALCOM:SOYBEAN", d: "🌱 Soja" },
-                                        { s: "CAPITALCOM:CORN",    d: "🌽 Maíz" },
-                                        { s: "CAPITALCOM:WHEAT",   d: "🌾 Trigo" },
+                                        { s: "CAPITALCOM:CORN", d: "🌽 Maíz" },
+                                        { s: "CAPITALCOM:WHEAT", d: "🌾 Trigo" },
                                         // ── Energía ──
-                                        { s: "TVC:USOIL",          d: "🛢 Petróleo WTI" },
-                                        { s: "TVC:UKOIL",          d: "🛢 Petróleo Brent" },
+                                        { s: "TVC:USOIL", d: "🛢 Petróleo WTI" },
+                                        { s: "TVC:UKOIL", d: "🛢 Petróleo Brent" },
                                         { s: "CAPITALCOM:NATURALGAS", d: "⚡ Gas Natural" },
                                         // ── Metales ──
-                                        { s: "OANDA:XAUUSD",       d: "🥇 Oro" },
-                                        { s: "OANDA:XAGUSD",       d: "🥈 Plata" },
-                                        { s: "OANDA:XCUUSD",       d: "🔶 Cobre" },
+                                        { s: "OANDA:XAUUSD", d: "🥇 Oro" },
+                                        { s: "OANDA:XAGUSD", d: "🥈 Plata" },
+                                        { s: "OANDA:XCUUSD", d: "🔶 Cobre" },
                                     ],
                                 },
                                 {
@@ -130,9 +130,9 @@ export default function Mercado() {
                                         { s: "BINANCE:BNBUSDT", d: "BNB" },
                                         { s: "BINANCE:ADAUSDT", d: "Cardano" },
                                         { s: "BINANCE:XRPUSDT", d: "Ripple" },
-                                        { s: "BINANCE:DOGEUSDT",d: "Dogecoin" },
-                                        { s: "BINANCE:AVAXUSDT",d: "Avalanche" },
-                                        { s: "BINANCE:LINKUSDT",d: "Chainlink" },
+                                        { s: "BINANCE:DOGEUSDT", d: "Dogecoin" },
+                                        { s: "BINANCE:AVAXUSDT", d: "Avalanche" },
+                                        { s: "BINANCE:LINKUSDT", d: "Chainlink" },
                                         { s: "BINANCE:DOTUSDT", d: "Polkadot" },
                                     ]
                                 },

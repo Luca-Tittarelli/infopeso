@@ -113,7 +113,7 @@ export async function fetchFinancialNews() {
 
     const filtered = raw
         .filter(item => isFinancialNews(item.title) && isRecent(item.pubDate))
-        .slice(0, 8)
+        .slice(0, 12)
         .map(item => ({
             id: item.link,
             title: item.title,

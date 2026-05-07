@@ -1,43 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { useFundamentals } from '../hooks/useFundamentals';
-import { CompanyFundamentalsCard } from '../components/cards/CompanyFundamentalsCard';
 import { useTheme } from '../hooks/useTheme';
+import { TechnicalAnalysis, MiniChart, CompanyProfile, FundamentalData, Timeline, SymbolInfo } from 'react-ts-tradingview-widgets';
 
 const CATEGORIES = [
     {
         name: 'Argentina',
         companies: [
-            { symbol: 'GGAL.BA',  name: 'Galicia' },
-            { symbol: 'YPFD.BA',  name: 'YPF' },
-            { symbol: 'PAMP.BA',  name: 'Pampa Energía' },
-            { symbol: 'BMA.BA',   name: 'Banco Macro' },
-            { symbol: 'BBAR.BA',  name: 'BBVA' },
-            { symbol: 'CEPU.BA',  name: 'Central Puerto' },
-            { symbol: 'LOMA.BA',  name: 'Loma Negra' },
-            { symbol: 'CRES.BA',  name: 'Cresud' },
-            { symbol: 'IRSA.BA',  name: 'IRSA' },
-            { symbol: 'TGSU2.BA', name: 'TGS' },
-            { symbol: 'ALUA.BA',  name: 'Aluar' },
-            { symbol: 'TXAR.BA',  name: 'Ternium' },
+            { symbol: 'GGAL.BA',  name: 'Galicia', tvSymbol: 'BCBA:GGAL' },
+            { symbol: 'YPFD.BA',  name: 'YPF', tvSymbol: 'BCBA:YPFD' },
+            { symbol: 'PAMP.BA',  name: 'Pampa Energía', tvSymbol: 'BCBA:PAMP' },
+            { symbol: 'BMA.BA',   name: 'Banco Macro', tvSymbol: 'BCBA:BMA' },
+            { symbol: 'BBAR.BA',  name: 'BBVA', tvSymbol: 'BCBA:BBAR' },
+            { symbol: 'CEPU.BA',  name: 'Central Puerto', tvSymbol: 'BCBA:CEPU' },
+            { symbol: 'LOMA.BA',  name: 'Loma Negra', tvSymbol: 'BCBA:LOMA' },
+            { symbol: 'CRES.BA',  name: 'Cresud', tvSymbol: 'BCBA:CRES' },
+            { symbol: 'IRSA.BA',  name: 'IRSA', tvSymbol: 'BCBA:IRSA' },
+            { symbol: 'TGSU2.BA', name: 'TGS', tvSymbol: 'BCBA:TGSU2' },
+            { symbol: 'ALUA.BA',  name: 'Aluar', tvSymbol: 'BCBA:ALUA' },
+            { symbol: 'TXAR.BA',  name: 'Ternium', tvSymbol: 'BCBA:TXAR' },
         ]
     },
     {
         name: 'Internacional',
         companies: [
-            { symbol: 'MELI',     name: 'Mercado Libre' },
-            { symbol: 'AAPL',     name: 'Apple' },
-            { symbol: 'MSFT',     name: 'Microsoft' },
-            { symbol: 'NVDA',     name: 'NVIDIA' },
-            { symbol: 'TSLA',     name: 'Tesla' },
-            { symbol: 'AMZN',     name: 'Amazon' },
-            { symbol: 'GOOGL',    name: 'Alphabet' },
-            { symbol: 'META',     name: 'Meta' },
-            { symbol: 'TSM',      name: 'TSMC' },
-            { symbol: 'KO',       name: 'Coca-Cola' },
-            { symbol: 'WMT',      name: 'Walmart' },
-            { symbol: 'NU',       name: 'Nubank' },
-            { symbol: 'BRK-B',    name: 'Berkshire' },
-            { symbol: 'NFLX',     name: 'Netflix' },
+            { symbol: 'MELI',     name: 'Mercado Libre', tvSymbol: 'NASDAQ:MELI' },
+            { symbol: 'AAPL',     name: 'Apple', tvSymbol: 'NASDAQ:AAPL' },
+            { symbol: 'MSFT',     name: 'Microsoft', tvSymbol: 'NASDAQ:MSFT' },
+            { symbol: 'NVDA',     name: 'NVIDIA', tvSymbol: 'NASDAQ:NVDA' },
+            { symbol: 'TSLA',     name: 'Tesla', tvSymbol: 'NASDAQ:TSLA' },
+            { symbol: 'AMZN',     name: 'Amazon', tvSymbol: 'NASDAQ:AMZN' },
+            { symbol: 'GOOGL',    name: 'Alphabet', tvSymbol: 'NASDAQ:GOOGL' },
+            { symbol: 'META',     name: 'Meta', tvSymbol: 'NASDAQ:META' },
+            { symbol: 'TSM',      name: 'TSMC', tvSymbol: 'NYSE:TSM' },
+            { symbol: 'KO',       name: 'Coca-Cola', tvSymbol: 'NYSE:KO' },
+            { symbol: 'WMT',      name: 'Walmart', tvSymbol: 'NYSE:WMT' },
+            { symbol: 'NU',       name: 'Nubank', tvSymbol: 'NYSE:NU' },
+            { symbol: 'BRK-B',    name: 'Berkshire', tvSymbol: 'NYSE:BRK.B' },
+            { symbol: 'NFLX',     name: 'Netflix', tvSymbol: 'NASDAQ:NFLX' },
         ]
     }
 ];
@@ -46,7 +45,8 @@ export default function Empresas() {
     const [theme] = useTheme();
     const [selectedSymbol, setSelectedSymbol] = useState(CATEGORIES[0].companies[0].symbol);
     
-    const { data, status } = useFundamentals(selectedSymbol);
+    const selectedCompany = [...CATEGORIES[0].companies, ...CATEGORIES[1].companies].find(c => c.symbol === selectedSymbol);
+    const tvSymbol = selectedCompany?.tvSymbol;
 
     useEffect(() => {
         if (selectedSymbol) {
@@ -71,97 +71,102 @@ export default function Empresas() {
                     </p>
                     <h1 className="text-3xl sm:text-4xl leading-tight"
                         style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-                        Empresas y Ratios
+                        Terminal de Empresas
                     </h1>
-                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
-                        Métricas clave para inversores de valor y análisis corporativo.
-                    </p>
                 </div>
             </div>
 
             <section className="px-5 sm:px-8 py-8">
-                <div className="max-w-[1200px] mx-auto space-y-10">
+                <div className="max-w-[1200px] mx-auto space-y-8">
                     
-                    {/* Selector por Categorías */}
-                    <div className="space-y-6">
-                        {CATEGORIES.map((category) => (
-                            <div key={category.name} className="space-y-3">
-                                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--text-tertiary)' }}>
-                                    {category.name}
-                                </h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {category.companies.map((company) => (
-                                        <button
-                                            key={company.symbol}
-                                            onClick={() => setSelectedSymbol(company.symbol)}
-                                            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border ${
-                                                selectedSymbol === company.symbol 
-                                                ? 'bg-[var(--accent-soft)] border-[var(--accent)] text-[var(--accent)]' 
-                                                : 'bg-[var(--bg-surface)] border-[var(--border-subtle)] text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)]'
-                                            }`}
-                                        >
-                                            {company.name}
-                                        </button>
-                                    ))}
+                    {/* Selector de Activos Estilizado */}
+                    <div className="p-5 rounded-[24px]" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
+                        <div className="flex flex-col md:flex-row gap-6">
+                            {CATEGORIES.map((category) => (
+                                <div key={category.name} className="flex-1 space-y-3">
+                                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--text-tertiary)' }}>
+                                        {category.name}
+                                    </h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {category.companies.map((company) => (
+                                            <button
+                                                key={company.symbol}
+                                                onClick={() => setSelectedSymbol(company.symbol)}
+                                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 border ${
+                                                    selectedSymbol === company.symbol 
+                                                    ? 'bg-[var(--accent)] text-[white] shadow-md shadow-[var(--accent)]/20 scale-105 border-[var(--accent)]' 
+                                                    : 'bg-transparent border-[var(--border-subtle)] text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)]'
+                                                }`}
+                                            >
+                                                {company.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Bento Grid Layout */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                        
+                        {/* Top Header Row - Symbol Info */}
+                        <div className="col-span-1 lg:col-span-12 rounded-[24px] overflow-hidden" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
+                            <SymbolInfo symbol={tvSymbol} colorTheme={theme} width="100%" locale="es" isTransparent />
+                        </div>
+
+                        {/* Left Column (Main Data) */}
+                        <div className="col-span-1 lg:col-span-8 flex flex-col gap-5">
+                            
+                            {/* Company Profile */}
+                            <div className="rounded-[24px] overflow-hidden p-2 transition-all hover:shadow-md" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
+                                <div className="h-[300px] w-full">
+                                    <CompanyProfile symbol={tvSymbol} colorTheme={theme} width="100%" height="100%" locale="es" isTransparent />
                                 </div>
                             </div>
-                        ))}
-                    </div>
 
-                    {/* Main Content Area */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                        
-                        {/* Fundamentals Card */}
-                        <div className="lg:col-span-8">
-                            <CompanyFundamentalsCard data={data} status={status} />
+                            {/* Fundamental Data Tabular */}
+                            <div className="rounded-[24px] overflow-hidden p-2 transition-all hover:shadow-md" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
+                                <div className="h-[450px] w-full">
+                                    <FundamentalData symbol={tvSymbol} colorTheme={theme} width="100%" height="100%" locale="es" isTransparent displayMode="compact" />
+                                </div>
+                            </div>
+
                         </div>
 
-                        {/* Side Stats / Info */}
-                        <div className="lg:col-span-4 space-y-4">
-                            <div className="p-5 rounded-2xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                                <h4 className="text-sm font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Análisis de {data?.assetProfile?.longName}</h4>
-                                <p className="text-[11px] leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
-                                    Esta empresa pertenece al sector de <strong>{data?.assetProfile?.sector}</strong>. 
-                                    Su capitalización de mercado de <strong>{data?.summaryDetail?.marketCap?.fmt}</strong> la posiciona como un jugador relevante en su industria.
-                                </p>
-                            </div>
+                        {/* Right Column (Insights & Side Data) */}
+                        <div className="col-span-1 lg:col-span-4 flex flex-col gap-5">
                             
-                            <div className="p-5 rounded-2xl" style={{ background: 'var(--accent-soft)', border: '1px solid var(--accent)' }}>
-                                <p className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--accent)' }}>Sugerencia de Inversión</p>
-                                <p className="text-[11px]" style={{ color: 'var(--text-primary)' }}>
-                                    Compara el <strong>P/E Ratio</strong> con el promedio de su sector para determinar si la acción está sobrevaluada o subvaluada.
-                                </p>
+                            {/* Technical Analysis Gauge */}
+                            <div className="rounded-[24px] overflow-hidden p-2" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
+                                <h4 className="text-[10px] font-bold uppercase tracking-wider mb-2 ml-3 mt-2 opacity-50" style={{ color: 'var(--text-primary)' }}>Sentimiento Técnico</h4>
+                                <div className="h-[380px] w-full">
+                                    <TechnicalAnalysis symbol={tvSymbol} colorTheme={theme} width="100%" height="100%" locale="es" isTransparent />
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    {/* Dictionary Section */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
-                        <div className="space-y-2">
-                            <h3 className="text-xs font-bold" style={{ color: 'var(--text-primary)' }}>ROE (Return on Equity)</h3>
-                            <p className="text-[11px] leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
-                                Mide la rentabilidad de la empresa en relación con el patrimonio neto. Indica qué tan eficiente es la gerencia para generar ganancias con el dinero de los accionistas.
-                            </p>
+                            {/* Mini Chart */}
+                            <div className="rounded-[24px] overflow-hidden p-4" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
+                                <h4 className="text-[10px] font-bold uppercase tracking-wider mb-3 opacity-50" style={{ color: 'var(--text-primary)' }}>Rendimiento Reciente</h4>
+                                <div className="h-[150px] w-full">
+                                    <MiniChart symbol={tvSymbol} colorTheme={theme} width="100%" height="100%" locale="es" isTransparent />
+                                </div>
+                            </div>
+
+                            {/* News Timeline Widget */}
+                            <div className="rounded-[24px] overflow-hidden flex-1" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', minHeight: '350px' }}>
+                                <h4 className="text-[10px] font-bold uppercase tracking-wider mb-0 p-4 pb-0 opacity-50" style={{ color: 'var(--text-primary)' }}>Noticias de la Empresa</h4>
+                                <Timeline feedMode="symbol" symbol={tvSymbol} colorTheme={theme} width="100%" height="100%" locale="es" isTransparent />
+                            </div>
+
                         </div>
-                        <div className="space-y-2">
-                            <h3 className="text-xs font-bold" style={{ color: 'var(--text-primary)' }}>Beta (5Y Monthly)</h3>
-                            <p className="text-[11px] leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
-                                Indica la volatilidad de la acción frente al mercado. Un beta mayor a 1 significa que la acción es más volátil que el promedio.
-                            </p>
-                        </div>
-                        <div className="space-y-2">
-                            <h3 className="text-xs font-bold" style={{ color: 'var(--text-primary)' }}>Profit Margin</h3>
-                            <p className="text-[11px] leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
-                                El porcentaje de ingresos que se convierte en ganancia neta después de todos los gastos. Es vital para medir la eficiencia operativa.
-                            </p>
-                        </div>
+
                     </div>
 
                     {/* Disclaimer */}
                     <p className="text-[10px] text-center pt-8 opacity-50" style={{ color: 'var(--text-tertiary)' }}>
-                        Datos obtenidos de registros públicos y consolidados localmente. 
-                        Debido a restricciones técnicas en tiempo real, los fundamentos se actualizan de forma periódica.
-                        Infopeso no brinda asesoría financiera.
+                        Datos en tiempo real y gratuitos provistos exclusivamente por la tecnología de TradingView.
+                        Infopeso no brinda asesoría financiera. Todo análisis es meramente educativo.
                     </p>
                 </div>
             </section>

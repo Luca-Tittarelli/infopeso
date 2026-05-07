@@ -1,7 +1,25 @@
 import React from 'react';
 
 /**
- * A dense, premium card to display company fundamentals.
+ * Formats large numbers (e.g., 1200000 -> 1.2M)
+ */
+const formatLargeNumber = (num) => {
+    if (!num || isNaN(num)) return '—';
+    const formatter = new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+        compactDisplay: 'short',
+        maximumFractionDigits: 1
+    });
+    return formatter.format(num);
+};
+
+const formatPercent = (num) => {
+    if (num === undefined || num === null || isNaN(num)) return '—';
+    return (num * 100).toFixed(2) + '%';
+};
+
+/**
+ * A dense, premium card to display company fundamentals using FMP data.
  */
 export function CompanyFundamentalsCard({ data, status }) {
     if (status === 'loading') {
@@ -25,17 +43,17 @@ export function CompanyFundamentalsCard({ data, status }) {
         );
     }
 
-    const { assetProfile, summaryDetail, financialData, defaultKeyStatistics } = data;
+    const { profile, metrics } = data;
 
     const stats = [
-        { label: 'Market Cap', value: summaryDetail?.marketCap?.fmt || '—' },
-        { label: 'P/E Ratio', value: summaryDetail?.trailingPE?.fmt || '—' },
-        { label: 'Div. Yield', value: summaryDetail?.dividendYield?.fmt || '—' },
-        { label: 'Beta (5Y)', value: summaryDetail?.beta?.fmt || '—' },
-        { label: 'Revenue', value: financialData?.totalRevenue?.fmt || '—' },
-        { label: 'Profit Margin', value: financialData?.profitMargins?.fmt || '—' },
-        { label: 'ROE', value: financialData?.returnOnEquity?.fmt || '—' },
-        { label: 'EPS (TTM)', value: defaultKeyStatistics?.trailingEps?.fmt || '—' },
+        { label: 'Market Cap', value: formatLargeNumber(profile?.mktCap) },
+        { label: 'P/E Ratio', value: metrics?.peRatioTTM?.toFixed(2) || '—' },
+        { label: 'Div. Yield', value: formatPercent(metrics?.dividendYieldTTM) },
+        { label: 'Beta (5Y)', value: profile?.beta?.toFixed(2) || '—' },
+        { label: 'Price/Sales', value: metrics?.priceToSalesRatioTTM?.toFixed(2) || '—' },
+        { label: 'ROE', value: formatPercent(metrics?.roeTTM) },
+        { label: 'Profit Margin', value: formatPercent(metrics?.netProfitMarginTTM) },
+        { label: 'EPS (TTM)', value: metrics?.netIncomePerShareTTM?.toFixed(2) || '—' },
     ];
 
     return (
@@ -53,14 +71,17 @@ export function CompanyFundamentalsCard({ data, status }) {
             <div className="flex flex-col gap-1 relative z-10">
                 <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--accent)' }}>
-                        {assetProfile?.sector || 'Sector'} · {assetProfile?.industry || 'Industria'}
+                        {profile?.sector || 'Sector'} · {profile?.industry || 'Industria'}
                     </span>
+                    {profile?.image && (
+                        <img src={profile.image} alt={profile.companyName} className="w-8 h-8 rounded-lg object-contain bg-white p-1" />
+                    )}
                 </div>
                 <h2 className="text-2xl leading-tight" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-                    {assetProfile?.longName || 'Empresa'}
+                    {profile?.companyName || 'Empresa'}
                 </h2>
-                <p className="text-xs line-clamp-2 mt-1" style={{ color: 'var(--text-tertiary)' }}>
-                    {assetProfile?.longBusinessSummary}
+                <p className="text-xs line-clamp-3 mt-1" style={{ color: 'var(--text-tertiary)' }}>
+                    {profile?.description}
                 </p>
             </div>
 
@@ -87,13 +108,14 @@ export function CompanyFundamentalsCard({ data, status }) {
                 <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--positive)' }}></div>
                     <span className="text-[10px] font-medium" style={{ color: 'var(--text-tertiary)' }}>
-                        {assetProfile?.city}, {assetProfile?.country}
+                        {profile?.city}, {profile?.country} {profile?.exchangeShortName && `· ${profile.exchangeShortName}`}
                     </span>
                 </div>
                 <span className="text-[10px] font-semibold" style={{ color: 'var(--text-tertiary)' }}>
-                    Fuente: Yahoo Finance
+                    Fuente: Financial Modeling Prep
                 </span>
             </div>
         </article>
     );
 }
+
