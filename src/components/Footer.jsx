@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export function Footer() {
     const currentYear = new Date().getFullYear();
     return (
@@ -107,7 +109,16 @@ export function Footer() {
             >
                 <div className="max-w-[1200px] mx-auto px-5 sm:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs"
                     style={{ color: 'var(--text-tertiary)' }}>
-                    <p>© {currentYear} Infopeso. Todos los derechos reservados.</p>
+                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                        <p>© {currentYear} Infopeso. Todos los derechos reservados.</p>
+                        <div className="flex gap-3">
+                            <Link href="/privacidad" className="hover:underline">Privacidad</Link>
+                            <span>·</span>
+                            <Link href="/terminos" className="hover:underline">Términos</Link>
+                            <span>·</span>
+                            <Link href="/contacto" className="hover:underline">Contacto</Link>
+                        </div>
+                    </div>
                     <p className="text-center sm:text-right max-w-sm">
                         El contenido de esta página es exclusivamente informativo y no constituye asesoramiento financiero.
                     </p>

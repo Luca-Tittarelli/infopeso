@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { MarketOverview } from "react-ts-tradingview-widgets";
 import { useTheme } from '@/hooks/useTheme';
 import { BOND_DATA, calculateBondMetrics } from '@/utils/bondCalculator';
+import Link from 'next/link';
 
 export default function RentaFijaClient() {
     const [theme] = useTheme();
@@ -192,6 +193,17 @@ export default function RentaFijaClient() {
                                     >
                                         {price ? `${metrics.paridad}%` : '--'}
                                     </p>
+                                </div>
+                            </div>
+
+                            <div className="mt-6 pt-6 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
+                                <p className="text-xs font-semibold mb-2" style={{ color: 'var(--text-tertiary)' }}>Calculadoras de Bonos:</p>
+                                <div className="flex gap-2.5 flex-wrap">
+                                    <Link href="/RentaFija/AL30" className="text-xs hover:underline" style={{ color: 'var(--accent)' }}>Ficha AL30</Link>
+                                    <span style={{ color: 'var(--border-strong)' }}>·</span>
+                                    <Link href="/RentaFija/GD30" className="text-xs hover:underline" style={{ color: 'var(--accent)' }}>Ficha GD30</Link>
+                                    <span style={{ color: 'var(--border-strong)' }}>·</span>
+                                    <Link href="/RentaFija/AL29" className="text-xs hover:underline" style={{ color: 'var(--accent)' }}>Ficha AL29</Link>
                                 </div>
                             </div>
 

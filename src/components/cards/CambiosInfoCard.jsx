@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DifferenceIcon from "../../utils/DifferenceIcons";
 import LineChart from "../../charts/ChartLine";
 import { filtrarUltimaSemana, getTimeDifference } from "../../utils/functions";
+import Link from "next/link";
 
 function PillToggle({ options, selected, onChange }) {
     return (
@@ -21,7 +22,7 @@ function PillToggle({ options, selected, onChange }) {
     );
 }
 
-export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart }) {
+export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart, linkTo }) {
     const [difference, setDifference] = useState(0);
     const [duration, setDuration]     = useState("week");
     const [chartData, setChartData]   = useState([]);
@@ -81,7 +82,11 @@ export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart 
             <div className="flex items-center justify-between gap-2">
                 <h3 className="text-sm font-semibold truncate"
                     style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
-                    {titulo}
+                    {linkTo ? (
+                        <Link href={linkTo} className="hover:underline" style={{ color: 'var(--accent)' }}>
+                            {titulo}
+                        </Link>
+                    ) : titulo}
                 </h3>
                 {showChart && (
                     <PillToggle

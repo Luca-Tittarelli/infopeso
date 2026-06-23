@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { fetchData } from "../utils/Fetch";
 import { PBIApi, PBIGrowthApi, PBIIndustryApi, PBIAgricultureApi, PBIServicesApi, PBIManufacturingApi } from "../apis";
 
-export function usePBI() {
-    const [pbiData, setPbiData] = useState([]);
-    const [status, setStatus] = useState('loading');
+export function usePBI(initialData = null) {
+    const [pbiData, setPbiData] = useState(initialData || []);
+    const [status, setStatus] = useState(initialData && initialData.length > 0 ? 'success' : 'loading');
 
     useEffect(() => {
+        if (initialData && initialData.length > 0) return;
         const fetchPBI = async () => {
             try {
                 setStatus('loading');

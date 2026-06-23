@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { fetchData } from "../utils/Fetch";
 import { macroAPI, RiesgoPaisAPI } from "../apis";
 
-export function useMacro(){
-    const [response, setResponse] = useState([]);
-    const [status, setStatus] = useState('loading');
+export function useMacro(initialData = null){
+    const [response, setResponse] = useState(initialData || []);
+    const [status, setStatus] = useState(initialData && initialData.length > 0 ? 'success' : 'loading');
     
     useEffect(() => {
+        if (initialData && initialData.length > 0) return;
         const fetching = async () => {
             const macroData = await fetchData(macroAPI);
             const riesgoPaisData = await fetchData(RiesgoPaisAPI);
@@ -34,7 +35,7 @@ export function useMacro(){
             setStatus(macroData.status);
         };
         fetching();
-    }, []);
+    }, [initialData]);
     return{
         variables: response,
         variablesStatus: status

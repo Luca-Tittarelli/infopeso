@@ -9,22 +9,23 @@ import { ErrorComponent } from "@/components/Error";
 import { filtrarUltimoMes } from "@/utils/functions";
 import { useDolar } from "@/hooks/useDolar";
 
-export default function CambiosClient() {
-    const { dolar, dolarStatus, cotizaciones, cotizacionesStatus } = useDolar();
-    const [others, setOthers] = useState(null);
-    const [othersStatus, setOthersStatus] = useState('loading');
+export default function CambiosClient({ initialDolar, initialOthers, initialCotizaciones }) {
+    const { dolar, dolarStatus, cotizaciones, cotizacionesStatus } = useDolar({ dolar: initialDolar, cotizaciones: initialCotizaciones });
+    const [others, setOthers] = useState(initialOthers);
+    const [othersStatus, setOthersStatus] = useState(initialOthers ? 'success' : 'loading');
 
     const filtrarPorCasa = (data, casa) =>
         data.filter(c => c.casa === casa);
 
     useEffect(() => {
+        if (initialOthers) return;
         const fetching = async () => {
             const res = await fetchData(cotizacionesAPI);
             setOthers(res.data);
             setOthersStatus(res.status);
         };
         fetching();
-    }, []);
+    }, [initialOthers]);
 
     return (
         <main className="min-h-screen pt-14 pb-16 md:pb-12">
@@ -68,28 +69,34 @@ export default function CambiosClient() {
                         >
                             {dolar
                                 .filter(item => item.casa !== 'mayorista')
-                                .map((item, key) => (
-                                    <div
-                                        key={key}
-                                        className="stagger-item"
-                                        style={{ animationDelay: `${key * 55}ms` }}
-                                    >
-                                        <ChangesCard
-                                            titulo={item.nombre}
-                                            compra={item.compra}
-                                            venta={item.venta}
-                                            fecha={item.fechaActualizacion}
-                                            chart={{ type: 'line', duration: 'month' }}
-                                            cotizaciones={{
-                                                status: cotizacionesStatus,
-                                                data: filtrarPorCasa(
-                                                    filtrarUltimoMes(cotizaciones),
-                                                    item.casa
-                                                ),
-                                            }}
-                                        />
-                                    </div>
-                                ))}
+                                .map((item, key) => {
+                                    const pathId = ['blue', 'oficial', 'mep', 'ccl', 'tarjeta'].includes(item.casa)
+                                        ? `dolar-${item.casa}`
+                                        : item.casa;
+                                    return (
+                                        <div
+                                            key={key}
+                                            className="stagger-item"
+                                            style={{ animationDelay: `${key * 55}ms` }}
+                                        >
+                                            <ChangesCard
+                                                titulo={item.nombre}
+                                                compra={item.compra}
+                                                venta={item.venta}
+                                                fecha={item.fechaActualizacion}
+                                                chart={{ type: 'line', duration: 'month' }}
+                                                linkTo={`/Cambios/${pathId}`}
+                                                cotizaciones={{
+                                                    status: cotizacionesStatus,
+                                                    data: filtrarPorCasa(
+                                                        filtrarUltimoMes(cotizaciones),
+                                                        item.casa
+                                                    ),
+                                                }}
+                                            />
+                                        </div>
+                                    );
+                                })}
                         </div>
                     )}
 
@@ -123,6 +130,7 @@ export default function CambiosClient() {
                                             venta={item.venta.toFixed(1)}
                                             fecha={item.fechaActualizacion}
                                             chart={false}
+                                            linkTo={`/Cambios/${item.casa}`}
                                         />
                                     </div>
                                 ))}

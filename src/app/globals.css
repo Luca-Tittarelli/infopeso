@@ -2,9 +2,9 @@
 
 /* ─── Font Tokens ────────────────────────────────────────────── */
 :root {
-  --font-mono:    'DM Mono', 'Courier New', monospace;
-  --font-display: 'Instrument Serif', Georgia, serif;
-  --font-ui:      'Inter', system-ui, sans-serif;
+  --font-mono:    var(--font-mono), 'Courier New', monospace;
+  --font-display: var(--font-display), Georgia, serif;
+  --font-ui:      var(--font-ui), system-ui, sans-serif;
 }
 
 /* ─── Color Tokens — Light ───────────────────────────────────── */

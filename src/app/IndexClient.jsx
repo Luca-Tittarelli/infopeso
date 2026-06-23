@@ -236,14 +236,14 @@ function LoadingDenseRow() {
     );
 }
 
-export default function IndexClient() {
+export default function IndexClient({ initialDolar, initialVariables }) {
     const [theme] = useTheme();
     const [lastMacro, setLastMacro] = useState([]);
     const [lastDolar, setLastDolar] = useState([]);
     const [isHistoricalMacroLoading, setIsHistoricalMacroLoading] = useState(true);
     const [isHistoricalDolarLoading, setIsHistoricalDolarLoading] = useState(true);
-    const { dolar, dolarStatus } = useDolar();
-    const { variables, variablesStatus } = useMacro();
+    const { dolar, dolarStatus } = useDolar(initialDolar);
+    const { variables, variablesStatus } = useMacro(initialVariables);
 
     const filter = (ids, arr) => arr?.filter(item => ids.includes(item.idVariable)) || [];
 

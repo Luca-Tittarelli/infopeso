@@ -19,9 +19,9 @@ const TABS = [
     { key: 'otrosIndices',       label: 'Otros índices',     chart: { type: 'line', duration: 'month' } },
 ];
 
-export default function EconomiaClient() {
-    const { variables, variablesStatus } = useMacro();
-    const { pbiData, pbiStatus } = usePBI();
+export default function EconomiaClient({ initialVariables, initialPBI }) {
+    const { variables, variablesStatus } = useMacro(initialVariables);
+    const { pbiData, pbiStatus } = usePBI(initialPBI);
     const [activeTab, setActiveTab] = useState('pbi');
 
     const filter = (categorie) =>

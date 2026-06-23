@@ -116,6 +116,16 @@ export function MacroListRow({ titulo, valor, desc, fecha, id, chart: { duration
                             {titulo}
                         </h2>
                         {showSourceBadge && <SourceBadge id={id} />}
+                        {!historyData && (
+                            <Link 
+                                href={`/Economia/${id}`} 
+                                className="text-[10px] font-semibold hover:underline ml-2 flex-shrink-0" 
+                                style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                Ver Ficha &rarr;
+                            </Link>
+                        )}
                     </div>
                     {desc && (
                         <p className="text-xs truncate" style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>

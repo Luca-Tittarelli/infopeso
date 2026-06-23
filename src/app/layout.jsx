@@ -2,6 +2,29 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import Header from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Inter, DM_Mono, Instrument_Serif } from "next/font/google";
+import Script from "next/script";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-ui",
+  display: "swap",
+});
+
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata = {
   metadataBase: new URL("https://infopeso.com"),
@@ -11,6 +34,9 @@ export const metadata = {
   },
   description:
     "Infopeso: datos económicos y cotizaciones de Argentina en tiempo real. Dólar Blue, Riesgo País, Inflación, Reservas BCRA y más.",
+  icons: {
+    icon: "/favicon.ico",
+  },
   keywords: [
     "Infopeso",
     "datos económicos",
@@ -69,26 +95,19 @@ const websiteSchema = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" className={`${inter.variable} ${dmMono.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
       <head>
-        {/* Google Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
-        />
-        {/* Ahrefs Analytics */}
-        <script
+        {/* Ahrefs Analytics (Optimized using next/script) */}
+        <Script
           src="https://analytics.ahrefs.com/analytics.js"
           data-key="dyUorFBLMLqDr0dtEh9Klg"
-          async
+          strategy="afterInteractive"
         />
-        {/* Google AdSense */}
-        <script
-          async
+        {/* Google AdSense (Optimized using next/script) */}
+        <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4776852547323922"
           crossOrigin="anonymous"
+          strategy="lazyOnload"
         />
         {/* JSON-LD global */}
         <script
@@ -100,7 +119,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Header />
         <main>{children}</main>
         <Footer />
