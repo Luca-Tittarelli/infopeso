@@ -1,6 +1,6 @@
 export const variablesMetadata = {
   'riesgo-pais': {
-    title: "Riesgo País Argentina Hoy: Evolución y Valor Histórico — Infopeso",
+    title: "Riesgo País Argentina Hoy: Evolución y Valor Histórico",
     description: "Consulta el valor actual y la evolución histórica del Riesgo País de Argentina (EMBI+ de JP Morgan). Gráfico interactivo y análisis económico en tiempo real.",
     definition: "El Riesgo País de Argentina es medido a través del índice EMBI+ (Emerging Markets Bond Index Plus), el cual es elaborado diariamente por el banco de inversión estadounidense JP Morgan. Este indicador calcula la diferencia o brecha de tasas de interés que pagan los bonos soberanos emitidos por la República Argentina en comparación con los bonos del Tesoro de los Estados Unidos (considerados el estándar libre de riesgo en las finanzas globales).",
     importance: "Un Riesgo País elevado indica una mayor desconfianza de los mercados internacionales sobre la solvencia fiscal de la República Argentina y su capacidad para cumplir con los compromisos de deuda externa. Este índice encarece directamente el costo del financiamiento para el Estado nacional y para las empresas privadas locales, lo que restringe el crédito corporativo, reduce la inversión en infraestructura y presiona el mercado de cambios.",
@@ -22,7 +22,7 @@ export const variablesMetadata = {
     }
   },
   '27': {
-    title: "Inflación Mensual en Argentina INDEC Hoy — Infopeso",
+    title: "Inflación Mensual en Argentina INDEC Hoy",
     description: "Consulta los últimos datos de inflación en Argentina (IPC) publicados oficialmente por el INDEC. Gráfico con serie histórica y evolución mensual de precios.",
     definition: "La inflación es el aumento generalizado y sostenido de los precios de los bienes y servicios en una economía durante un período de tiempo, lo que reduce el valor adquisitivo de la moneda local. En la República Argentina, la inflación oficial es calculada mensualmente por el Instituto Nacional de Estadística y Censos (INDEC) a través del Índice de Precios al Consumidor (IPC).",
     importance: "La inflación en pesos erosiona el poder de compra de los salarios, jubilaciones y ahorros de la población argentina. Monitorear su tasa mensual es fundamental para las paritarias laborales, la indexación de contratos de alquiler y deudas, y para comprender las decisiones de política monetaria del Banco Central de la República Argentina (BCRA), tales como el ajuste de las tasas de interés de referencia.",
@@ -44,7 +44,7 @@ export const variablesMetadata = {
     }
   },
   '1': {
-    title: "Reservas Internacionales del BCRA Hoy — Infopeso",
+    title: "Reservas Internacionales del BCRA Hoy",
     description: "Valor actualizado de las Reservas Internacionales en dólares del Banco Central de la República Argentina (BCRA). Gráfico de evolución diaria.",
     definition: "Las Reservas Internacionales de la República Argentina son el conjunto de activos financieros en moneda extranjera (dólares estadounidenses, oro, yuanes de swaps bilaterales y Derechos Especiales de Giro del FMI) que posee y administra el Banco Central de la República Argentina (BCRA) para respaldar la moneda nacional y garantizar la liquidez externa del país.",
     importance: "El nivel de reservas del BCRA es un termómetro clave de la solvencia cambiaria de Argentina. Reservas robustas permiten al Banco Central amortiguar corridas cambiarias, intervenir en los mercados financieros, respaldar las importaciones necesarias para la producción industrial local y cumplir en tiempo y forma con los pagos de capital e intereses de la deuda externa soberana.",
@@ -66,7 +66,7 @@ export const variablesMetadata = {
     }
   },
   '15': {
-    title: "Base Monetaria del BCRA: Evolución y Monto Hoy — Infopeso",
+    title: "Base Monetaria del BCRA: Evolución y Monto Hoy",
     description: "Consulta el monto actual y evolución de la Base Monetaria en pesos de Argentina. Gráfico de emisión monetaria y agregados económicos del BCRA.",
     definition: "La Base Monetaria (BM) representa la cantidad total de dinero de curso legal emitida directamente por el Banco Central de la República Argentina (BCRA). Se define técnicamente como la suma del dinero en circulación (billetes y monedas en manos del público y en las cajas de los bancos comerciales) y los depósitos en cuenta corriente de las entidades financieras constituidos en el BCRA.",
     importance: "El tamaño y ritmo de crecimiento de la base monetaria son indicadores centrales de la política de emisión y de las presiones inflacionarias potenciales. Una expansión de la base monetaria sin respaldo en la demanda de dinero real suele traducirse en una depreciación del peso argentino y en un alza en el nivel general de precios al consumidor.",
@@ -88,8 +88,8 @@ export const variablesMetadata = {
     }
   },
   '160': {
-    title: "Tasa de Política Monetaria BCRA Hoy — Infopeso",
-    description: "Consulta la tasa de interés de referencia del Banco Central (BCRA) en Argentina. Gráfico de evolución de tasas y rendimiento de política monetaria.",
+    title: "Tasa de Política Monetaria BCRA: serie histórica hasta julio 2025",
+    description: "Serie histórica de la tasa de política monetaria del BCRA, discontinuada el 10/07/2025 (la referencia actual es la TAMAR). Gráfico de evolución de tasas y rendimiento de política monetaria.",
     definition: "La Tasa de Política Monetaria es la tasa de interés de referencia fijada por el Directorio del Banco Central de la República Argentina (BCRA) para regular las condiciones de liquidez de la economía. Es el interés que el BCRA paga o cobra a las entidades financieras por el uso de instrumentos de absorción o inyección de pesos (como pases pasivos).",
     importance: "Esta tasa determina directamente el costo del crédito y el rendimiento de los depósitos en pesos argentinos. El BCRA la utiliza de forma estratégica: elevar la tasa busca incentivar las colocaciones en pesos (plazos fijos) para contener la demanda de dólares y reducir la inflación; bajar la tasa busca reactivar el crédito y dinamizar la economía abaratando el costo financiero de empresas y familias.",
     faqs: [
@@ -109,30 +109,26 @@ export const variablesMetadata = {
       distributionUrl: "https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias"
     }
   },
-  '6': {
-    title: "Tasa de Política Monetaria BCRA Hoy — Infopeso",
-    description: "Consulta la tasa de interés de referencia del Banco Central (BCRA) en Argentina. Gráfico de evolución de tasas y rendimiento de política monetaria.",
-    definition: "La Tasa de Política Monetaria es la tasa de interés de referencia fijada por el Directorio del Banco Central de la República Argentina (BCRA) para de regular las condiciones de liquidez de la economía. Es el interés que el BCRA paga o cobra a las entidades financieras por el uso de instrumentos de absorción o inyección de pesos (como pases pasivos).",
-    importance: "Esta tasa determina directamente el costo del crédito y el rendimiento de los depósitos en pesos argentinos. El BCRA la utiliza de forma estratégica: elevar la tasa busca incentivar las colocaciones en pesos (plazos fijos) para contener la demanda de dólares y reducir la inflación; bajar la tasa busca reactivar el crédito y dinamizar la economía abaratando el costo financiero de empresas y familias.",
+  '44': {
+    title: "Tasa TAMAR de Bancos Privados Hoy",
+    description: "Tasa TAMAR de bancos privados en Argentina: valor de hoy y evolución histórica de la tasa que pagan los plazos fijos mayoristas.",
+    definition: "La TAMAR (Tasa de Interés para Depósitos a Plazo Fijo de Montos Mayores a un Millón de Pesos) es el promedio de las tasas que pagan los bancos privados por depósitos a plazo fijo de más de un millón de pesos, entre 30 y 35 días. La publica el BCRA y desde 2025 es la referencia de tasas en pesos del mercado.",
+    importance: "Sirve de referencia para préstamos, créditos y bonos en pesos que ajustan por tasa variable, y permite comparar si un plazo fijo minorista paga por encima o por debajo del mercado mayorista.",
     faqs: [
       {
-        question: "¿Cómo impacta la Tasa de Política Monetaria en los plazos fijos de los ahorristas?",
-        answer: "Los bancos comerciales toman la tasa de política monetaria como referencia principal para establecer la tasa nominal anual (TNA) de interés que pagan a los clientes por plazos fijos minoristas en pesos. Un alza del BCRA suele provocar un incremento en la tasa de plazo fijo, y viceversa."
-      },
-      {
-        question: "¿Qué son los pasivos remunerados del Banco Central y cómo se vinculan a la tasa de referencia?",
-        answer: "Son los instrumentos financieros de deuda de corto plazo (como los pases pasivos) que el BCRA utiliza para absorber el excedente de pesos del sistema financiero. La tasa de política monetaria es el costo financiero que paga el BCRA por mantener inmovilizados esos fondos bancarios."
+        question: "¿Qué diferencia hay entre la TAMAR y la TNA de un plazo fijo común?",
+        answer: "La TAMAR corresponde a depósitos mayoristas de más de un millón de pesos, que suelen pagar algo más que los plazos fijos minoristas. Es un promedio de los bancos privados y se informa como tasa nominal anual."
       }
     ],
     dataset: {
-      name: "Tasa de Política Monetaria de Argentina",
-      description: "Serie histórica de la tasa de interés de referencia determinada por el BCRA para la política monetaria nacional.",
+      name: "Tasa TAMAR de bancos privados",
+      description: "Serie histórica de la tasa TAMAR de bancos privados publicada por el BCRA.",
       variableMeasured: "Tasa de Interés Nominal Anual (%)",
       distributionUrl: "https://api.bcra.gob.ar/estadisticas/v4.0/Monetarias"
     }
   },
-  '32': {
-    title: "Coeficiente de Estabilización de Referencia (CER) Hoy — Infopeso",
+  '30': {
+    title: "Coeficiente de Estabilización de Referencia (CER) Hoy",
     description: "Consulta el valor actual y evolución histórica del CER en Argentina. Gráfico diario e inflación acumulada de referencia.",
     definition: "El Coeficiente de Estabilización de Referencia (CER) es un indicador de indexación diaria calculado y publicado por el Banco Central de la República Argentina (BCRA). Este coeficiente refleja la evolución de la inflación minorista medida por el INDEC mediante el Índice de Precios al Consumidor (IPC), con un desfase temporal predeterminado.",
     importance: "El CER se utiliza para ajustar deudas, contratos y una amplia gama de instrumentos financieros (como los plazos fijos UVA y bonos de la deuda pública ajustables por inflación) para proteger el valor de compra del capital original frente al deterioro que produce la inflación persistente en Argentina.",
@@ -157,7 +153,7 @@ export const variablesMetadata = {
 
 export function getVariableMetadata(id) {
   return variablesMetadata[String(id)] || {
-    title: "Variable Económica Argentina Hoy — Infopeso",
+    title: "Variable Económica Argentina Hoy",
     description: "Datos históricos y cotización en tiempo real de variables del Banco Central de la República Argentina (BCRA).",
     definition: "Indicador macroeconómico y monetario oficial reportado por el Banco Central de la República Argentina (BCRA) o INDEC.",
     importance: "El seguimiento de esta variable es clave para evaluar la estabilidad monetaria, financiera y cambiaria en la economía de Argentina.",

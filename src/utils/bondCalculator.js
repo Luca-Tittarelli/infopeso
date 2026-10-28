@@ -60,54 +60,73 @@ export function calculateXIRR(cashFlows, guess = 0.1) {
 }
 
 /**
- * Approximate remaining cash flows per 100 VNO (Valores Nominales Originales)
- * Data updated for 2026 onwards for the most popular bonds.
+ * Flujos pendientes por cada 100 VN (interés + amortización), en USD.
+ * Fuente: cronograma de pagos publicado por Rava (flujo actualizado al 27/10/2026), consistente con las
+ * condiciones de emisión (Res. 381/2020): AL30/GD30 amortizan en 13 cuotas (4% y luego 8%) con cupón escalonado
+ * (0,75% hasta jul-2027, 1,75% después); AL29 amortiza en 10 cuotas de 10% con cupón de 1%.
+ * Revisar cada vez que se paga un cupón: se eliminan solos los flujos con fecha pasada, pero residualValue es manual.
  */
 export const BOND_DATA = {
     "AL30": {
         name: "AL30 - Ley Argentina 2030",
-        residualValue: 84.0, // Approximate remaining principal in mid 2026
+        fullName: "Bonar 2030",
+        law: "Ley argentina",
+        maturity: "2030-07-09",
+        residualValue: 64.0, // valor residual después del pago de julio de 2026
         flows: [
-            { date: "2026-07-09", amount: 4.375 },
-            { date: "2027-01-09", amount: 4.375 },
-            { date: "2027-07-09", amount: 4.375 },
-            { date: "2028-01-09", amount: 16.75 },
-            { date: "2028-07-09", amount: 16.75 },
-            { date: "2029-01-09", amount: 16.75 },
-            { date: "2029-07-09", amount: 16.75 },
-            { date: "2030-01-09", amount: 16.75 },
-            { date: "2030-07-09", amount: 16.75 },
+            { date: "2027-01-11", amount: 8.24 },
+            { date: "2027-07-12", amount: 8.21 },
+            { date: "2028-01-10", amount: 8.42 },
+            { date: "2028-07-10", amount: 8.35 },
+            { date: "2029-01-09", amount: 8.28 },
+            { date: "2029-07-10", amount: 8.21 },
+            { date: "2030-01-09", amount: 8.14 },
+            { date: "2030-07-10", amount: 8.07 },
         ]
     },
     "GD30": {
         name: "GD30 - Ley NY 2030",
-        residualValue: 84.0,
+        fullName: "Global 2030",
+        law: "Ley Nueva York",
+        maturity: "2030-07-09",
+        residualValue: 64.0,
         flows: [
-            { date: "2026-07-09", amount: 4.375 },
-            { date: "2027-01-09", amount: 4.375 },
-            { date: "2027-07-09", amount: 4.375 },
-            { date: "2028-01-09", amount: 16.75 },
-            { date: "2028-07-09", amount: 16.75 },
-            { date: "2029-01-09", amount: 16.75 },
-            { date: "2029-07-09", amount: 16.75 },
-            { date: "2030-01-09", amount: 16.75 },
-            { date: "2030-07-09", amount: 16.75 },
+            { date: "2027-01-11", amount: 8.24 },
+            { date: "2027-07-12", amount: 8.21 },
+            { date: "2028-01-10", amount: 8.42 },
+            { date: "2028-07-10", amount: 8.35 },
+            { date: "2029-01-09", amount: 8.28 },
+            { date: "2029-07-10", amount: 8.21 },
+            { date: "2030-01-09", amount: 8.14 },
+            { date: "2030-07-10", amount: 8.07 },
         ]
     },
     "AL29": {
         name: "AL29 - Ley Argentina 2029",
-        residualValue: 80.0,
+        fullName: "Bonar 2029",
+        law: "Ley argentina",
+        maturity: "2029-07-09",
+        residualValue: 60.0,
         flows: [
-            { date: "2026-07-09", amount: 10.50 },
-            { date: "2027-01-09", amount: 10.50 },
-            { date: "2027-07-09", amount: 10.50 },
-            { date: "2028-01-09", amount: 10.50 },
-            { date: "2028-07-09", amount: 10.50 },
-            { date: "2029-01-09", amount: 10.50 },
-            { date: "2029-07-09", amount: 10.50 },
+            { date: "2027-01-11", amount: 10.30 },
+            { date: "2027-07-12", amount: 10.25 },
+            { date: "2028-01-10", amount: 10.20 },
+            { date: "2028-07-10", amount: 10.15 },
+            { date: "2029-01-09", amount: 10.10 },
+            { date: "2029-07-10", amount: 10.05 },
         ]
     }
 };
+
+/**
+ * Próximo pago pendiente de un bono (fecha y monto por 100 VN) o null si no quedan flujos
+ */
+export function getNextPayment(ticker, from = new Date()) {
+    const bond = BOND_DATA[ticker];
+    if (!bond) return null;
+    const next = bond.flows.find((f) => new Date(f.date) > from);
+    return next || null;
+}
 
 /**
  * Get TIR and Paridad based on current market price

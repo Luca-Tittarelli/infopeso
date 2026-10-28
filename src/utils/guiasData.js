@@ -2,7 +2,7 @@ export const GUIAS = [
     {
         slug: 'armar-cartera-inversiones-argentina',
         title: 'Cómo Estructurar una Cartera de Inversiones en Argentina (Guía Educativa 2026)',
-        metaTitle: 'Cómo Armar una Cartera de Inversiones en Argentina: Conceptos y Diversificación — Infopeso',
+        metaTitle: 'Cómo Armar una Cartera de Inversiones en Argentina: Conceptos y Diversificación',
         description: 'Metodología conceptual para estructurar un portafolio diversificado en Argentina con acciones locales, CEDEARs, bonos soberanos e instrumentos de renta fija.',
         category: 'Inversiones y Portafolio',
         readTime: '7 min',
@@ -56,7 +56,7 @@ Para analizar la composición de un portafolio de estudio, los analistas observa
     {
         slug: 'que-son-cedears-como-invertir',
         title: 'Qué son los CEDEARs: Conceptos, Ratios y Funcionamiento en Argentina',
-        metaTitle: 'Qué son los CEDEARs: Guía Explicativa de Funcionamiento — Infopeso',
+        metaTitle: 'Qué son los CEDEARs: Guía Explicativa de Funcionamiento',
         description: 'Explicación conceptual de qué es un CEDEAR, cómo se calcula su precio en pesos en función del Dólar CCL y el ratio de conversión.',
         category: 'CEDEARs y Renta Variable',
         readTime: '6 min',
@@ -69,7 +69,7 @@ Para analizar la composición de un portafolio de estudio, los analistas observa
                 heading: '1. Mecánica de Cotización de un CEDEAR',
                 content: `El precio teórico en pesos de un CEDEAR se deduce mediante la siguiente relación matemática:
                 
-$$\\text{Precio CEDEAR (ARS)} = \\frac{\\text{Precio Acción USA (USD)} \\times \\text{Dólar CCL}}{\\text{Ratio de Conversión}}$$
+**Fórmula:** Precio CEDEAR (ARS) = (Precio de la acción en EE. UU. en USD × Dólar CCL) ÷ Ratio de conversión
 
 - **Precio en EE.UU.:** El valor al que opera la acción subyacente en NYSE o NASDAQ.
 - **Dólar CCL:** Tipo de cambio financiero implícito de arbitraje de divisas.
@@ -100,7 +100,7 @@ $$\\text{Precio CEDEAR (ARS)} = \\frac{\\text{Precio Acción USA (USD)} \\times 
     {
         slug: 'dolar-mep-vs-ccl-vs-blue',
         title: 'Dólar MEP vs CCL vs Blue: Diferencias y Mecanismos de Operación',
-        metaTitle: 'Dólar MEP vs CCL vs Blue: Comparativa y Conceptos 2026 — Infopeso',
+        metaTitle: 'Dólar MEP vs CCL vs Blue: Comparativa y Conceptos 2026',
         description: 'Explicación técnica y comparativa entre el Dólar MEP (Bolsa), Dólar CCL (Contado con Liquidación) y el Dólar Blue en Argentina.',
         category: 'Divisas y Tipo de Cambio',
         readTime: '5 min',
@@ -135,7 +135,7 @@ $$\\text{Precio CEDEAR (ARS)} = \\frac{\\text{Precio Acción USA (USD)} \\times 
     {
         slug: 'como-calcular-dolar-tarjeta',
         title: 'Cómo se Calcula el Dólar Tarjeta: Estructura Impositiva y Recargos',
-        metaTitle: 'Cálculo del Dólar Tarjeta: Fórmula y Percepciones Vigentes — Infopeso',
+        metaTitle: 'Cálculo del Dólar Tarjeta: Fórmula y Percepciones Vigentes',
         description: 'Conoce la estructura tributaria del Dólar Tarjeta y Turista para consumos en moneda extranjera, servicios digitales y pasajes.',
         category: 'Divisas y Tipo de Cambio',
         readTime: '5 min',
@@ -148,7 +148,7 @@ $$\\text{Precio CEDEAR (ARS)} = \\frac{\\text{Precio Acción USA (USD)} \\times 
                 heading: '1. Componentes del Tipo de Cambio Tarjeta',
                 content: `La liquidación de consumos en moneda extranjera efectuados con tarjetas emitidas en Argentina se rige por:
 
-$$\\text{Dólar Tarjeta} = \\text{Dólar Oficial Venta BNA} + \\text{Percepción Impositiva ARCA}$$
+**Fórmula:** Dólar tarjeta = Dólar oficial venta (BNA) + Percepción impositiva (ARCA)
 
 - **Cotización Base:** Tipo de cambio vendedor del BNA al cierre del día hábil anterior a la fecha de liquidación del resumen.
 - **Percepción Impositiva:** Pago a cuenta de tributos directos (Ganancias / Bienes Personales).`
@@ -166,7 +166,7 @@ $$\\text{Dólar Tarjeta} = \\text{Dólar Oficial Venta BNA} + \\text{Percepción
     {
         slug: 'bonos-argentinos-al30-vs-gd30',
         title: 'Bonos Soberanos AL30 vs GD30: Análisis Comparativo y Jurisdicción Legal',
-        metaTitle: 'AL30 vs GD30: Diferencias de Legislación, Paridad y Rendimiento — Infopeso',
+        metaTitle: 'AL30 vs GD30: Diferencias de Legislación, Paridad y Rendimiento',
         description: 'Análisis técnico de los bonos soberanos reestructurados: Bonar 2030 (AL30) bajo Ley Argentina y Global 2030 (GD30) bajo Ley Nueva York.',
         category: 'Renta Fija y Bonos',
         readTime: '6 min',
@@ -197,13 +197,13 @@ $$\\text{Dólar Tarjeta} = \\text{Dólar Oficial Venta BNA} + \\text{Percepción
                 answer: 'Ambos títulos amortizan capital y abonan intereses semestralmente en los meses de enero y julio según sus respectivos prospectos de emisión.'
             }
         ],
-        ctaLink: '/RentaFija/al30',
+        ctaLink: '/RentaFija/AL30',
         ctaText: 'Ver Calculadora y Cronograma de AL30'
     },
     {
         slug: 'que-es-la-tir-de-un-bono',
         title: 'Qué es la TIR (Tasa Interna de Retorno) de un Bono y Cómo se Interpreta',
-        metaTitle: 'TIR de un Bono: Concepto, Supuestos y Metodología de Cálculo — Infopeso',
+        metaTitle: 'TIR de un Bono: Concepto, Supuestos y Metodología de Cálculo',
         description: 'Explicación teórica de la Tasa Interna de Retorno (TIR) y la Tasa Interna de Rendimiento en instrumentos de renta fija soberana y privada.',
         category: 'Renta Fija y Bonos',
         readTime: '5 min',
@@ -231,7 +231,7 @@ $$\\text{Dólar Tarjeta} = \\text{Dólar Oficial Venta BNA} + \\text{Percepción
     {
         slug: 'acciones-vaca-muerta-ypf-vista-pampa',
         title: 'Empresas del Sector Energético en Vaca Muerta: Análisis de YPF, Vista, Pampa y TGS',
-        metaTitle: 'Sector Energético y Vaca Muerta: Análisis de Empresas 2026 — Infopeso',
+        metaTitle: 'Sector Energético y Vaca Muerta: Análisis de Empresas 2026',
         description: 'Revisión informativa de los modelos de negocio y características operativas de las principales compañías del sector energético en Argentina.',
         category: 'Inversiones y Portafolio',
         readTime: '7 min',
@@ -260,7 +260,7 @@ $$\\text{Dólar Tarjeta} = \\text{Dólar Oficial Venta BNA} + \\text{Percepción
     {
         slug: 'riesgo-pais-argentina-que-es-como-se-calcula',
         title: 'Riesgo País Argentina: Metodología del EMBI+ de JP Morgan y Conceptos',
-        metaTitle: 'Riesgo País Argentina: Definición y Metodología EMBI+ — Infopeso',
+        metaTitle: 'Riesgo País Argentina: Definición y Metodología EMBI+',
         description: 'Aprende qué mide el índice de Riesgo País (EMBI+), cómo se construye el diferencial de tasas y qué relación guarda con los bonos soberanos.',
         category: 'Macroeconomía',
         readTime: '5 min',
@@ -286,7 +286,7 @@ $$\\text{Dólar Tarjeta} = \\text{Dólar Oficial Venta BNA} + \\text{Percepción
     {
         slug: 'que-es-el-pe-ratio-price-to-earnings',
         title: 'Qué es el P/E Ratio (Price-to-Earnings): Definición, Fórmula y Aplicación',
-        metaTitle: 'P/E Ratio en Finanzas: Definición y Metodología de Valuación — Infopeso',
+        metaTitle: 'P/E Ratio en Finanzas: Definición y Metodología de Valuación',
         description: 'Explicación del múltiplo Precio/Ganancia (Price-to-Earnings Ratio) utilizado en el análisis fundamental de acciones y carteras.',
         category: 'Inversiones y Portafolio',
         readTime: '6 min',
@@ -297,7 +297,7 @@ $$\\text{Dólar Tarjeta} = \\text{Dólar Oficial Venta BNA} + \\text{Percepción
         sections: [
             {
                 heading: '1. Fórmula y Enfoque Metodológico',
-                content: `$$\\text{P/E Ratio} = \\frac{\\text{Precio por Acción}}{\\text{Beneficio por Acción (EPS)}}$$
+                content: `**Fórmula:** P/E = Precio por acción ÷ Beneficio por acción (EPS)
 
 Permite comparar de forma estandarizada empresas de un mismo sector industrial independientemente del valor nominal de su acción en el mercado.`
             }
@@ -314,7 +314,7 @@ Permite comparar de forma estandarizada empresas de un mismo sector industrial i
     {
         slug: 'brecha-cambiaria-argentina',
         title: 'Brecha Cambiaria en Argentina: Concepto, Medición e Indicadores',
-        metaTitle: 'Brecha Cambiaria Argentina: Definición y Metodología — Infopeso',
+        metaTitle: 'Brecha Cambiaria Argentina: Definición y Metodología',
         description: 'Análisis de la brecha porcentual entre el tipo de cambio oficial mayorista/minorista y las cotizaciones bursátiles e informales.',
         category: 'Macroeconomía',
         readTime: '5 min',
@@ -325,7 +325,7 @@ Permite comparar de forma estandarizada empresas de un mismo sector industrial i
         sections: [
             {
                 heading: '1. Fórmula de Medición de la Brecha',
-                content: `$$\\text{Brecha Cambiaria (\\%)} = \\left( \\frac{\\text{Dólar Financiero / Libre} - \\text{Dólar Oficial}}{\\text{Dólar Oficial}} \\right) \\times 100$$`
+                content: `**Fórmula:** Brecha cambiaria (%) = (Dólar financiero o libre − Dólar oficial) ÷ Dólar oficial × 100`
             }
         ],
         faqs: [

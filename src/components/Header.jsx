@@ -69,7 +69,7 @@ export default function Header() {
 
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center gap-1">
-                    {navLinks.map(({ to, label }) => {
+                    {[...navLinks.slice(0, -1), { to: '/guias', label: 'Guías' }, navLinks[navLinks.length - 1]].map(({ to, label }) => {
                         const active = isActive(to);
                         const isCartera = to === '/Cartera';
 

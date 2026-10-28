@@ -4,7 +4,7 @@ export function Footer() {
     const currentYear = new Date().getFullYear();
     return (
         <footer
-            className="mt-24"
+            className="mt-24 pb-24 md:pb-0"
             style={{
                 borderTop: '1px solid var(--border-subtle)',
                 background: 'var(--bg-surface)',
@@ -140,8 +140,8 @@ export function Footer() {
                             <li><Link href="/Economia/27" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Inflación Mensual INDEC</Link></li>
                             <li><Link href="/Economia/1" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Reservas Internacionales BCRA</Link></li>
                             <li><Link href="/Economia/15" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Base Monetaria</Link></li>
-                            <li><Link href="/RentaFija/al30" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Bono AL30 (Bonaar 2030)</Link></li>
-                            <li><Link href="/RentaFija/gd30" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Bono GD30 (Global 2030)</Link></li>
+                            <li><Link href="/RentaFija/AL30" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Bono AL30 (Bonar 2030)</Link></li>
+                            <li><Link href="/RentaFija/GD30" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Bono GD30 (Global 2030)</Link></li>
                         </ul>
                     </div>
                     <div>

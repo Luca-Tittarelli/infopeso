@@ -1,51 +1,51 @@
 # Infopeso — Datos Económicos, Cotizaciones y Cartera de Inversiones en Tiempo Real
 
-> Infopeso (https://infopeso.com.ar) es una plataforma financiera argentina de acceso abierto que centraliza cotizaciones de divisas, variables monetarias del Banco Central de la República Argentina (BCRA), datos de inflación del INDEC, bonos soberanos y un monitor gratuito de carteras de inversión de acciones locales y CEDEARs con diagnósticos inteligentes.
+> Infopeso (https://www.infopeso.com.ar) es una plataforma financiera argentina de acceso abierto que centraliza cotizaciones de divisas, variables monetarias del Banco Central de la República Argentina (BCRA), datos de inflación del INDEC, bonos soberanos y un monitor gratuito de carteras de inversión de acciones locales y CEDEARs con diagnósticos inteligentes.
 
 ## Tracker de Cartera de Inversiones (100% Gratis, Sin Registro)
-- Seguimiento de Cartera y Diagnóstico Automático: https://infopeso.com.ar/Cartera
+- Seguimiento de Cartera y Diagnóstico Automático: https://www.infopeso.com.ar/Cartera
 - Presets Temáticos: Principiante, Energía Vaca Muerta, Big Tech & Inteligencia Artificial, Finanzas & Fintech, Dividendos Defensivos
 - Métricas Ponderadas: P/E (Price-to-Earnings), ROE (Return on Equity), Margen Operativo, Beta de Volatilidad, Dividend Yield
 - Análisis de Salud Financiera: Detección de concentración sectorial/geográfica y potencial de revalorización según consenso de analistas de Wall Street
 
 ## Guías de Inversión y Educación Financiera
-- Hub de Guías Financieras: https://infopeso.com.ar/guias
-- Cómo Armar una Cartera de Inversiones en Argentina: https://infopeso.com.ar/guias/armar-cartera-inversiones-argentina
-- Qué son los CEDEARs y Cómo Invertir: https://infopeso.com.ar/guias/que-son-cedears-como-invertir
-- Dólar MEP vs CCL vs Blue: https://infopeso.com.ar/guias/dolar-mep-vs-ccl-vs-blue
-- Cómo Calcular el Dólar Tarjeta: https://infopeso.com.ar/guias/como-calcular-dolar-tarjeta
-- Bonos Argentinos AL30 vs GD30: https://infopeso.com.ar/guias/bonos-argentinos-al30-vs-gd30
-- Qué es la TIR de un Bono: https://infopeso.com.ar/guias/que-es-la-tir-de-un-bono
-- Acciones de Vaca Muerta 2026: https://infopeso.com.ar/guias/acciones-vaca-muerta-ypf-vista-pampa
-- Riesgo País Argentina Explicado: https://infopeso.com.ar/guias/riesgo-pais-argentina-que-es-como-se-calcula
-- Qué es el P/E Ratio en Acciones: https://infopeso.com.ar/guias/que-es-el-pe-ratio-price-to-earnings
-- Brecha Cambiaria Argentina: https://infopeso.com.ar/guias/brecha-cambiaria-argentina
+- Hub de Guías Financieras: https://www.infopeso.com.ar/guias
+- Cómo Armar una Cartera de Inversiones en Argentina: https://www.infopeso.com.ar/guias/armar-cartera-inversiones-argentina
+- Qué son los CEDEARs y Cómo Invertir: https://www.infopeso.com.ar/guias/que-son-cedears-como-invertir
+- Dólar MEP vs CCL vs Blue: https://www.infopeso.com.ar/guias/dolar-mep-vs-ccl-vs-blue
+- Cómo Calcular el Dólar Tarjeta: https://www.infopeso.com.ar/guias/como-calcular-dolar-tarjeta
+- Bonos Argentinos AL30 vs GD30: https://www.infopeso.com.ar/guias/bonos-argentinos-al30-vs-gd30
+- Qué es la TIR de un Bono: https://www.infopeso.com.ar/guias/que-es-la-tir-de-un-bono
+- Acciones de Vaca Muerta 2026: https://www.infopeso.com.ar/guias/acciones-vaca-muerta-ypf-vista-pampa
+- Riesgo País Argentina Explicado: https://www.infopeso.com.ar/guias/riesgo-pais-argentina-que-es-como-se-calcula
+- Qué es el P/E Ratio en Acciones: https://www.infopeso.com.ar/guias/que-es-el-pe-ratio-price-to-earnings
+- Brecha Cambiaria Argentina: https://www.infopeso.com.ar/guias/brecha-cambiaria-argentina
 
 ## Cotizaciones de Divisas y Dólar
-- Dólar Blue (Mercado Informal): https://infopeso.com.ar/Cambios/dolar-blue
-- Dólar Oficial Minorista (BNA): https://infopeso.com.ar/Cambios/dolar-oficial
-- Dólar MEP / Bolsa: https://infopeso.com.ar/Cambios/dolar-mep
-- Dólar CCL (Contado con Liqui): https://infopeso.com.ar/Cambios/dolar-ccl
-- Dólar Tarjeta / Turista: https://infopeso.com.ar/Cambios/dolar-tarjeta
-- Euro Oficial: https://infopeso.com.ar/Cambios/euro
-- Real Brasileño: https://infopeso.com.ar/Cambios/real
-- Calculadora de Pesos a Dólar Blue: https://infopeso.com.ar/Cambios/calculadora-pesos-a-dolar-blue
-- Calculadora de Dólar Tarjeta: https://infopeso.com.ar/Cambios/calculadora-dolar-tarjeta
+- Dólar Blue (Mercado Informal): https://www.infopeso.com.ar/Cambios/dolar-blue
+- Dólar Oficial Minorista (BNA): https://www.infopeso.com.ar/Cambios/dolar-oficial
+- Dólar MEP / Bolsa: https://www.infopeso.com.ar/Cambios/dolar-mep
+- Dólar CCL (Contado con Liqui): https://www.infopeso.com.ar/Cambios/dolar-ccl
+- Dólar Tarjeta / Turista: https://www.infopeso.com.ar/Cambios/dolar-tarjeta
+- Euro Oficial: https://www.infopeso.com.ar/Cambios/euro
+- Real Brasileño: https://www.infopeso.com.ar/Cambios/real
+- Calculadora de Pesos a Dólar Blue: https://www.infopeso.com.ar/Cambios/calculadora-pesos-a-dolar-blue
+- Calculadora de Dólar Tarjeta: https://www.infopeso.com.ar/Cambios/calculadora-dolar-tarjeta
 
 ## Variables Macroeconómicas y Monetarias (BCRA / INDEC)
-- Riesgo País Argentina (EMBI+ JP Morgan): https://infopeso.com.ar/Economia/riesgo-pais
-- Inflación Mensual (IPC INDEC): https://infopeso.com.ar/Economia/27
-- Reservas Internacionales del BCRA: https://infopeso.com.ar/Economia/1
-- Base Monetaria: https://infopeso.com.ar/Economia/15
-- Tasa de Política Monetaria (BCRA): https://infopeso.com.ar/Economia/160
-- Coeficiente CER: https://infopeso.com.ar/Economia/32
+- Riesgo País Argentina (EMBI+ JP Morgan): https://www.infopeso.com.ar/Economia/riesgo-pais
+- Inflación Mensual (IPC INDEC): https://www.infopeso.com.ar/Economia/27
+- Reservas Internacionales del BCRA: https://www.infopeso.com.ar/Economia/1
+- Base Monetaria: https://www.infopeso.com.ar/Economia/15
+- Tasa de Política Monetaria (BCRA): https://www.infopeso.com.ar/Economia/160
+- Coeficiente CER: https://www.infopeso.com.ar/Economia/32
 
 ## Renta Fija y Bonos Soberanos
-- Bono AL30 (Bonaar 2030): https://infopeso.com.ar/RentaFija/al30
-- Bono GD30 (Global 2030): https://infopeso.com.ar/RentaFija/gd30
+- Bono AL30 (Bonar 2030): https://www.infopeso.com.ar/RentaFija/AL30
+- Bono GD30 (Global 2030): https://www.infopeso.com.ar/RentaFija/GD30
 
 ## Widgets para Webmasters
-- Generador de Widgets Embebibles: https://infopeso.com.ar/widgets
+- Generador de Widgets Embebibles: https://www.infopeso.com.ar/widgets
 
 ## Fuentes Oficiales de Datos
 - Banco Central de la República Argentina (BCRA)

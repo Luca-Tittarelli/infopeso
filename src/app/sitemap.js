@@ -5,7 +5,7 @@ import { getAllGuiaSlugs } from '@/utils/guiasData';
 import { CATEGORIES } from '@/utils/carteraData';
 
 export default function sitemap() {
-    const base = 'https://infopeso.com.ar';
+    const base = 'https://www.infopeso.com.ar';
     const today = new Date();
 
     const staticRoutes = [

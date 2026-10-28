@@ -2,7 +2,7 @@ export const cambiosMetadata = {
   'dolar-blue': {
     name: "Dólar Blue",
     casa: "blue",
-    title: "Cotización del Dólar Blue Hoy en Argentina: Venta y Compra — Infopeso",
+    title: "Cotización del Dólar Blue Hoy en Argentina: Venta y Compra",
     description: "Consulta el precio actualizado del Dólar Blue hoy en Argentina. Gráfico de evolución histórica de compra y venta del dólar paralelo en el mercado informal.",
     definition: "El Dólar Blue es el nombre que se le da informalmente al dólar estadounidense que se comercializa en el mercado paralelo o informal en Argentina. Al no estar regulado ni autorizado por el Banco Central de la República Argentina (BCRA), su precio se determina libremente por la oferta y la demanda en cuevas financieras y cambistas informales (arbolitos).",
     importance: "El valor del Dólar Blue es uno de los termómetros económicos más importantes de Argentina. Ante la presencia de cepos cambiarios o restricciones para acceder al mercado oficial, el Dólar Blue suele reflejar la expectativa de devaluación del peso, impactando directamente en la fijación de precios de bienes de consumo e insumos y en las decisiones de ahorro de la población.",
@@ -20,7 +20,7 @@ export const cambiosMetadata = {
   'dolar-oficial': {
     name: "Dólar Oficial",
     casa: "oficial",
-    title: "Cotización del Dólar Oficial Hoy en Argentina: Compra y Venta — Infopeso",
+    title: "Cotización del Dólar Oficial Hoy en Argentina: Compra y Venta",
     description: "Valor oficial del dólar minorista hoy en Argentina del Banco Nación (BNA). Consulta su cotización de compra y venta e histórico cambiario.",
     definition: "El Dólar Oficial (o minorista) es el tipo de cambio de referencia establecido por el Banco Central de la República Argentina (BCRA) y ofrecido al público general por las entidades financieras bancarias autorizadas y casas de cambio oficiales (como el Banco de la Nación Argentina). Su compra está sujeta a límites y regulaciones gubernamentales.",
     importance: "El Dólar Oficial es la base del comercio exterior argentino, rigiendo las importaciones y exportaciones registradas del país. Asimismo, su cotización sirve como punto de partida impositivo para el cálculo del Dólar Tarjeta y determina el costo de las deudas en moneda extranjera liquidadas a través del sistema financiero formal.",
@@ -37,8 +37,8 @@ export const cambiosMetadata = {
   },
   'dolar-mep': {
     name: "Dólar MEP (Bolsa)",
-    casa: "mep",
-    title: "Cotización del Dólar MEP Hoy en Argentina (Dólar Bolsa) — Infopeso",
+    casa: "bolsa",
+    title: "Cotización del Dólar MEP Hoy en Argentina (Dólar Bolsa)",
     description: "Consulta el precio actualizado del Dólar MEP (Mercado Electrónico de Pagos) hoy en Argentina. Gráfico de evolución e instrucciones de cálculo.",
     definition: "El Dólar MEP (Mercado Electrónico de Pagos), también conocido como Dólar Bolsa, es un tipo de cambio financiero legal que se obtiene mediante la compra de un activo financiero (bonos soberanos o acciones) en pesos argentinos y su posterior venta en dólares estadounidenses dentro del mercado de valores local.",
     importance: "Al tratarse de una operatoria 100% legal, en blanco y sin límites de compra diarios o mensuales, el Dólar MEP es la herramienta favorita de las empresas y ahorristas argentinos para dolarizar sus carteras de forma segura. Además, sirve de referencia para monitorear la brecha cambiaria legal respecto al tipo de cambio oficial.",
@@ -55,8 +55,8 @@ export const cambiosMetadata = {
   },
   'dolar-ccl': {
     name: "Dólar CCL (Contado con Liquidación)",
-    casa: "ccl",
-    title: "Cotización del Dólar CCL Hoy en Argentina (Contado con Liqui) — Infopeso",
+    casa: "contadoconliqui",
+    title: "Cotización del Dólar CCL Hoy en Argentina (Contado con Liqui)",
     description: "Precio actualizado del dólar Contado con Liquidación (CCL) hoy en Argentina. Gráfico histórico y brecha cambiaria financiera internacional.",
     definition: "El Dólar Contado con Liquidación (CCL) es un tipo de cambio financiero legal que permite a personas y empresas cambiar pesos argentinos por dólares estadounidenses y transferirlos de manera segura a cuentas bancarias en el exterior. Se opera mediante la compra y venta de acciones locales o CEDEARs y sus equivalentes (ADRs) que cotizan tanto en la Bolsa de Comercio de Buenos Aires como en mercados internacionales (ej. Wall Street).",
     importance: "El Dólar CCL es la vía principal que tienen las multinacionales y grandes fondos de inversión para girar dividendos o retirar capital de Argentina de forma legal. Su cotización suele ser más alta que el MEP debido al costo y valor intrínseco de poseer divisas líquidas depositadas en el extranjero.",
@@ -71,17 +71,49 @@ export const cambiosMetadata = {
       }
     ]
   },
+  'dolar-cripto': {
+    name: "Dólar Cripto",
+    casa: "cripto",
+    title: "Cotización del Dólar Cripto Hoy en Argentina: Compra y Venta",
+    description: "Cotización del dólar cripto hoy en Argentina (USDT/USDC contra pesos en exchanges). Precio de compra, venta y evolución del último mes.",
+    definition: "El Dólar Cripto es el precio en pesos de las stablecoins atadas al dólar (como USDT o USDC) en los exchanges de criptomonedas que operan en Argentina. Su cotización surge de la oferta y la demanda en esas plataformas, por lo que suele acompañar de cerca al Dólar MEP y al CCL.",
+    importance: "Permite dolarizarse o salir de dólares sin pasar por el sistema bancario ni por el mercado de bonos. La brecha entre el dólar cripto, el MEP y el blue es una referencia útil para decidir dónde operar y cuánto cuesta cada vía.",
+    faqs: [
+      {
+        question: "¿En qué se diferencia el dólar cripto del dólar MEP?",
+        answer: "El MEP se obtiene comprando y vendiendo bonos o acciones en el mercado local, mientras que el dólar cripto surge de operar stablecoins en exchanges. Los precios suelen ser parecidos, pero las comisiones, los límites y los tiempos de acreditación son distintos."
+      },
+      {
+        question: "¿Es seguro operar con dólar cripto?",
+        answer: "Depende del exchange y de cómo se opere. Conviene usar plataformas reguladas, verificar las comisiones y entender el riesgo de volatilidad entre la stablecoin y el dólar. Esta página es informativa y no constituye una recomendación."
+      }
+    ]
+  },
+  'dolar-mayorista': {
+    name: "Dólar Mayorista",
+    casa: "mayorista",
+    title: "Cotización del Dólar Mayorista Hoy en Argentina: Compra y Venta",
+    description: "Cotización del dólar mayorista hoy en Argentina, el tipo de cambio de referencia del BCRA para el comercio exterior. Evolución del último mes.",
+    definition: "El Dólar Mayorista es el tipo de cambio al que operan bancos, grandes empresas, importadores y exportadores en el mercado de cambios, y el que el BCRA toma como referencia. Se informa con un diferencial (spread) muy chico entre compra y venta.",
+    importance: "Es la base sobre la que se forman otros precios: el dólar oficial minorista de los bancos se ubica por encima del mayorista, y su evolución anticipa ajustes de precios de bienes importados y de insumos.",
+    faqs: [
+      {
+        question: "¿Cuál es la diferencia entre el dólar mayorista y el oficial?",
+        answer: "El mayorista es el precio de las operaciones entre bancos y grandes empresas; el oficial minorista es el que pagan las personas en el banco, que incluye el margen de la entidad. Por eso el oficial siempre es algo más alto."
+      }
+    ]
+  },
   'dolar-tarjeta': {
     name: "Dólar Tarjeta",
     casa: "tarjeta",
-    title: "Cotización del Dólar Tarjeta Hoy en Argentina (Dólar Turista) — Infopeso",
-    description: "Consulta el precio del Dólar Tarjeta hoy. Calculadora de impuestos sobre consumos en dólares en el exterior y servicios de streaming.",
-    definition: "El Dólar Tarjeta (o Dólar Turista) es el tipo de cambio que se aplica en Argentina para los consumos en moneda extranjera realizados a través de tarjetas de crédito o débito, así como para la compra de servicios de turismo y pasajes al exterior. Su cotización se calcula sumando recargos impositivos al Dólar Oficial minorista.",
+    title: "Cotización del Dólar Tarjeta Hoy en Argentina (Dólar Turista)",
+    description: "Consulta el precio del Dólar Tarjeta hoy. Cómo se calcula y cuánto recarga sobre el dólar oficial, para consumos en el exterior y servicios de streaming.",
+    definition: "El Dólar Tarjeta (o Dólar Turista) es el tipo de cambio que se aplica en Argentina para los consumos en moneda extranjera realizados a través de tarjetas de crédito o débito, así como para la compra de servicios de turismo y pasajes al exterior. Su cotización se calcula sumando la percepción impositiva vigente al Dólar Oficial minorista.",
     importance: "Este tipo de cambio afecta directamente a cualquier persona en Argentina que consuma servicios digitales internacionales (como Netflix, Spotify o almacenamiento en la nube), compre bienes en el extranjero o viaje fuera del país. Es un indicador clave para el turismo emisor y el balance de divisas por consumo de servicios del BCRA.",
     faqs: [
       {
         question: "¿Qué impuestos componen la cotización del Dólar Tarjeta?",
-        answer: "Tradicionalmente está compuesto por el valor del dólar oficial minorista del banco emisor, más el recargo de la percepción a cuenta del Impuesto a las Ganancias o Bienes Personales, y el Impuesto PAIS (Impuesto para una Argentina Inclusiva y Solidaria)."
+        answer: "Está compuesto por el valor del dólar oficial minorista del banco emisor más la percepción a cuenta del Impuesto a las Ganancias o Bienes Personales (hoy 30% sobre el oficial). El Impuesto PAIS dejó de aplicarse en diciembre de 2024."
       },
       {
         question: "¿Es posible recuperar los impuestos cobrados en el Dólar Tarjeta?",
@@ -91,22 +123,26 @@ export const cambiosMetadata = {
   },
   'euro': {
     name: "Euro Oficial",
-    casa: "euro",
-    title: "Cotización del Euro Hoy en Argentina: Venta y Compra — Infopeso",
+    casa: "oficial",
+    moneda: "EUR",
+    symbol: "€",
+    title: "Cotización del Euro Hoy en Argentina: Venta y Compra",
     description: "Consulta la cotización oficial del Euro hoy en Argentina. Gráfico de evolución histórica de la divisa europea en el mercado local.",
     definition: "El Euro es la moneda oficial de la Eurozona. En Argentina, la cotización oficial del Euro refleja el tipo de cambio minorista de referencia para la moneda europea frente al peso argentino, establecido por las entidades cambiarias reguladas por el BCRA.",
     importance: "El seguimiento del Euro es clave para los viajeros con destino a Europa y para el comercio internacional con la Unión Europea. Su valor en Argentina se deriva de la cotización internacional del par EUR/USD combinada con el valor del dólar oficial en el mercado local.",
     faqs: [
       {
         question: "¿Se aplican los mismos impuestos al Euro que al Dólar para consumos con tarjeta?",
-        answer: "Sí, todos los consumos nominados en monedas extranjeras (incluyendo el Euro, Libra Esterlina, Reales, etc.) que se liquiden en la tarjeta se convierten primero a dólares y luego se les aplican los mismos recargos impositivos (Impuesto PAIS y percepciones)."
+        answer: "Sí, todos los consumos nominados en monedas extranjeras (incluyendo el Euro, Libra Esterlina, Reales, etc.) que se liquiden en la tarjeta se convierten primero a dólares y luego se les aplica el mismo recargo impositivo (percepciones a cuenta de Ganancias o Bienes Personales)."
       }
     ]
   },
   'real': {
     name: "Real Brasileño",
-    casa: "real",
-    title: "Cotización del Real Brasileño Hoy en Argentina — Infopeso",
+    casa: "oficial",
+    moneda: "BRL",
+    symbol: "R$",
+    title: "Cotización del Real Brasileño Hoy en Argentina",
     description: "Consulta el precio del Real hoy en Argentina. Gráfico histórico y cotización oficial de compra y venta del Real de Brasil.",
     definition: "El Real Brasileño (BRL) es la moneda oficial de la República Federativa de Brasil. En Argentina, su tipo de cambio oficial refleja el valor del real en pesos argentinos informado por el Banco Nación y bancos privados.",
     importance: "Dado que Brasil es el principal socio comercial de Argentina en el Mercosur y el destino turístico internacional más popular para los argentinos, el valor del Real es fundamental para exportadores, importadores, y turistas en época de vacaciones estivales.",
