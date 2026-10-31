@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import WidgetsGeneratorClient from './WidgetsGeneratorClient';
 import { jsonLd } from '@/utils/site';
 
@@ -30,53 +29,80 @@ export default function WidgetsPage() {
     };
 
     return (
-        <main className="min-h-screen pt-20 pb-16 px-5 sm:px-8 max-w-[1200px] mx-auto space-y-12">
+        <main style={{ minHeight: '100vh', paddingTop: '56px', paddingBottom: 'var(--space-16)' }}>
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }}
             />
 
-            {/* Hero Section */}
-            <div className="text-center max-w-3xl mx-auto space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold"
-                     style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-                    <span>💻 Herramientas para Webmasters y Medios</span>
+            {/* Header Section */}
+            <header
+                style={{
+                    borderBottom: '1px solid var(--line)',
+                    padding: 'var(--space-8) 0',
+                }}
+            >
+                <div className="pulso-container">
+                    <p className="label" style={{ color: 'var(--signal-text)', margin: '0 0 var(--space-2) 0' }}>
+                        HERRAMIENTAS PARA MEDIOS Y DESARROLLADORES
+                    </p>
+                    <h1 className="h1" style={{ color: 'var(--ink)', margin: 0 }}>
+                        Widgets de cotizaciones financieras para tu web
+                    </h1>
+                    <p className="body" style={{ color: 'var(--ink-muted)', marginTop: 'var(--space-2)', marginBottom: 0, maxWidth: '64ch' }}>
+                        Embebé cotizaciones del dólar blue, MEP, oficial y acciones en tu sitio o portal en menos de un minuto. Livianos, responsivos y con actualización automática.
+                    </p>
                 </div>
-                <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-                    Widgets de Cotizaciones Financieras para tu Web
-                </h1>
-                <p className="text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                    Agregá cotizaciones del Dólar Blue, MEP, Oficial y seguimiento de cartera en tu blog o portal en menos de 1 minuto. Livianos, responsivos y con actualización automática.
-                </p>
+            </header>
+
+            <div className="pulso-container" style={{ paddingTop: 'var(--space-8)', display: 'flex', flexDirection: 'column', gap: 'var(--space-12)' }}>
+                {/* Interactive Widget Configurator */}
+                <WidgetsGeneratorClient />
+
+                {/* Features & Integration Guide */}
+                <section
+                    className="grid grid-cols-1 md:grid-cols-3"
+                    style={{
+                        paddingTop: 'var(--space-8)',
+                        borderTop: '1px solid var(--line)',
+                        gap: 'var(--space-4)',
+                    }}
+                >
+                    <div className="pulso-card">
+                        <p className="label" style={{ color: 'var(--signal-text)', marginBottom: 'var(--space-2)' }}>
+                            01 · RENDIMIENTO
+                        </p>
+                        <h3 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>
+                            Ultra livianos
+                        </h3>
+                        <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                            Cargan en milisegundos sin afectar el rendimiento ni los indicadores Core Web Vitals de tu sitio.
+                        </p>
+                    </div>
+                    <div className="pulso-card">
+                        <p className="label" style={{ color: 'var(--signal-text)', marginBottom: 'var(--space-2)' }}>
+                            02 · TIEMPO REAL
+                        </p>
+                        <h3 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>
+                            Actualización automática
+                        </h3>
+                        <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                            Los datos se actualizan de forma continua desde las APIs de Infopeso sin recargar tu servidor.
+                        </p>
+                    </div>
+                    <div className="pulso-card">
+                        <p className="label" style={{ color: 'var(--signal-text)', marginBottom: 'var(--space-2)' }}>
+                            03 · IDENTIDAD PULSO
+                        </p>
+                        <h3 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>
+                            Modo oscuro y claro
+                        </h3>
+                        <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                            Elegí entre el tema pizarra cálida o papel diario para integrarlo con el diseño de tu publicación.
+                        </p>
+                    </div>
+                </section>
             </div>
-
-            {/* Interactive Widget Configurator */}
-            <WidgetsGeneratorClient />
-
-            {/* Features & Integration Guide */}
-            <section className="pt-12 border-t grid grid-cols-1 md:grid-cols-3 gap-6" style={{ borderColor: 'var(--border-subtle)' }}>
-                <div className="p-6 rounded-2xl border space-y-2" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                    <div className="text-2xl">⚡</div>
-                    <h3 className="font-bold text-base" style={{ color: 'var(--text-primary)' }}>Ultra Livianos</h3>
-                    <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                        Cargan en milisegundos sin afectar el rendimiento ni el Core Web Vitals de tu sitio.
-                    </p>
-                </div>
-                <div className="p-6 rounded-2xl border space-y-2" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                    <div className="text-2xl">🔄</div>
-                    <h3 className="font-bold text-base" style={{ color: 'var(--text-primary)' }}>Actualización Automática</h3>
-                    <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                        Los datos se refrescan permanentemente sin necesidad de que recargues tu servidor.
-                    </p>
-                </div>
-                <div className="p-6 rounded-2xl border space-y-2" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                    <div className="text-2xl">🎨</div>
-                    <h3 className="font-bold text-base" style={{ color: 'var(--text-primary)' }}>Modo Oscuro & Claro</h3>
-                    <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                        Se adaptan visualmente al diseño y paleta de colores de tu página web.
-                    </p>
-                </div>
-            </section>
         </main>
     );
 }

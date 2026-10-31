@@ -1,8 +1,8 @@
 'use client';
 
-import { useSyncExternalStore, useCallback, useState, useEffect } from 'react';
+import { useSyncExternalStore, useCallback, useEffect } from 'react';
 
-// Singleton global state
+// Singleton global state — Oscuro primero según manual de marca
 let currentTheme = 'dark';
 const listeners = new Set();
 
@@ -24,44 +24,31 @@ function getServerSnapshot() {
     return 'dark';
 }
 
+function applyThemeToDOM(theme) {
+    if (typeof document === 'undefined') return;
+    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+}
+
 // Client-side initialization
 if (typeof window !== 'undefined') {
     try {
         const saved = localStorage.getItem('theme');
         if (saved === 'light' || saved === 'dark') {
             currentTheme = saved;
-        } else if (document.documentElement.classList.contains('dark')) {
-            currentTheme = 'dark';
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        } else if (document.documentElement.getAttribute('data-theme') === 'light') {
             currentTheme = 'light';
         } else {
             currentTheme = 'dark';
         }
-        document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+        applyThemeToDOM(currentTheme);
     } catch (e) {}
 
-    // Listen to changes in other tabs
     window.addEventListener('storage', (e) => {
         if (e.key === 'theme' && (e.newValue === 'light' || e.newValue === 'dark')) {
             setGlobalTheme(e.newValue);
         }
     });
-
-    // Listen to OS preference change if user has no stored theme
-    if (window.matchMedia) {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const handleChange = (e) => {
-            const saved = localStorage.getItem('theme');
-            if (!saved) {
-                setGlobalTheme(e.matches ? 'dark' : 'light');
-            }
-        };
-        if (mediaQuery.addEventListener) {
-            mediaQuery.addEventListener('change', handleChange);
-        } else if (mediaQuery.addListener) {
-            mediaQuery.addListener(handleChange);
-        }
-    }
 }
 
 export function setGlobalTheme(nextTheme) {
@@ -70,7 +57,7 @@ export function setGlobalTheme(nextTheme) {
     if (typeof window !== 'undefined') {
         try {
             localStorage.setItem('theme', nextTheme);
-            document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+            applyThemeToDOM(nextTheme);
         } catch (e) {}
     }
     emitChange();
@@ -90,9 +77,7 @@ export function useTheme() {
     const mounted = useSyncExternalStore(emptySubscribe, getClientMounted, getServerMounted);
 
     useEffect(() => {
-        if (document.documentElement.classList.contains('dark') !== (currentTheme === 'dark')) {
-            document.documentElement.classList.toggle('dark', currentTheme === 'dark');
-        }
+        applyThemeToDOM(currentTheme);
     }, []);
 
     const changeTheme = useCallback(() => {

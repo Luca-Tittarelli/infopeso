@@ -93,167 +93,174 @@ export default async function GuiaArticuloPage({ params }) {
     };
 
     return (
-        <main className="min-h-screen pt-20 pb-16 px-5 sm:px-8 max-w-[900px] mx-auto">
-            {/* Inject Structured Data Schemas */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: jsonLd(articleSchema) }}
-            />
+        <main style={{ minHeight: '100vh', paddingTop: '56px', paddingBottom: 'var(--space-16)' }}>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(articleSchema) }} />
             {faqSchema && (
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }}
-                />
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
             )}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }}
-            />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
 
-            {/* Breadcrumb navigation */}
-            <nav className="flex items-center gap-2 text-xs mb-6 overflow-x-auto whitespace-nowrap py-1" style={{ color: 'var(--text-tertiary)' }}>
-                <Link href="/" className="hover:underline">Inicio</Link>
-                <span>/</span>
-                <Link href="/guias" className="hover:underline">Guías Educativas</Link>
-                <span>/</span>
-                <span className="truncate max-w-[260px] font-medium" style={{ color: 'var(--text-secondary)' }}>
-                    {guia.title}
-                </span>
-            </nav>
-
-            {/* Header info */}
-            <header className="mb-8 space-y-4">
-                <div className="flex flex-wrap items-center gap-3 text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                    <span className="px-2.5 py-1 rounded-full font-semibold" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-                        {guia.category}
+            <div className="pulso-container" style={{ maxWidth: '880px', paddingTop: 'var(--space-8)' }}>
+                {/* Breadcrumb navigation */}
+                <nav className="flex items-center gap-2 body-sm mb-6 overflow-x-auto whitespace-nowrap py-1" style={{ color: 'var(--ink-subtle)' }} aria-label="Breadcrumb">
+                    <Link href="/" className="hover:underline" style={{ color: 'var(--ink-muted)' }}>Inicio</Link>
+                    <span>/</span>
+                    <Link href="/guias" className="hover:underline" style={{ color: 'var(--ink-muted)' }}>Guías educativas</Link>
+                    <span>/</span>
+                    <span className="truncate max-w-[260px]" style={{ color: 'var(--ink)' }}>
+                        {guia.title}
                     </span>
-                    <span>⏱️ {guia.readTime} de lectura</span>
-                    <span>•</span>
-                    <time dateTime={guia.updatedAt}>Actualizado: {guia.updatedAt}</time>
-                </div>
+                </nav>
 
-                <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight" style={{ color: 'var(--text-primary)' }}>
-                    {guia.title}
-                </h1>
-
-                <p className="text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                    {guia.description}
-                </p>
-            </header>
-
-            {/* Legal Disclaimer Box - Top */}
-            <div className="p-4 rounded-xl mb-8 border text-xs leading-relaxed"
-                 style={{ 
-                     background: 'rgba(232, 148, 43, 0.05)', 
-                     borderColor: 'rgba(232, 148, 43, 0.25)',
-                     color: 'var(--text-secondary)'
-                 }}>
-                <div className="flex items-center gap-2 font-bold mb-1" style={{ color: 'var(--accent)' }}>
-                    <span>⚖️ AVISO LEGAL Y DESCARGO DE RESPONSABILIDAD</span>
-                </div>
-                <p>
-                    El contenido de este artículo tiene fines <strong>exclusivamente educativos, informativos y pedagógicos</strong>. 
-                    <strong>No constituye asesoramiento financiero, recomendación de inversión, ni oferta de compra o venta</strong> de ningún título valor o activo en los términos de la Ley N° 26.831 de Mercado de Capitales de la República Argentina. Cada inversor debe realizar su propio análisis de riesgo y consultar a un idóneo matriculado ante la Comisión Nacional de Valores (CNV) antes de tomar decisiones financieras.
-                </p>
-            </div>
-
-            {/* Answer-First Box (GEO & AI-SEO Optimized for snippet extraction) */}
-            <div className="p-5 sm:p-6 rounded-2xl mb-10 border relative"
-                 style={{ 
-                     background: 'var(--bg-surface)', 
-                     borderColor: 'var(--accent)',
-                     borderLeftWidth: '5px'
-                 }}>
-                <span className="text-[11px] font-bold uppercase tracking-wider block mb-2" style={{ color: 'var(--accent)' }}>
-                    💡 Resumen Metodológico y Conceptual
-                </span>
-                <p className="text-sm sm:text-base leading-relaxed font-medium" style={{ color: 'var(--text-primary)' }}>
-                    {guia.directAnswer}
-                </p>
-            </div>
-
-            {/* Main Content Sections */}
-            <article className="space-y-8 text-sm sm:text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                {guia.sections.map((sec, idx) => (
-                    <section key={idx} className="space-y-3">
-                        <h2 className="text-lg sm:text-xl font-bold tracking-tight mt-6" style={{ color: 'var(--text-primary)' }}>
-                            {sec.heading}
-                        </h2>
-                        <RichText text={sec.content} />
-                    </section>
-                ))}
-            </article>
-
-            <AdSlot slot="inContentB" />
-
-            {/* Contextual CTA Banner */}
-            {guia.ctaLink && (
-                <div className="my-10 p-6 rounded-2xl border text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-5"
-                     style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                    <div className="space-y-1">
-                        <h3 className="font-bold text-base" style={{ color: 'var(--text-primary)' }}>
-                            Herramientas Interactivas y Simuladores de Infopeso
-                        </h3>
-                        <p className="text-xs sm:text-sm" style={{ color: 'var(--text-secondary)' }}>
-                            Probá nuestras calculadoras financieras y paneles de simulación de múltiplos con fines pedagógicos.
-                        </p>
+                {/* Header info */}
+                <header style={{ marginBottom: 'var(--space-8)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <span
+                            className="label"
+                            style={{
+                                padding: '2px var(--space-3)',
+                                borderRadius: 'var(--radius-pill)',
+                                background: 'var(--surface-200)',
+                                border: '1px solid var(--line)',
+                                color: 'var(--signal-text)',
+                            }}
+                        >
+                            {guia.category}
+                        </span>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)' }}>
+                            {guia.readTime} de lectura
+                        </span>
+                        <span style={{ color: 'var(--line)' }}>·</span>
+                        <time
+                            dateTime={guia.updatedAt}
+                            style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)' }}
+                        >
+                            ACTUALIZADO {guia.updatedAt}
+                        </time>
                     </div>
-                    <Link
-                        href={guia.ctaLink}
-                        className="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-white shrink-0 hover:scale-105 active:scale-95 transition-transform"
-                        style={{ background: 'var(--accent)' }}
+
+                    <h1 className="h1" style={{ color: 'var(--ink)', margin: 0 }}>
+                        {guia.title}
+                    </h1>
+
+                    <p className="body" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                        {guia.description}
+                    </p>
+                </header>
+
+                {/* Aviso legal requerido por manual */}
+                <div
+                    style={{
+                        padding: 'var(--space-4)',
+                        borderRadius: 'var(--radius-md)',
+                        background: 'var(--surface-200)',
+                        border: '1px solid var(--line)',
+                        color: 'var(--ink-muted)',
+                        fontSize: 'var(--text-caption)',
+                        lineHeight: 1.5,
+                        marginBottom: 'var(--space-6)',
+                    }}
+                >
+                    <strong style={{ color: 'var(--signal-text)' }}>AVISO INFORMATIVO: </strong>
+                    Información con fines informativos. No es una recomendación de inversión. El contenido de este artículo tiene carácter estrictamente educativo y no constituye asesoramiento financiero ni oferta de compra o venta bajo la Ley N.º 26.831 de Mercado de Capitales.
+                </div>
+
+                {/* Answer-First Box */}
+                <div
+                    className="pulso-card"
+                    style={{
+                        borderLeft: '4px solid var(--signal)',
+                        marginBottom: 'var(--space-8)',
+                    }}
+                >
+                    <span className="label" style={{ color: 'var(--signal-text)', display: 'block', marginBottom: 'var(--space-2)' }}>
+                        Resumen metodológico y conceptual
+                    </span>
+                    <p className="body" style={{ color: 'var(--ink)', fontWeight: 600, margin: 0 }}>
+                        {guia.directAnswer}
+                    </p>
+                </div>
+
+                {/* Main Content Sections */}
+                <article style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)', color: 'var(--ink-muted)' }}>
+                    {guia.sections.map((sec, idx) => (
+                        <section key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                            <h2 className="h2" style={{ color: 'var(--ink)', margin: 0 }}>
+                                {sec.heading}
+                            </h2>
+                            <RichText text={sec.content} />
+                        </section>
+                    ))}
+                </article>
+
+                <AdSlot slot="inContentB" />
+
+                {/* Contextual CTA Banner */}
+                {guia.ctaLink && (
+                    <div
+                        className="pulso-card flex flex-col sm:flex-row items-center justify-between gap-5"
+                        style={{ margin: 'var(--space-10) 0' }}
                     >
-                        {guia.ctaText || 'Ver herramienta en Infopeso'} →
-                    </Link>
-                </div>
-            )}
-
-            {/* FAQ Section */}
-            {guia.faqs && guia.faqs.length > 0 && (
-                <section className="mt-12 pt-8 border-t space-y-4" style={{ borderColor: 'var(--border-subtle)' }}>
-                    <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-                        Preguntas Frecuentes Relacionadas
-                    </h2>
-                    <div className="space-y-3">
-                        {guia.faqs.map((faq, idx) => (
-                            <div key={idx} className="p-4 rounded-xl border" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                                <h3 className="text-sm font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
-                                    {faq.question}
-                                </h3>
-                                <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                                    {faq.answer}
-                                </p>
-                            </div>
-                        ))}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
+                            <h3 className="h2" style={{ color: 'var(--ink)', margin: 0 }}>
+                                Herramientas interactivas de Infopeso
+                            </h3>
+                            <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                                Probá nuestras calculadoras de cotizaciones y el simulador de cartera con datos en vivo.
+                            </p>
+                        </div>
+                        <Link href={guia.ctaLink} className="pulso-btn pulso-btn--primary shrink-0">
+                            {guia.ctaText || 'Abrir herramienta en Infopeso'}
+                        </Link>
                     </div>
-                </section>
-            )}
+                )}
 
-            <AdSlot slot="multiplex" />
+                {/* FAQ Section */}
+                {guia.faqs && guia.faqs.length > 0 && (
+                    <section style={{ marginTop: 'var(--space-12)', paddingTop: 'var(--space-8)', borderTop: '1px solid var(--line)' }}>
+                        <h2 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-4)' }}>
+                            Preguntas frecuentes relacionadas
+                        </h2>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                            {guia.faqs.map((faq, idx) => (
+                                <div key={idx} className="pulso-card">
+                                    <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-body)', fontWeight: 700, color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>
+                                        {faq.question}
+                                    </h3>
+                                    <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                                        {faq.answer}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                <AdSlot slot="multiplex" />
 
                 <RelatedLinks
-                title="Seguí leyendo y usá los datos del día"
-                links={[
-                    ...GUIAS.filter((g) => g.slug !== guia.slug).slice(0, 3).map((g) => ({ href: `/guias/${g.slug}`, label: g.metaTitle || g.title })),
-                    { href: '/Cambios/dolar-blue', label: 'Dólar blue hoy' },
-                    { href: '/RentaFija', label: 'Bonos: precio, TIR y paridad' },
-                    { href: '/Empresas', label: 'Acciones y CEDEARs' },
-                ]}
-            />
+                    title="Seguí leyendo y usá los datos del día"
+                    links={[
+                        ...GUIAS.filter((g) => g.slug !== guia.slug).slice(0, 3).map((g) => ({ href: `/guias/${g.slug}`, label: g.metaTitle || g.title })),
+                        { href: '/Cambios/dolar-blue', label: 'Dólar blue hoy' },
+                        { href: '/RentaFija', label: 'Bonos: precio, TIR y paridad' },
+                        { href: '/Empresas', label: 'Acciones y CEDEARs' },
+                    ]}
+                />
 
-            {/* Author Attribution & Footer Disclaimer */}
-            <div className="mt-12 space-y-4">
-                <div className="p-4 rounded-xl border flex items-center justify-between text-xs"
-                     style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)', color: 'var(--text-tertiary)' }}>
-                    <span>✍️ {guia.author}</span>
-                    <Link href="/guias" className="hover:underline text-accent font-semibold">
-                        ← Volver al Hub de Guías
-                    </Link>
+                {/* Author Attribution & Footer Disclaimer */}
+                <div style={{ marginTop: 'var(--space-12)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                    <div className="pulso-card flex items-center justify-between body-sm" style={{ color: 'var(--ink-subtle)' }}>
+                        <span>Autor: {guia.author}</span>
+                        <Link href="/guias" className="hover:underline" style={{ color: 'var(--signal-text)', fontWeight: 600 }}>
+                            ← Volver a guías educativas
+                        </Link>
+                    </div>
+
+                    <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)', textAlign: 'center', margin: 0 }}>
+                        Información con fines informativos. No es una recomendación de inversión.
+                    </p>
                 </div>
-
-                <p className="text-[11px] text-center leading-normal" style={{ color: 'var(--text-tertiary)' }}>
-                    Infopeso no brinda asesoramiento financiero, recomendaciones de compra o venta ni gestión de carteras. Toda la información es de carácter ilustrativo y de acceso público.
-                </p>
             </div>
         </main>
     );

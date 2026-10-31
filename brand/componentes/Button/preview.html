@@ -1,0 +1,21 @@
+<!-- @dsCard group="Acciones" height=140 subtitle="Primario, secundario y fantasma" -->
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<style>body{margin:0;background:var(--ground-000)}</style>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .wrap{background:var(--ground-000);padding:var(--space-6);display:flex;flex-wrap:wrap;gap:var(--space-4);align-items:center;font-family:var(--font-display)}
+  .btn{height:48px;padding:0 var(--space-6);border-radius:var(--radius-pill);font:700 16px/1 var(--font-display);letter-spacing:-0.01em;cursor:pointer;border:0}
+  .btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+  .primary{background:var(--signal);color:var(--on-signal)}
+  .secondary{background:transparent;color:var(--ink);border:1.5px solid var(--ink-subtle)}
+  .ghost{background:transparent;color:var(--ink-muted);padding:0 var(--space-4)}
+  .ghost:hover{background:var(--surface-200);color:var(--ink)}
+  .primary:disabled{background:var(--surface-200);color:var(--ink-subtle);cursor:not-allowed}
+</style>
+<div class="wrap">
+  <button class="btn primary" type="button">Crear mi cartera</button>
+  <button class="btn secondary" type="button">Ver detalle</button>
+  <button class="btn ghost" type="button">Cancelar</button>
+  <button class="btn primary" type="button" disabled>Guardando…</button>
+</div>
+<script></script>

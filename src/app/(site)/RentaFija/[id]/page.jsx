@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { jsonLd } from '@/utils/site';
 import AdSlot from '@/components/ads/AdSlot';
+import { formatNumber } from '@/utils/formatters';
 
 export const dynamicParams = false;
 
@@ -64,24 +65,9 @@ export default async function Page({ params }) {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Inicio",
-                "item": "https://www.infopeso.com.ar"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Renta Fija",
-                "item": "https://www.infopeso.com.ar/RentaFija"
-            },
-            {
-                "@type": "ListItem",
-                "position": 3,
-                "name": bond.name,
-                "item": `https://www.infopeso.com.ar/RentaFija/${id}`
-            }
+            { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.infopeso.com.ar" },
+            { "@type": "ListItem", "position": 2, "name": "Renta Fija", "item": "https://www.infopeso.com.ar/RentaFija" },
+            { "@type": "ListItem", "position": 3, "name": bond.name, "item": `https://www.infopeso.com.ar/RentaFija/${id}` }
         ]
     };
 
@@ -97,61 +83,63 @@ export default async function Page({ params }) {
     };
 
     return (
-        <main className="min-h-screen pt-14 pb-16 md:pb-12">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: jsonLd(financialProductSchema) }}
-            />
+        <main style={{ minHeight: '100vh', paddingTop: '56px', paddingBottom: 'var(--space-16)' }}>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(financialProductSchema) }} />
 
-            <section className="max-w-[1100px] mx-auto px-5 sm:px-8 py-8">
-                {/* Breadcrumbs (Server-rendered) */}
-                <nav className="flex items-center gap-2 mb-6">
+            <section className="pulso-container" style={{ paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-8)' }}>
+                {/* Breadcrumbs */}
+                <nav className="flex items-center gap-2 mb-6" aria-label="Breadcrumb">
                     <Link
                         href="/RentaFija"
-                        className="flex items-center gap-1.5 text-sm font-medium transition-colors hover:underline"
-                        style={{ color: 'var(--text-secondary)' }}
+                        className="flex items-center gap-1.5 body-sm hover:underline"
+                        style={{ color: 'var(--ink-muted)' }}
                     >
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                             <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        Renta Fija
+                        Renta fija
                     </Link>
-                    <span style={{ color: 'var(--border-subtle)' }}>/</span>
-                    <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                    <span style={{ color: 'var(--line)' }}>/</span>
+                    <span className="body-sm" style={{ color: 'var(--ink-subtle)' }}>
                         Bono {id}
                     </span>
                 </nav>
 
-                {/* Client calculator & TV MiniChart */}
-                {/* Datos del día en el HTML (BYMA vía data912; sin precio si la fuente falla) */}
                 {pricing && (
-                    <section className="mb-8 p-5 rounded-xl grid grid-cols-2 md:grid-cols-5 gap-4" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
+                    <section className="mb-8 pulso-card grid grid-cols-2 md:grid-cols-5" style={{ gap: 'var(--space-4)' }}>
                         <div>
-                            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Precio en pesos</p>
-                            <p className="text-lg font-bold" style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{pricing.ars ? `$${pricing.ars.toLocaleString('es-AR')}` : '—'}</p>
+                            <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-1)' }}>Precio en pesos</p>
+                            <p className="data" style={{ fontSize: 'var(--text-h2)', fontWeight: 600, color: 'var(--ink)', margin: 0 }}>
+                                {pricing.ars ? `$ ${formatNumber(pricing.ars, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}` : '—'}
+                            </p>
                         </div>
                         <div>
-                            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Precio USD (MEP)</p>
-                            <p className="text-lg font-bold" style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{pricing.usdMep ? `U$S ${pricing.usdMep.toLocaleString('es-AR')}` : '—'}</p>
+                            <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-1)' }}>Precio USD (MEP)</p>
+                            <p className="data" style={{ fontSize: 'var(--text-h2)', fontWeight: 600, color: 'var(--ink)', margin: 0 }}>
+                                {pricing.usdMep ? `US$ ${formatNumber(pricing.usdMep, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—'}
+                            </p>
                         </div>
                         <div>
-                            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Precio USD (CCL)</p>
-                            <p className="text-lg font-bold" style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{pricing.usdCcl ? `U$S ${pricing.usdCcl.toLocaleString('es-AR')}` : '—'}</p>
+                            <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-1)' }}>Precio USD (CCL)</p>
+                            <p className="data" style={{ fontSize: 'var(--text-h2)', fontWeight: 600, color: 'var(--ink)', margin: 0 }}>
+                                {pricing.usdCcl ? `US$ ${formatNumber(pricing.usdCcl, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—'}
+                            </p>
                         </div>
                         <div>
-                            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>TIR · Paridad</p>
-                            <p className="text-lg font-bold" style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{metrics ? `${metrics.tir}% · ${metrics.paridad}%` : '—'}</p>
+                            <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-1)' }}>TIR · Paridad</p>
+                            <p className="data" style={{ fontSize: 'var(--text-h2)', fontWeight: 600, color: 'var(--signal-text)', margin: 0 }}>
+                                {metrics ? `${formatNumber(metrics.tir, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} % · ${formatNumber(metrics.paridad, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %` : '—'}
+                            </p>
                         </div>
                         <div>
-                            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Próximo pago</p>
-                            <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>{nextPayment ? `${fmtDate(nextPayment.date)} (U$S ${nextPayment.amount.toFixed(2)})` : '—'}</p>
+                            <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-1)' }}>Próximo pago</p>
+                            <p className="body-sm" style={{ fontWeight: 600, color: 'var(--ink)', margin: 0 }}>
+                                {nextPayment ? `${fmtDate(nextPayment.date)} (US$ ${formatNumber(nextPayment.amount, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})` : '—'}
+                            </p>
                         </div>
-                        <p className="col-span-2 md:col-span-5 text-[11px]" style={{ color: 'var(--text-tertiary)' }}>
-                            Precios por 100 VN con demora, fuente BYMA vía data912. TIR y paridad calculadas sobre el precio en dólares MEP y el cronograma de pagos pendientes; son estimaciones informativas, no recomendaciones.
+                        <p className="col-span-2 md:col-span-5" style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)', margin: 0 }}>
+                            Precios por 100 VN con demora, fuente BYMA vía data912. TIR y paridad calculadas sobre el precio en dólares MEP y el cronograma de pagos pendientes. Información con fines informativos. No es una recomendación de inversión.
                         </p>
                     </section>
                 )}
@@ -160,26 +148,25 @@ export default async function Page({ params }) {
 
                 <AdSlot slot="inContentA" />
 
-                {/* Rich text section (Server-rendered, indexable!) */}
-                <section className="mt-10 pt-8" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-                    <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-                        Información Financiera sobre el Bono {id}
+                <section style={{ marginTop: 'var(--space-12)', paddingTop: 'var(--space-8)', borderTop: '1px solid var(--line)' }}>
+                    <h2 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-4)' }}>
+                        Información financiera sobre el bono {id}
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div className="p-4 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                            <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
-                                ¿Qué es el Bono {id}?
+                    <div className="grid grid-cols-1 md:grid-cols-2 mb-6" style={{ gap: 'var(--space-4)' }}>
+                        <div className="pulso-card">
+                            <h3 className="label" style={{ color: 'var(--signal-text)', marginBottom: 'var(--space-2)' }}>
+                                ¿Qué es el bono {id}?
                             </h3>
-                            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                                El bono {bond.name} es un título público de deuda soberana emitido por la República Argentina en dólares estadounidenses. Forma parte del esquema de reestructuración de deuda y representa una promesa de pago con cronogramas pre-establecidos de interés y amortizaciones parciales de capital (amortizing bond).
+                            <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                                El bono {bond.name} es un título público de deuda soberana emitido por la República Argentina en dólares estadounidenses. Forma parte del esquema de reestructuración de deuda y representa una promesa de pago con cronogramas preestablecidos de interés y amortizaciones parciales de capital.
                             </p>
                         </div>
-                        <div className="p-4 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                            <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
+                        <div className="pulso-card">
+                            <h3 className="label" style={{ color: 'var(--signal-text)', marginBottom: 'var(--space-2)' }}>
                                 ¿Cómo funciona esta calculadora?
                             </h3>
-                            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                                La calculadora computa la Tasa Interna de Retorno (TIR) usando la fórmula XIRR para flujos de fondos con intervalos irregulares, tomando el precio ingresado como flujo negativo inicial y los cupones futuros como flujos positivos. La paridad representa la relación porcentual entre el precio actual de mercado y el valor residual del bono (VNO pendiente).
+                            <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                                La calculadora computa la Tasa Interna de Retorno (TIR) usando la fórmula XIRR para flujos de fondos con intervalos irregulares, tomando el precio ingresado como flujo negativo inicial y los cupones futuros como flujos positivos. La paridad representa la relación porcentual entre el precio actual de mercado y el valor residual del bono.
                             </p>
                         </div>
                     </div>

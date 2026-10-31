@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { cotizacionesAPI } from "@/apis";
 import { Loading } from "@/components/LoadingAnim";
 import { ChangesCard } from "@/components/cards/CambiosInfoCard";
@@ -18,7 +19,7 @@ export default function CambiosClient({ initialDolar, initialOthers, initialCoti
     const [othersStatus, setOthersStatus] = useState(initialOthers ? 'success' : 'loading');
 
     const filtrarPorCasa = (data, casa) =>
-        data.filter(c => c.casa === casa);
+        data ? data.filter(c => c.casa === casa) : [];
 
     useEffect(() => {
         if (initialOthers) return;
@@ -31,84 +32,88 @@ export default function CambiosClient({ initialDolar, initialOthers, initialCoti
     }, [initialOthers]);
 
     return (
-        <main className="min-h-screen pt-14 pb-16 md:pb-12">
-            <div
-                className="px-5 sm:px-8 py-8"
-                style={{ borderBottom: '1px solid var(--border-subtle)' }}
+        <main style={{ minHeight: '100vh', paddingTop: '56px', paddingBottom: 'var(--space-16)' }}>
+            {/* Encabezado */}
+            <header
+                style={{
+                    borderBottom: '1px solid var(--line)',
+                    padding: 'var(--space-8) 0',
+                }}
             >
-                <div className="max-w-[1200px] mx-auto">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] mb-1"
-                       style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
-                        DolarAPI · ArgentinaDatos
-                    </p>
-                    <h1 className="text-3xl sm:text-4xl leading-tight"
-                        style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-                        Tipos de cambio
-                    </h1>
-                    <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
-                        Precios de compra y venta actualizados al día de hoy
-                    </p>
-                </div>
-            </div>
+                <div className="pulso-container">
+                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                        <div>
+                            <p className="label" style={{ color: 'var(--signal-text)', margin: '0 0 var(--space-2) 0' }}>
+                                DolarAPI · ArgentinaDatos
+                            </p>
+                            <h1 className="h1" style={{ color: 'var(--ink)', margin: 0 }}>
+                                Tipos de cambio
+                            </h1>
+                            <p className="body" style={{ color: 'var(--ink-muted)', marginTop: 'var(--space-1)', marginBottom: 0 }}>
+                                Precios de compra y venta actualizados al día de hoy en el mercado argentino.
+                            </p>
+                        </div>
 
-            <section className="px-5 sm:px-8 py-8">
-                <div className="max-w-[1200px] mx-auto">
+                        <div className="flex flex-wrap items-center gap-3">
+                            <Link href="/Cambios/calculadora-pesos-a-dolar-blue" className="pulso-btn pulso-btn--primary">
+                                Calcular pesos a dólar blue
+                            </Link>
+                            <Link href="/Cambios/calculadora-dolar-tarjeta" className="pulso-btn pulso-btn--secondary">
+                                Calcular dólar tarjeta
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <section style={{ padding: 'var(--space-8) 0' }}>
+                <div className="pulso-container">
                     <div className="flex items-center gap-3 mb-4">
-                        <h2
-                            className="text-xs font-semibold uppercase tracking-[0.1em]"
-                            style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}
-                        >
+                        <h2 className="label" style={{ color: 'var(--ink-subtle)', margin: 0 }}>
                             Dólar
                         </h2>
-                        <div className="flex-1 h-px" style={{ background: 'var(--border-subtle)' }} />
+                        <div className="flex-1" style={{ height: '1px', background: 'var(--line)' }} />
                     </div>
 
                     {dolarStatus === 'loading' && <Loading />}
                     {dolarStatus === 'error' && <ErrorComponent message="Error al obtener datos del dólar" />}
                     {dolarStatus === 'success' && dolar && (
                         <div
-                            className="grid gap-4"
-                            style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}
+                            className="grid"
+                            style={{
+                                gap: 'var(--space-4)',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                            }}
                         >
-                            {dolar
-                                
-                                .map((item, key) => {
-                                    const pathId = CASA_PATHS[item.casa] || `dolar-${item.casa}`;
-                                    return (
-                                        <div
-                                            key={key}
-                                            className="stagger-item"
-                                            style={{ animationDelay: `${key * 55}ms` }}
-                                        >
-                                            <ChangesCard
-                                                titulo={item.nombre}
-                                                compra={item.compra}
-                                                venta={item.venta}
-                                                fecha={item.fechaActualizacion}
-                                                chart={{ type: 'line', duration: 'month' }}
-                                                linkTo={`/Cambios/${pathId}`}
-                                                cotizaciones={{
-                                                    status: cotizacionesStatus,
-                                                    data: filtrarPorCasa(
-                                                        filtrarUltimoMes(cotizaciones),
-                                                        item.casa
-                                                    ),
-                                                }}
-                                            />
-                                        </div>
-                                    );
-                                })}
+                            {dolar.map((item, key) => {
+                                const pathId = CASA_PATHS[item.casa] || `dolar-${item.casa}`;
+                                return (
+                                    <ChangesCard
+                                        key={key}
+                                        titulo={item.nombre}
+                                        compra={item.compra}
+                                        venta={item.venta}
+                                        fecha={item.fechaActualizacion}
+                                        chart={{ type: 'line', duration: 'month' }}
+                                        linkTo={`/Cambios/${pathId}`}
+                                        cotizaciones={{
+                                            status: cotizacionesStatus,
+                                            data: filtrarPorCasa(
+                                                filtrarUltimoMes(cotizaciones || []),
+                                                item.casa
+                                            ),
+                                        }}
+                                    />
+                                );
+                            })}
                         </div>
                     )}
 
                     <div className="flex items-center gap-3 mt-10 mb-4">
-                        <h2
-                            className="text-xs font-semibold uppercase tracking-[0.1em]"
-                            style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}
-                        >
+                        <h2 className="label" style={{ color: 'var(--ink-subtle)', margin: 0 }}>
                             Otras monedas
                         </h2>
-                        <div className="flex-1 h-px" style={{ background: 'var(--border-subtle)' }} />
+                        <div className="flex-1" style={{ height: '1px', background: 'var(--line)' }} />
                     </div>
 
                     {othersStatus === 'loading' && <Loading />}
@@ -116,66 +121,64 @@ export default function CambiosClient({ initialDolar, initialOthers, initialCoti
                     {othersStatus === 'success' && others && (
                         <>
                             <div
-                                className="grid gap-4"
-                                style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}
+                                className="grid"
+                                style={{
+                                    gap: 'var(--space-4)',
+                                    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                                }}
                             >
                                 {others.map((item, key) => (
-                                    <div
+                                    <ChangesCard
                                         key={key}
-                                        className="stagger-item"
-                                        style={{ animationDelay: `${key * 40}ms` }}
-                                    >
-                                        <ChangesCard
-                                            titulo={item.nombre}
-                                            compra={item.compra.toFixed(1)}
-                                            venta={item.venta.toFixed(1)}
-                                            fecha={item.fechaActualizacion}
-                                            chart={false}
-                                            linkTo={MONEDA_PATHS[item.moneda] ? `/Cambios/${MONEDA_PATHS[item.moneda]}` : undefined}
-                                        />
-                                    </div>
+                                        titulo={item.nombre}
+                                        compra={item.compra}
+                                        venta={item.venta}
+                                        fecha={item.fechaActualizacion}
+                                        chart={false}
+                                        linkTo={MONEDA_PATHS[item.moneda] ? `/Cambios/${MONEDA_PATHS[item.moneda]}` : undefined}
+                                    />
                                 ))}
                             </div>
-                            <p className="text-xs text-center mt-8" style={{ color: 'var(--text-tertiary)' }}>
+                            <p className="body-sm" style={{ color: 'var(--ink-subtle)', textAlign: 'center', marginTop: 'var(--space-8)' }}>
                                 Fuente:{' '}
-                                <a href="https://dolarapi.com" className="hover:underline" style={{ color: 'var(--accent)' }} target="_blank" rel="noopener noreferrer">DolarAPI</a>
+                                <a href="https://dolarapi.com" className="hover:underline" style={{ color: 'var(--signal-text)' }} target="_blank" rel="noopener noreferrer">DolarAPI</a>
                             </p>
 
-                            <div className="mt-16 pt-8 border-t border-[var(--border-subtle)]">
-                                <h2 className="text-lg font-bold mb-6" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-                                    Preguntas Frecuentes sobre el Dólar y Tipos de Cambio
+                            <div style={{ marginTop: 'var(--space-12)', paddingTop: 'var(--space-8)', borderTop: '1px solid var(--line)' }}>
+                                <h2 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-6)' }}>
+                                    Preguntas frecuentes sobre el dólar y tipos de cambio
                                 </h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="p-4 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                                        <h3 className="text-sm font-bold mb-1.5" style={{ color: 'var(--text-primary)' }}>
-                                            ¿Qué es el Dólar Blue y cómo se determina su valor?
+                                <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 'var(--space-4)' }}>
+                                    <div className="pulso-card">
+                                        <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-body)', fontWeight: 700, color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>
+                                            ¿Qué es el dólar blue y cómo se determina su valor?
                                         </h3>
-                                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                                            El Dólar Blue es el tipo de cambio informal que se comercializa de forma libre en el mercado informal de Argentina. Su cotización no está regulada por el Banco Central de la República Argentina (BCRA) y su valor fluctúa libremente según la oferta y la demanda de divisas en el mercado paralelo.
+                                        <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                                            El dólar blue es el tipo de cambio informal que se comercializa de forma libre en el mercado paralelo de Argentina. Su cotización no está regulada por el Banco Central (BCRA) y su valor fluctúa según la oferta y demanda de divisas en efectivo.
                                         </p>
                                     </div>
-                                    <div className="p-4 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                                        <h3 className="text-sm font-bold mb-1.5" style={{ color: 'var(--text-primary)' }}>
-                                            ¿Cuál es la diferencia entre el Dólar MEP y el Dólar CCL?
+                                    <div className="pulso-card">
+                                        <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-body)', fontWeight: 700, color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>
+                                            ¿Cuál es la diferencia entre el dólar MEP y el dólar CCL?
                                         </h3>
-                                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                                            Ambos son dólares financieros legales que se adquieren mediante la compra-venta de bonos o acciones en la bolsa de comercio argentina. El Dólar MEP (Mercado Electrónico de Pagos) se liquida e ingresa en cuentas bancarias locales de Argentina, mientras que el Dólar CCL (Contado con Liquidación) permite transferir las divisas resultantes a cuentas bancarias en el exterior.
+                                        <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                                            Ambos son dólares financieros legales que se operan comprando y vendiendo bonos o acciones en la bolsa. El dólar MEP (Mercado Electrónico de Pagos) se liquida en cuentas bancarias locales, mientras que el dólar CCL (Contado con Liquidación) permite girar divisas a cuentas del exterior.
                                         </p>
                                     </div>
-                                    <div className="p-4 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                                        <h3 className="text-sm font-bold mb-1.5" style={{ color: 'var(--text-primary)' }}>
-                                            ¿Cómo se calcula el Dólar Tarjeta o Turista?
+                                    <div className="pulso-card">
+                                        <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-body)', fontWeight: 700, color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>
+                                            ¿Cómo se calcula el dólar tarjeta o turista?
                                         </h3>
-                                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                                            El Dólar Tarjeta se calcula tomando como base la cotización oficial minorista provista por el Banco de la Nación Argentina, y adicionándole la percepción a cuenta de Ganancias o Bienes Personales (hoy 30% sobre el oficial). El Impuesto PAIS dejó de aplicarse en diciembre de 2024.
+                                        <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                                            El dólar tarjeta se calcula tomando como base la cotización oficial minorista del Banco Nación y sumándole la percepción a cuenta de Ganancias o Bienes Personales (actualmente 30 % sobre el oficial). El Impuesto PAIS dejó de aplicarse en diciembre de 2024.
                                         </p>
                                     </div>
-                                    <div className="p-4 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                                        <h3 className="text-sm font-bold mb-1.5" style={{ color: 'var(--text-primary)' }}>
-                                            ¿Qué es el Dólar Oficial Minorista?
+                                    <div className="pulso-card">
+                                        <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-body)', fontWeight: 700, color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>
+                                            ¿Qué es el dólar oficial minorista?
                                         </h3>
-                                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                                            El Dólar Oficial Minorista es el valor de referencia de venta al público en general en entidades financieras bancarias de Argentina, y sirve de base imponible para el cálculo del Dólar Tarjeta. Es informado de manera transparente por las instituciones reguladas por el BCRA.
+                                        <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                                            Es el valor de referencia de venta al público en bancos y entidades reguladas por el BCRA, y sirve de base imponible para el cálculo del dólar tarjeta.
                                         </p>
                                     </div>
                                 </div>

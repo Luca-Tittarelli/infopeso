@@ -1,38 +1,21 @@
 import "./globals.css";
 import { SITE_URL } from "@/utils/site";
-import { Inter, DM_Mono, Instrument_Serif } from "next/font/google";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-ui",
-  display: "swap",
-});
-
-const dmMono = DM_Mono({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-mono",
-  display: "swap",
-});
-
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
-  display: "swap",
-});
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Infopeso — Datos económicos de Argentina",
+    default: "Infopeso — Dólar, inflación, mercado y tu cartera",
     template: "%s | Infopeso",
   },
   description:
-    "Infopeso: datos económicos y cotizaciones de Argentina en tiempo real. Dólar Blue, Riesgo País, Inflación, Reservas BCRA y más.",
+    "Cotizaciones del dólar (MEP, CCL, blue, oficial), inflación, riesgo país, bonos y seguimiento de tu cartera personal en pesos y dólares.",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/brand/favicon.svg", type: "image/svg+xml" },
+      { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/favicon-16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: "/brand/apple-touch-icon-180.png",
   },
   keywords: [
     "Infopeso",
@@ -41,12 +24,14 @@ export const metadata = {
     "finanzas",
     "cotizaciones",
     "dolar blue",
+    "dolar mep",
+    "dolar ccl",
     "dolar hoy",
     "BCRA",
     "riesgo pais",
     "inflacion",
     "reservas",
-    "tipo de cambio",
+    "cartera de inversiones",
   ],
   authors: [{ name: "Infopeso" }],
   creator: "Infopeso",
@@ -69,28 +54,29 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#0F0F0D",
+  themeColor: "#141210",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="es" className={`dark ${inter.variable} ${dmMono.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
+    <html lang="es-AR" data-theme="dark" className="dark" suppressHydrationWarning>
       <head>
-        {/* Inline Theme Initializer: prevents theme flash before React hydrates */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@400;500&display=swap"
+          rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/brand/tokens.css" />
+        {/* Oscuro primero: sincroniza data-theme antes de hidratar */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){
               try {
                 var saved = localStorage.getItem('theme');
-                if (saved === 'light') {
-                  document.documentElement.classList.remove('dark');
-                } else if (saved === 'dark') {
-                  document.documentElement.classList.add('dark');
-                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                  document.documentElement.classList.remove('dark');
-                } else {
-                  document.documentElement.classList.add('dark');
-                }
+                var theme = (saved === 'light' || saved === 'dark') ? saved : 'dark';
+                document.documentElement.setAttribute('data-theme', theme);
+                document.documentElement.classList.toggle('dark', theme === 'dark');
               } catch(e) {}
             })();`,
           }}

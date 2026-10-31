@@ -62,7 +62,7 @@ export default async function Page() {
                 "name": "¿Cuántos pesos son 100 dólares blue hoy?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": `El cálculo se realiza multiplicando 100 por el precio de venta del dólar blue del momento.${blueVenta ? ` Con el blue a $${fmtARS(blueVenta, 0)}, 100 dólares equivalen a $${fmtARS(blueVenta * 100, 0)}.` : ''} Consultá la tabla interactiva de la calculadora para ver el valor actualizado.`
+                    "text": `El cálculo se realiza multiplicando 100 por el precio de venta del dólar blue del momento.${blueVenta ? ` Con el blue a $ ${fmtARS(blueVenta, 0)}, 100 dólares equivalen a $ ${fmtARS(blueVenta * 100, 0)}.` : ''} Consultá la tabla interactiva de la calculadora para ver el valor actualizado.`
                 }
             }
         ]
@@ -79,22 +79,22 @@ export default async function Page() {
     };
 
     return (
-        <main className="min-h-screen pt-14 pb-16 md:pb-12">
+        <main style={{ minHeight: '100vh', paddingTop: '56px', paddingBottom: 'var(--space-16)' }}>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(webAppSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
 
-            <section className="max-w-[1100px] mx-auto px-5 sm:px-8 py-8">
-                <nav className="flex items-center gap-2 mb-6">
-                    <Link href="/Cambios" className="flex items-center gap-1.5 text-sm font-medium transition-colors hover:underline" style={{ color: 'var(--text-secondary)' }}>
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <section className="pulso-container" style={{ paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-8)' }}>
+                <nav className="flex items-center gap-2 mb-6" aria-label="Breadcrumb">
+                    <Link href="/Cambios" className="flex items-center gap-1.5 body-sm hover:underline" style={{ color: 'var(--ink-muted)' }}>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                             <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                         Divisas
                     </Link>
-                    <span style={{ color: 'var(--border-subtle)' }}>/</span>
-                    <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                        Calculadora Dólar Blue
+                    <span style={{ color: 'var(--line)' }}>/</span>
+                    <span className="body-sm" style={{ color: 'var(--ink-subtle)' }}>
+                        Calculadora dólar blue
                     </span>
                 </nav>
 
@@ -103,17 +103,17 @@ export default async function Page() {
                 <AdSlot slot="inContentA" />
 
                 {sameAmount.length > 1 && (
-                    <section className="mt-8 p-5 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                        <h2 className="text-base font-bold mb-3" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
+                    <section className="mt-8 pulso-card">
+                        <h2 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-4)' }}>
                             100 dólares hoy: cuánto cuesta en cada cotización
                         </h2>
                         <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
+                            <table className="w-full">
                                 <tbody>
                                     {sameAmount.map(({ name, q }) => (
-                                        <tr key={name} style={{ borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}>
-                                            <td className="py-2">{name}</td>
-                                            <td className="py-2 text-right" style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>${fmtARS(q.venta * 100, 0)}</td>
+                                        <tr key={name} style={{ borderBottom: '1px solid var(--line)' }}>
+                                            <td className="py-2.5 body-sm" style={{ color: 'var(--ink-muted)' }}>{name}</td>
+                                            <td className="py-2.5 text-right data" style={{ color: 'var(--ink)' }}>$ {fmtARS(q.venta * 100, 0)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -123,35 +123,42 @@ export default async function Page() {
                 )}
 
                 {ago.length > 0 && blueVenta && (
-                    <section className="mt-6 p-5 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                        <h2 className="text-base font-bold mb-3" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
+                    <section className="mt-6 pulso-card">
+                        <h2 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-4)' }}>
                             100 dólares blue: cuánto valían hace 1, 6 y 12 meses
                         </h2>
-                        <table className="w-full text-sm">
+                        <table className="w-full">
                             <tbody>
                                 {ago.map(({ months, row }) => (
-                                    <tr key={months} style={{ borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}>
-                                        <td className="py-2">Hace {months === 12 ? '1 año' : `${months} ${months === 1 ? 'mes' : 'meses'}`}</td>
-                                        <td className="py-2 text-right" style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>${fmtARS(row.venta * 100, 0)}</td>
+                                    <tr key={months} style={{ borderBottom: '1px solid var(--line)' }}>
+                                        <td className="py-2.5 body-sm" style={{ color: 'var(--ink-muted)' }}>
+                                            Hace {months === 12 ? '1 año' : `${months} ${months === 1 ? 'mes' : 'meses'}`}
+                                        </td>
+                                        <td className="py-2.5 text-right data" style={{ color: 'var(--ink)' }}>
+                                            $ {fmtARS(row.venta * 100, 0)}
+                                        </td>
                                     </tr>
                                 ))}
-                                <tr style={{ color: 'var(--text-secondary)' }}>
-                                    <td className="py-2 font-bold">Hoy</td>
-                                    <td className="py-2 text-right font-bold" style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>${fmtARS(blueVenta * 100, 0)}</td>
+                                <tr>
+                                    <td className="py-2.5 body-sm" style={{ color: 'var(--ink)', fontWeight: 700 }}>Hoy</td>
+                                    <td className="py-2.5 text-right data" style={{ color: 'var(--signal-text)', fontWeight: 600 }}>
+                                        $ {fmtARS(blueVenta * 100, 0)}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <p className="text-[11px] mt-3" style={{ color: 'var(--text-tertiary)' }}>Precio de venta del blue. Fuente: ArgentinaDatos y DolarAPI.</p>
+                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)', marginTop: 'var(--space-3)', marginBottom: 0 }}>
+                            Precio de venta del blue. Fuente: ArgentinaDatos y DolarAPI.
+                        </p>
                     </section>
                 )}
 
-                {/* Explicación SEO Contextual */}
-                <article className="mt-12 pt-8 border-t border-[var(--border-subtle)] space-y-6">
-                    <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
+                <article style={{ marginTop: 'var(--space-12)', paddingTop: 'var(--space-8)', borderTop: '1px solid var(--line)' }}>
+                    <h2 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-3)' }}>
                         ¿Cómo calcular conversiones en el mercado informal?
                     </h2>
-                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                        Para calcular exactamente cuántos pesos necesitás para comprar dólares en el mercado informal de Argentina, tenés que multiplicar la cantidad de dólares deseada por el precio de <strong>venta</strong> del Dólar Blue. Si tenés dólares billete y querés cambiarlos a pesos, debés multiplicar por la cotización de <strong>compra</strong>.
+                    <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                        Para calcular exactamente cuántos pesos necesitás para comprar dólares en el mercado informal de Argentina, tenés que multiplicar la cantidad de dólares deseada por el precio de <strong>venta</strong> del dólar blue. Si tenés dólares billete y querés cambiarlos a pesos, debés multiplicar por la cotización de <strong>compra</strong>.
                     </p>
                 </article>
 
@@ -160,7 +167,7 @@ export default async function Page() {
                 <RelatedLinks
                     title="Otras cotizaciones y calculadoras"
                     links={[
-                        { href: '/Cambios/dolar-blue', label: 'Dólar blue hoy', value: blueVenta ? `$${fmtARS(blueVenta, 0)}` : undefined },
+                        { href: '/Cambios/dolar-blue', label: 'Dólar blue hoy', value: blueVenta ? `$ ${fmtARS(blueVenta, 0)}` : undefined },
                         { href: '/Cambios/dolar-oficial', label: 'Dólar oficial hoy' },
                         { href: '/Cambios/dolar-mep', label: 'Dólar MEP hoy' },
                         { href: '/Cambios/dolar-ccl', label: 'Dólar CCL hoy' },

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '@/hooks/useTheme';
+import Link from 'next/link';
 import { TechnicalAnalysis, MiniChart, CompanyProfile, FundamentalData, Timeline, SymbolInfo } from 'react-ts-tradingview-widgets';
 import { TradingViewContainer } from '@/components/TradingViewContainer';
 
@@ -45,7 +45,6 @@ const CATEGORIES = [
 ];
 
 export default function EmpresasClient() {
-    const [theme] = useTheme();
     const [selectedSymbol, setSelectedSymbol] = useState(CATEGORIES[0].companies[0].symbol);
     
     const selectedCompany = [...CATEGORIES[0].companies, ...CATEGORIES[1].companies].find(c => c.symbol === selectedSymbol);
@@ -58,40 +57,59 @@ export default function EmpresasClient() {
     }, [selectedSymbol]);
 
     return (
-        <main className="min-h-screen pt-14 pb-16 md:pb-12">
-            <div className="px-5 sm:px-8 py-8 border-b" style={{ borderColor: 'var(--border-subtle)' }}>
-                <div className="max-w-[1200px] mx-auto">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] mb-1"
-                       style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
-                        Análisis Fundamental
-                    </p>
-                    <h1 className="text-3xl sm:text-4xl leading-tight"
-                        style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-                        Terminal de Empresas
-                    </h1>
-                </div>
-            </div>
+        <main style={{ minHeight: '100vh', paddingTop: '56px', paddingBottom: 'var(--space-16)' }}>
+            <header
+                style={{
+                    borderBottom: '1px solid var(--line)',
+                    padding: 'var(--space-8) 0',
+                }}
+            >
+                <div className="pulso-container flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <p className="label" style={{ color: 'var(--signal-text)', margin: '0 0 var(--space-2) 0' }}>
+                            ANÁLISIS FUNDAMENTAL · BYMA · NYSE · NASDAQ
+                        </p>
+                        <h1 className="h1" style={{ color: 'var(--ink)', margin: 0 }}>
+                            Terminal de empresas
+                        </h1>
+                        <p className="body" style={{ color: 'var(--ink-muted)', marginTop: 'var(--space-1)', marginBottom: 0 }}>
+                            Métricas fundamentales, perfil corporativo y cotizaciones de acciones argentinas y CEDEARs.
+                        </p>
+                    </div>
 
-            <section className="px-5 sm:px-8 py-8">
-                <div className="max-w-[1200px] mx-auto space-y-8">
-                    
-                    <div className="p-5 rounded-[24px]" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                        <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex flex-wrap items-center gap-3">
+                        {selectedCompany && (
+                            <Link
+                                href={`/Empresas/${encodeURIComponent(selectedCompany.symbol)}`}
+                                className="pulso-btn pulso-btn--secondary"
+                            >
+                                Ver ficha de {selectedCompany.name}
+                            </Link>
+                        )}
+                        <Link href="/Cartera" className="pulso-btn pulso-btn--primary">
+                            Simular en mi cartera
+                        </Link>
+                    </div>
+                </div>
+            </header>
+
+            <section style={{ padding: 'var(--space-8) 0' }}>
+                <div className="pulso-container" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+                    <div className="pulso-card">
+                        <div className="flex flex-col md:flex-row" style={{ gap: 'var(--space-6)' }}>
                             {CATEGORIES.map((category) => (
-                                <div key={category.name} className="flex-1 space-y-3">
-                                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--text-tertiary)' }}>
+                                <div key={category.name} className="flex-1" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                                    <h2 className="label" style={{ color: 'var(--ink-subtle)', margin: 0 }}>
                                         {category.name}
-                                    </h3>
+                                    </h2>
                                     <div className="flex flex-wrap gap-2">
                                         {category.companies.map((company) => (
                                             <button
                                                 key={company.symbol}
+                                                type="button"
                                                 onClick={() => setSelectedSymbol(company.symbol)}
-                                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 border ${
-                                                    selectedSymbol === company.symbol 
-                                                    ? 'bg-[var(--accent)] text-[white] shadow-md shadow-[var(--accent)]/20 scale-105 border-[var(--accent)]' 
-                                                    : 'bg-transparent border-[var(--border-subtle)] text-[var(--text-secondary)] hover:bg-[var(--bg-surface-hover)]'
-                                                }`}
+                                                className={selectedSymbol === company.symbol ? 'pill-active' : 'pill-inactive'}
+                                                style={{ cursor: 'pointer' }}
                                             >
                                                 {company.name}
                                             </button>
@@ -102,8 +120,15 @@ export default function EmpresasClient() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-                        <div className="col-span-1 lg:col-span-12 rounded-[24px] overflow-hidden" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
+                    <div className="grid grid-cols-1 lg:grid-cols-12 items-start" style={{ gap: 'var(--space-6)' }}>
+                        <div
+                            className="col-span-1 lg:col-span-12 overflow-hidden"
+                            style={{
+                                background: 'var(--surface-100)',
+                                border: '1px solid var(--line)',
+                                borderRadius: 'var(--radius-md)',
+                            }}
+                        >
                             <TradingViewContainer minHeight="160px">
                                 {(activeTheme) => (
                                     <SymbolInfo key={`sym-${tvSymbol}-${activeTheme}`} symbol={tvSymbol} colorTheme={activeTheme} width="100%" locale="es" isTransparent />
@@ -111,8 +136,16 @@ export default function EmpresasClient() {
                             </TradingViewContainer>
                         </div>
 
-                        <div className="col-span-1 lg:col-span-8 flex flex-col gap-5">
-                            <div className="rounded-[24px] overflow-hidden p-2 transition-all hover:shadow-md" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
+                        <div className="col-span-1 lg:col-span-8 flex flex-col" style={{ gap: 'var(--space-6)' }}>
+                            <div
+                                className="overflow-hidden"
+                                style={{
+                                    background: 'var(--surface-100)',
+                                    border: '1px solid var(--line)',
+                                    borderRadius: 'var(--radius-md)',
+                                    padding: 'var(--space-2)',
+                                }}
+                            >
                                 <div className="h-[300px] w-full">
                                     <TradingViewContainer height="300px">
                                         {(activeTheme) => (
@@ -122,7 +155,15 @@ export default function EmpresasClient() {
                                 </div>
                             </div>
 
-                            <div className="rounded-[24px] overflow-hidden p-2 transition-all hover:shadow-md" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
+                            <div
+                                className="overflow-hidden"
+                                style={{
+                                    background: 'var(--surface-100)',
+                                    border: '1px solid var(--line)',
+                                    borderRadius: 'var(--radius-md)',
+                                    padding: 'var(--space-2)',
+                                }}
+                            >
                                 <div className="h-[450px] w-full">
                                     <TradingViewContainer height="450px">
                                         {(activeTheme) => (
@@ -133,9 +174,19 @@ export default function EmpresasClient() {
                             </div>
                         </div>
 
-                        <div className="col-span-1 lg:col-span-4 flex flex-col gap-5">
-                            <div className="rounded-[24px] overflow-hidden p-2" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                                <h4 className="text-[10px] font-bold uppercase tracking-wider mb-2 ml-3 mt-2 opacity-50" style={{ color: 'var(--text-primary)' }}>Sentimiento Técnico</h4>
+                        <div className="col-span-1 lg:col-span-4 flex flex-col" style={{ gap: 'var(--space-6)' }}>
+                            <div
+                                className="overflow-hidden"
+                                style={{
+                                    background: 'var(--surface-100)',
+                                    border: '1px solid var(--line)',
+                                    borderRadius: 'var(--radius-md)',
+                                    padding: 'var(--space-4)',
+                                }}
+                            >
+                                <h3 className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-2)' }}>
+                                    Indicadores técnicos
+                                </h3>
                                 <div className="h-[380px] w-full">
                                     <TradingViewContainer height="380px">
                                         {(activeTheme) => (
@@ -145,8 +196,18 @@ export default function EmpresasClient() {
                                 </div>
                             </div>
 
-                            <div className="rounded-[24px] overflow-hidden p-4" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                                <h4 className="text-[10px] font-bold uppercase tracking-wider mb-3 opacity-50" style={{ color: 'var(--text-primary)' }}>Rendimiento Reciente</h4>
+                            <div
+                                className="overflow-hidden"
+                                style={{
+                                    background: 'var(--surface-100)',
+                                    border: '1px solid var(--line)',
+                                    borderRadius: 'var(--radius-md)',
+                                    padding: 'var(--space-4)',
+                                }}
+                            >
+                                <h3 className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-2)' }}>
+                                    Rendimiento reciente
+                                </h3>
                                 <div className="h-[150px] w-full">
                                     <TradingViewContainer height="150px">
                                         {(activeTheme) => (
@@ -156,8 +217,18 @@ export default function EmpresasClient() {
                                 </div>
                             </div>
 
-                            <div className="rounded-[24px] overflow-hidden flex-1" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', minHeight: '350px' }}>
-                                <h4 className="text-[10px] font-bold uppercase tracking-wider mb-0 p-4 pb-0 opacity-50" style={{ color: 'var(--text-primary)' }}>Noticias de la Empresa</h4>
+                            <div
+                                className="overflow-hidden flex-1"
+                                style={{
+                                    background: 'var(--surface-100)',
+                                    border: '1px solid var(--line)',
+                                    borderRadius: 'var(--radius-md)',
+                                    minHeight: '350px',
+                                }}
+                            >
+                                <h3 className="label" style={{ color: 'var(--ink-subtle)', padding: 'var(--space-4) var(--space-4) 0', margin: 0 }}>
+                                    Noticias de la empresa
+                                </h3>
                                 <TradingViewContainer height="350px">
                                     {(activeTheme) => (
                                         <Timeline key={`timeline-${tvSymbol}-${activeTheme}`} feedMode="symbol" symbol={tvSymbol} colorTheme={activeTheme} width="100%" height="100%" locale="es" isTransparent />
@@ -167,9 +238,8 @@ export default function EmpresasClient() {
                         </div>
                     </div>
 
-                    <p className="text-[10px] text-center pt-8 opacity-50" style={{ color: 'var(--text-tertiary)' }}>
-                        Datos en tiempo real y gratuitos provistos exclusivamente por la tecnología de TradingView.
-                        Infopeso no brinda asesoría financiera. Todo análisis es meramente educativo.
+                    <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)', textAlign: 'center', paddingTop: 'var(--space-4)', margin: 0 }}>
+                        Datos provistos por TradingView. Información con fines informativos. No es una recomendación de inversión.
                     </p>
                 </div>
             </section>

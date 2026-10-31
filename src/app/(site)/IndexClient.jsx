@@ -1,288 +1,130 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { filtrarUltimoMes, getDatesRange, getYesterdayDate } from "@/utils/functions";
-import { fetchData } from "@/utils/Fetch";
-import { dolarFechaAPI, variableAPI, RiesgoPaisHistoricoAPI } from "@/apis";
-import { ErrorComponent } from "@/components/Error";
-import { indexCategories } from "@/MacroFilters";
-import { LoadingCard } from "@/components/LoadingCard";
-import { useDolar } from "@/hooks/useDolar";
-import { useMacro } from "@/hooks/useMacro";
-import Link from "next/link";
-import { DenseRowItem } from "@/components/cards/DenseRowItem";
-import { MiniChart, TickerTape, MarketData } from "react-ts-tradingview-widgets";
-import { useTheme } from "@/hooks/useTheme";
-import { NewsFeed } from "@/components/news/NewsFeed";
-import { TradingViewContainer } from "@/components/TradingViewContainer";
+import { useEffect, useState } from 'react';
+import { filtrarUltimoMes, getDatesRange, getYesterdayDate } from '@/utils/functions';
+import { fetchData } from '@/utils/Fetch';
+import { dolarFechaAPI, variableAPI, RiesgoPaisHistoricoAPI } from '@/apis';
+import { ErrorComponent } from '@/components/Error';
+import { indexCategories } from '@/MacroFilters';
+import { useDolar } from '@/hooks/useDolar';
+import { useMacro } from '@/hooks/useMacro';
+import Link from 'next/link';
+import { MiniChart, MarketData } from 'react-ts-tradingview-widgets';
+import { NewsFeed } from '@/components/news/NewsFeed';
+import { TradingViewContainer } from '@/components/TradingViewContainer';
+import { QuoteCard } from '@/components/pulso/QuoteCard';
+import { Button } from '@/components/pulso/Button';
+import { Delta } from '@/components/pulso/Delta';
+import { formatCurrency, formatNumber, formatUpdatedTime, isValidNumber } from '@/utils/formatters';
 
-// ─── SystemStatusBar ────────────────────────────────────────────
-function SystemStatusBar({ variables, lastMacro, isLoading }) {
-    const find    = (id) => variables?.find(v => v.idVariable === id);
-    const findLast = (id) => lastMacro?.find(m => m.idVariable === id);
+const CASA_SLUGS = {
+    blue: 'dolar-blue',
+    oficial: 'dolar-oficial',
+    bolsa: 'dolar-mep',
+    contadoconliqui: 'dolar-ccl',
+    tarjeta: 'dolar-tarjeta',
+    mayorista: 'dolar-mayorista',
+    cripto: 'dolar-cripto',
+};
 
-    const rp   = find('riesgo-pais');
-    const tasa = find(44);
-    const base = find(15);
-
-    const rpLast   = findLast('riesgo-pais');
-    const tasaLast = findLast(44);
-    const baseLast = findLast(15);
-
-    const signal = (curr, prev, invert) => {
-        if (!curr || !prev || prev === 0) return 0;
-        const pct = ((curr - prev) / Math.abs(prev)) * 100;
-        if (Math.abs(pct) < 0.5) return 0;
-        return invert ? (pct > 0 ? -1 : 1) : (pct > 0 ? 1 : -1);
-    };
-
-    const s1 = signal(rp?.valor, rpLast?.valor, true);
-    const s2 = signal(tasa?.valor, tasaLast?.valor, true);
-    const s3 = signal(base?.valor, baseLast?.valor, false);
-    const score = s1 + s2 + s3;
-
-    const status =
-        score >=  2 ? { label: 'EXPANSIVO',   color: 'var(--positive)', bg: 'var(--positive-soft)' } :
-        score <= -2 ? { label: 'CONTRACTIVO', color: 'var(--negative)', bg: 'var(--negative-soft)' } :
-                      { label: 'NEUTRO',       color: 'var(--accent)',   bg: 'var(--accent-soft)'   };
-
-    const arrow = (s) => s > 0 ? '↑' : s < 0 ? '↓' : '→';
-
-    const now     = new Date();
-    const timeStr = now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-    const dateStr = now.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
-
+function SectionHeader({ kicker, title, actionHref, actionLabel }) {
     return (
-        <div style={{ background: 'var(--bg-surface)', borderBottom: '1px solid var(--border-subtle)' }}>
-            <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-1.5 flex items-center justify-between gap-4 flex-wrap">
-                <div className="flex items-center gap-3 flex-wrap">
-                    <div className="flex items-center gap-1.5">
-                        <span className="relative flex h-2 w-2 flex-shrink-0">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-40"
-                                  style={{ background: status.color, animationDuration: '2.5s' }} />
-                            <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: status.color }} />
-                        </span>
-                        <span className="text-[10px] font-bold tracking-[0.14em] uppercase"
-                              style={{ color: status.color, fontFamily: 'var(--font-ui)' }}>
-                            {isLoading ? '···' : status.label}
-                        </span>
-                    </div>
-
-                    {!isLoading && rp && tasa && base && (
-                        <>
-                            <span className="text-[10px]" style={{ color: 'var(--border-strong)' }}>·</span>
-                            <div className="flex items-center gap-3">
-                                <span className="text-[10px] font-medium" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
-                                    Riesgo {arrow(s1)}
-                                </span>
-                                <span className="text-[10px] font-medium" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
-                                    Tasa {arrow(s2)}
-                                </span>
-                                <span className="text-[10px] font-medium" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
-                                    Liquidez {arrow(s3)}
-                                </span>
-                            </div>
-                        </>
-                    )}
-                </div>
-
-                <span className="text-[10px] capitalize hidden sm:block"
-                      style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                    {dateStr} · {timeStr}
-                </span>
-            </div>
-        </div>
-    );
-}
-
-// ─── PrimaryMetric — Tier 1 ─────────────────────────────────────
-function PrimaryMetric({ label, sublabel, value, unit, delta, deltaLabel, deltaIsAbs, prefix, source, loading }) {
-    const pos = delta > 0;
-    const neg = delta < 0;
-    const col = pos ? 'var(--positive)' : neg ? 'var(--negative)' : 'var(--text-tertiary)';
-    const bg  = pos ? 'var(--positive-soft)' : neg ? 'var(--negative-soft)' : 'var(--bg-surface-hover)';
-
-    return (
-        <article className="flex flex-col gap-1.5 p-3 rounded-xl h-full"
-                 style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-            {loading ? (
-                <div className="space-y-2 animate-pulse">
-                    <div className="skeleton h-2.5 w-20 rounded" />
-                    <div className="skeleton h-8 w-28 rounded" />
-                    <div className="skeleton h-2.5 w-16 rounded" />
-                </div>
-            ) : (
-                <>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.11em]"
-                       style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                        {label}
+        <div
+            style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'flex-end',
+                justifyContent: 'space-between',
+                gap: 'var(--space-4)',
+                marginBottom: 'var(--space-6)',
+                paddingBottom: 'var(--space-3)',
+                borderBottom: '1px solid var(--line)',
+            }}
+        >
+            <div>
+                {kicker && (
+                    <p className="label" style={{ color: 'var(--ink-subtle)', margin: '0 0 var(--space-1) 0' }}>
+                        {kicker}
                     </p>
-                    <div className="flex items-baseline gap-1.5">
-                        <span className="text-[1.375rem] font-medium leading-none"
-                              style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }}>
-                            {prefix}{value !== null && value !== undefined ? Number(value).toLocaleString('es-AR') : '—'}
-                        </span>
-                        {unit && (
-                            <span className="text-sm" style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                                {unit}
-                            </span>
-                        )}
-                    </div>
-                    <div className="flex items-center justify-between gap-2 mt-auto pt-1">
-                        {delta !== null && delta !== undefined ? (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded"
-                                  style={{ background: bg, color: col, fontFamily: 'var(--font-mono)' }}>
-                                {pos ? '↑' : neg ? '↓' : '→'}{' '}
-                                {deltaIsAbs
-                                    ? `${Math.abs(delta).toFixed(0)} ${unit || ''} ${deltaLabel || ''}`
-                                    : `${Math.abs(delta).toFixed(2)}% ${deltaLabel || ''}`
-                                }
-                            </span>
-                        ) : <span />}
-                        {source && <span className="source-badge">{source}</span>}
-                    </div>
-                    {sublabel && (
-                        <p className="text-[10px] leading-tight" style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                            {sublabel}
-                        </p>
-                    )}
-                </>
-            )}
-        </article>
-    );
-}
-
-// ─── MarketCard — Tier 2 ────────────────────────────────────────
-function MarketCard({ label, sublabel, value, unit, delta, deltaIsAbs, source, loading, children }) {
-    const pos = delta > 0;
-    const neg = delta < 0;
-    const col = pos ? 'var(--positive)' : neg ? 'var(--negative)' : 'var(--text-tertiary)';
-    const bg  = pos ? 'var(--positive-soft)' : neg ? 'var(--negative-soft)' : 'var(--bg-surface-hover)';
-
-    return (
-        <article className="flex flex-col gap-3 p-3.5 rounded-xl"
-                 style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', minHeight: '130px' }}>
-            {loading ? (
-                <div className="space-y-2 animate-pulse">
-                    <div className="skeleton h-2.5 w-24 rounded" />
-                    <div className="skeleton h-10 w-36 rounded" />
-                </div>
-            ) : (
-                <>
-                    <div className="flex items-start justify-between gap-2">
-                        <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.11em]"
-                               style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                                {label}
-                            </p>
-                            <div className="flex items-baseline gap-1.5 mt-1">
-                                <span className="text-3xl font-medium leading-none"
-                                      style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }}>
-                                    {value !== null && value !== undefined ? Number(value).toLocaleString('es-AR') : '—'}
-                                </span>
-                                {unit && (
-                                    <span className="text-sm" style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}>
-                                        {unit}
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-                        <div className="flex flex-col items-end gap-1.5 flex-shrink-0 pt-1">
-                            {delta !== null && delta !== undefined && (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded"
-                                      style={{ background: bg, color: col, fontFamily: 'var(--font-mono)' }}>
-                                    {pos ? '↑' : neg ? '↓' : '→'}{' '}
-                                    {deltaIsAbs ? `${Math.abs(delta).toFixed(0)} pb` : `${Math.abs(delta).toFixed(2)}%`}
-                                </span>
-                            )}
-                            {source && <span className="source-badge">{source}</span>}
-                        </div>
-                    </div>
-                    {sublabel && (
-                        <p className="text-[10px]" style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                            {sublabel}
-                        </p>
-                    )}
-                    {children && <div className="flex-1 mt-1">{children}</div>}
-                </>
-            )}
-        </article>
-    );
-}
-
-// ─── SectionHead — separador de sección ─────────────────────────
-function SectionHead({ label, right }) {
-    return (
-        <div className="flex items-center gap-3 mb-3">
-            <h2 className="text-[9px] font-semibold uppercase tracking-[0.12em] whitespace-nowrap"
-                style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                {label}
-            </h2>
-            <div className="flex-1 h-px" style={{ background: 'var(--border-subtle)' }} />
-            {right}
-        </div>
-    );
-}
-
-// ─── LoadingDenseRow ────────────────────────────────────────────
-function LoadingDenseRow() {
-    return (
-        <div className="flex items-center justify-between py-2 px-3.5" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-            <div className="skeleton h-3.5 w-24 rounded" />
-            <div className="flex items-center gap-2">
-                <div className="skeleton h-3.5 w-12 rounded" />
-                <div className="skeleton h-4 w-16 rounded" />
+                )}
+                <h2 className="h1" style={{ margin: 0, color: 'var(--ink)' }}>
+                    {title}
+                </h2>
             </div>
+            {actionHref && actionLabel && (
+                <Link
+                    href={actionHref}
+                    className="label"
+                    style={{
+                        color: 'var(--signal-text)',
+                        textDecoration: 'none',
+                    }}
+                >
+                    {actionLabel} →
+                </Link>
+            )}
         </div>
     );
 }
 
-export default function IndexClient({ 
-    initialDolar, 
-    initialVariables, 
-    initialHistoricalMacro = null, 
-    initialHistoricalDolar = null, 
-    initialNews = null 
+export default function IndexClient({
+    initialDolar,
+    initialVariables,
+    initialHistoricalMacro = null,
+    initialHistoricalDolar = null,
+    initialNews = null,
 }) {
-    const [theme] = useTheme();
     const [lastMacro, setLastMacro] = useState(initialHistoricalMacro || []);
     const [lastDolar, setLastDolar] = useState(initialHistoricalDolar || []);
-    const [isHistoricalMacroLoading, setIsHistoricalMacroLoading] = useState(!initialHistoricalMacro || initialHistoricalMacro.length === 0);
-    const [isHistoricalDolarLoading, setIsHistoricalDolarLoading] = useState(!initialHistoricalDolar || initialHistoricalDolar.length === 0);
+    const [isHistoricalMacroLoading, setIsHistoricalMacroLoading] = useState(
+        !initialHistoricalMacro || initialHistoricalMacro.length === 0
+    );
+    const [isHistoricalDolarLoading, setIsHistoricalDolarLoading] = useState(
+        !initialHistoricalDolar || initialHistoricalDolar.length === 0
+    );
     const { dolar, dolarStatus } = useDolar(initialDolar);
     const { variables, variablesStatus } = useMacro(initialVariables);
 
-    const filter = (ids, arr) => arr?.filter(item => ids.includes(item.idVariable)) || [];
+    const filter = (ids, arr) => arr?.filter((item) => ids.includes(item.idVariable)) || [];
 
-    const macroData    = variables || [];
-    const findMacro    = (id) => macroData.find(v => String(v.idVariable) === String(id));
+    const macroData = variables || [];
+    const findMacro = (id) => macroData.find((v) => String(v.idVariable) === String(id));
 
     const riesgoPaisVar = findMacro('riesgo-pais');
-    const tasaVar       = findMacro(44);
-    const baseVar       = findMacro(15);
-    const inflacionVar  = findMacro(27);
-    const reservasVar   = findMacro(1);
+    const tasaVar = findMacro(44);
+    const baseVar = findMacro(15);
+    const inflacionVar = findMacro(27);
+    const reservasVar = findMacro(1);
 
-    const delta = (curr, prev, isAbs = false) => {
-        if (!curr || !prev || prev === 0) return null;
-        return isAbs ? curr - prev : ((curr - prev) / Math.abs(prev)) * 100;
+    const calcDelta = (curr, prev, isAbs = false) => {
+        if (!isValidNumber(curr) || !isValidNumber(prev) || Number(prev) === 0) return null;
+        return isAbs
+            ? Number(curr) - Number(prev)
+            : ((Number(curr) - Number(prev)) / Math.abs(Number(prev))) * 100;
     };
 
-    const findLastMacro = (id) => lastMacro.find(m => String(m.idVariable) === String(id));
+    const findLastMacro = (id) => lastMacro.find((m) => String(m.idVariable) === String(id));
 
-    const rpLast        = findLastMacro('riesgo-pais');
-    const tasaLast      = findLastMacro(44);
-    const baseLast      = findLastMacro(15);
+    const rpLast = findLastMacro('riesgo-pais');
+    const tasaLast = findLastMacro(44);
+    const baseLast = findLastMacro(15);
     const inflacionLast = findLastMacro(27);
-    const reservasLast  = findLastMacro(1);
+    const reservasLast = findLastMacro(1);
 
-    const rpDelta       = delta(riesgoPaisVar?.valor, rpLast?.valor, true);
-    const tasaDelta     = delta(tasaVar?.valor, tasaLast?.valor);
-    const baseDelta     = delta(baseVar?.valor, baseLast?.valor);
-    const inflaDelta    = delta(inflacionVar?.valor, inflacionLast?.valor, true);
-    const reservasDelta = delta(reservasVar?.valor, reservasLast?.valor);
+    const rpDelta = calcDelta(riesgoPaisVar?.valor, rpLast?.valor, true);
+    const tasaDelta = calcDelta(tasaVar?.valor, tasaLast?.valor);
+    const baseDelta = calcDelta(baseVar?.valor, baseLast?.valor);
+    const inflaDelta = calcDelta(inflacionVar?.valor, inflacionLast?.valor, true);
+    const reservasDelta = calcDelta(reservasVar?.valor, reservasLast?.valor);
 
-    const dolarList = dolar?.filter(d => d.casa !== 'mayorista') || [];
+    const dolarList = dolar || [];
+    const findDolar = (casa) => dolarList.find((d) => d.casa === casa);
+    const findLastDolar = (casa) => lastDolar.find((d) => d.casa === casa);
+
+    const blueDolar = findDolar('blue');
+    const mepDolar = findDolar('bolsa');
+    const blueDelta = calcDelta(blueDolar?.venta, findLastDolar('blue')?.venta);
+    const mepDelta = calcDelta(mepDolar?.venta, findLastDolar('bolsa')?.venta);
 
     useEffect(() => {
         if (initialHistoricalMacro && initialHistoricalMacro.length > 0) return;
@@ -300,18 +142,18 @@ export default function IndexClient({
                     try {
                         if (id === 'riesgo-pais') {
                             const res = await fetchData(RiesgoPaisHistoricoAPI);
-                            const rp  = filtrarUltimoMes(res.data)[0];
+                            const rp = filtrarUltimoMes(res.data)[0];
                             return { idVariable: 'riesgo-pais', valor: rp?.valor };
                         } else {
                             const dates = getDatesRange();
-                            const res   = await fetchData(variableAPI(id, dates[0], dates[1]));
-                            const obj   = res.data.results?.[0];
+                            const res = await fetchData(variableAPI(id, dates[0], dates[1]));
+                            const obj = res.data.results?.[0];
                             if (obj?.detalle?.length > 0) {
                                 return { idVariable: obj.idVariable, valor: obj.detalle[0].valor };
                             }
                         }
                     } catch (err) {
-                        console.error("Error fetching macro index:", id, err);
+                        console.error('Error fetching macro index:', id, err);
                     }
                     return null;
                 });
@@ -319,7 +161,7 @@ export default function IndexClient({
                 const results = await Promise.all(promises);
                 setLastMacro(results.filter(Boolean));
             } catch (err) {
-                console.error("Error fetching macro historicals:", err);
+                console.error('Error fetching macro historicals:', err);
             } finally {
                 setIsHistoricalMacroLoading(false);
             }
@@ -340,10 +182,12 @@ export default function IndexClient({
             try {
                 const promises = dolar.map(async (item) => {
                     try {
-                        const res = await fetchData(dolarFechaAPI(item.casa, getYesterdayDate().replace(/-/g, '/')));
+                        const res = await fetchData(
+                            dolarFechaAPI(item.casa, getYesterdayDate().replace(/-/g, '/'))
+                        );
                         return res.data;
                     } catch (err) {
-                        console.error("Error fetching historical dollar for:", item.casa, err);
+                        console.error('Error fetching historical dollar for:', item.casa, err);
                         return null;
                     }
                 });
@@ -351,7 +195,7 @@ export default function IndexClient({
                 const results = await Promise.all(promises);
                 setLastDolar(results.filter(Boolean));
             } catch (err) {
-                console.error("Error fetching dollar historicals:", err);
+                console.error('Error fetching dollar historicals:', err);
             } finally {
                 setIsHistoricalDolarLoading(false);
             }
@@ -360,217 +204,494 @@ export default function IndexClient({
         fetchAllDolar();
     }, [dolar, dolarStatus, initialHistoricalDolar]);
 
-    const isLoading = 
-        dolarStatus === 'loading' || 
-        variablesStatus === 'loading' || 
-        isHistoricalDolarLoading || 
+    const isLoading =
+        dolarStatus === 'loading' ||
+        variablesStatus === 'loading' ||
+        isHistoricalDolarLoading ||
         isHistoricalMacroLoading;
 
-    const hasError  = dolarStatus === 'error' || variablesStatus === 'error';
+    const hasError = dolarStatus === 'error' || variablesStatus === 'error';
 
     return (
-        <main className="min-h-screen pb-16 md:pb-12" style={{ paddingTop: '56px' }}>
-            <SystemStatusBar variables={variables} lastMacro={lastMacro} isLoading={isLoading} />
+        <main style={{ minHeight: '100vh', paddingBottom: 'var(--space-16)' }}>
+            {/* Portada / Hero */}
+            <section
+                style={{
+                    paddingTop: 'var(--space-12)',
+                    paddingBottom: 'var(--space-8)',
+                    borderBottom: '1px solid var(--line)',
+                }}
+            >
+                <div className="pulso-container">
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            alignItems: 'flex-end',
+                            justifyContent: 'space-between',
+                            gap: 'var(--space-6)',
+                        }}
+                    >
+                        <div style={{ maxWidth: '720px' }}>
+                            <p className="label" style={{ color: 'var(--ink-subtle)', margin: '0 0 var(--space-3) 0' }}>
+                                PULSO FINANCIERO ARGENTINO · TIEMPO REAL
+                            </p>
+                            <h1 className="display-xl" style={{ margin: '0 0 var(--space-4) 0' }}>
+                                Leé el mercado.
+                            </h1>
+                            <p className="body" style={{ color: 'var(--ink-muted)', margin: 0, maxWidth: '580px' }}>
+                                Seguí el dólar, la inflación, el riesgo país y probá cómo rinde tu cartera en pesos y dólares con datos verificables.
+                            </p>
+                        </div>
 
-            <section className="px-5 sm:px-8 pt-5 pb-3">
-                <div className="max-w-[1400px] mx-auto">
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.14em] mb-0.5"
-                       style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
-                        Economía Argentina
-                    </p>
-                    <h1 className="text-xl sm:text-2xl leading-tight"
-                        style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-                        Estado del sistema financiero
-                    </h1>
-                </div>
-            </section>
+                        {/* Única acción principal naranja de la pantalla */}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)' }}>
+                            <Button variant="primary" href="/Cartera">
+                                Crear mi cartera
+                            </Button>
+                            <Button variant="secondary" href="/Cambios">
+                                Ver cotizaciones
+                            </Button>
+                        </div>
+                    </div>
 
-            <section className="px-5 sm:px-8 pb-4">
-                <div className="max-w-[1400px] mx-auto rounded-lg overflow-hidden pointer-events-none" style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}>
-                    <TickerTape
-                        colorTheme={theme}
-                        displayMode="regular"
-                        locale="es"
-                        showSymbolLogo={true}
-                        symbols={[
-                            { description: "Soja",        proName: "CAPITALCOM:SOYBEAN" },
-                            { description: "Maíz",        proName: "CAPITALCOM:CORN" },
-                            { description: "Trigo",       proName: "CAPITALCOM:WHEAT" },
-                            { description: "Petróleo WTI",proName: "TVC:USOIL" },
-                            { description: "Oro",         proName: "OANDA:XAUUSD" },
-                            { description: "Plata",       proName: "OANDA:XAGUSD" },
-                        ]}
-                    />
+                    {/* Grilla protagonista: 4 QuoteCards principales */}
+                    <div
+                        style={{
+                            marginTop: 'var(--space-8)',
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                            gap: 'var(--space-4)',
+                        }}
+                    >
+                        <QuoteCard
+                            label="DÓLAR BLUE · VENTA"
+                            value={blueDolar?.venta}
+                            prefix="$"
+                            decimals={2}
+                            delta={blueDelta}
+                            deltaUnit="%"
+                            updatedAt={blueDolar?.fechaActualizacion}
+                            secondaryLabel={blueDolar?.compra ? `COMPRA ${formatCurrency(blueDolar.compra, 'ARS')}` : ''}
+                            href="/Cambios/dolar-blue"
+                            loading={isLoading}
+                        />
+                        <QuoteCard
+                            label="DÓLAR MEP · VENTA"
+                            value={mepDolar?.venta}
+                            prefix="$"
+                            decimals={2}
+                            delta={mepDelta}
+                            deltaUnit="%"
+                            updatedAt={mepDolar?.fechaActualizacion}
+                            secondaryLabel={mepDolar?.compra ? `COMPRA ${formatCurrency(mepDolar.compra, 'ARS')}` : ''}
+                            href="/Cambios/dolar-mep"
+                            loading={isLoading}
+                        />
+                        <QuoteCard
+                            label="RIESGO PAÍS · EMBI+"
+                            value={riesgoPaisVar?.valor}
+                            suffix="pb"
+                            decimals={0}
+                            delta={rpDelta}
+                            deltaUnit="pb"
+                            deltaDecimals={0}
+                            updatedAt={riesgoPaisVar?.fecha}
+                            href="/Economia/riesgo-pais"
+                            loading={isLoading}
+                        />
+                        <QuoteCard
+                            label="INFLACIÓN MENSUAL · INDEC"
+                            value={inflacionVar?.valor}
+                            suffix="%"
+                            decimals={1}
+                            delta={inflaDelta}
+                            deltaUnit="pp"
+                            deltaDecimals={1}
+                            updatedAt={inflacionVar?.fecha}
+                            href="/Economia/27"
+                            loading={isLoading}
+                        />
+                    </div>
                 </div>
             </section>
 
             {hasError && (
-                <div className="px-5 sm:px-8 pb-4">
-                    <div className="max-w-[1400px] mx-auto">
-                        <ErrorComponent message="Error al cargar el dashboard" />
+                <section style={{ paddingTop: 'var(--space-8)' }}>
+                    <div className="pulso-container">
+                        <ErrorComponent message="No pudimos actualizar algunos indicadores en vivo." />
                     </div>
-                </div>
+                </section>
             )}
 
-            <section className="px-5 sm:px-8 pb-5">
-                <div className="max-w-[1400px] mx-auto">
-                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-                        <PrimaryMetric
-                            label="Tasa Política Monetaria"
-                            sublabel="BCRA · Anualizada"
-                            value={tasaVar?.valor}
-                            unit="%"
-                            delta={tasaDelta}
-                            deltaLabel="período"
-                            source="BCRA"
-                            loading={isLoading}
-                        />
-                        <PrimaryMetric
-                            label="Base Monetaria"
-                            sublabel="BCRA · Millones ARS"
-                            value={baseVar?.valor}
-                            unit=""
-                            delta={baseDelta}
-                            deltaLabel="período"
-                            source="BCRA"
-                            loading={isLoading}
-                        />
-                        <PrimaryMetric
-                            label="Reservas Internacionales"
-                            sublabel="BCRA · Millones USD"
-                            value={reservasVar?.valor}
-                            unit=""
-                            delta={reservasDelta}
-                            deltaLabel="período"
-                            source="BCRA"
-                            loading={isLoading}
-                        />
-                        <PrimaryMetric
-                            label="Inflación Mensual"
-                            sublabel="INDEC · Último dato"
-                            value={inflacionVar?.valor}
-                            unit="%"
-                            delta={inflaDelta}
-                            deltaLabel="pp vs. ant."
-                            deltaIsAbs
-                            source="INDEC"
-                            loading={isLoading}
-                        />
+            {/* Sección: Pizarra completa del Dólar + Indicadores del BCRA */}
+            <section style={{ paddingTop: 'var(--space-12)' }}>
+                <div className="pulso-container">
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                            gap: 'var(--space-8)',
+                            alignItems: 'start',
+                        }}
+                    >
+                        {/* Columna 1: Tabla de Tipos de Cambio */}
+                        <div>
+                            <SectionHeader
+                                kicker="DOLARAPI · COMPRA Y VENTA"
+                                title="Tipos de cambio"
+                                actionHref="/Cambios"
+                                actionLabel="Ver calculadoras"
+                            />
+
+                            <div
+                                style={{
+                                    background: 'var(--surface-100)',
+                                    border: '1px solid var(--line)',
+                                    borderRadius: 'var(--radius-md)',
+                                    overflowX: 'auto',
+                                }}
+                            >
+                                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '480px' }}>
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                scope="col"
+                                                className="label"
+                                                style={{
+                                                    color: 'var(--ink-subtle)',
+                                                    textAlign: 'left',
+                                                    padding: 'var(--space-3) var(--space-4)',
+                                                    borderBottom: '1px solid var(--line)',
+                                                }}
+                                            >
+                                                Cotización
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="label"
+                                                style={{
+                                                    color: 'var(--ink-subtle)',
+                                                    textAlign: 'right',
+                                                    padding: 'var(--space-3) var(--space-4)',
+                                                    borderBottom: '1px solid var(--line)',
+                                                }}
+                                            >
+                                                Compra
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="label"
+                                                style={{
+                                                    color: 'var(--ink-subtle)',
+                                                    textAlign: 'right',
+                                                    padding: 'var(--space-3) var(--space-4)',
+                                                    borderBottom: '1px solid var(--line)',
+                                                }}
+                                            >
+                                                Venta
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="label"
+                                                style={{
+                                                    color: 'var(--ink-subtle)',
+                                                    textAlign: 'right',
+                                                    padding: 'var(--space-3) var(--space-4)',
+                                                    borderBottom: '1px solid var(--line)',
+                                                }}
+                                            >
+                                                Var. diaria
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {isLoading ? (
+                                            [1, 2, 3, 4, 5, 6].map((i) => (
+                                                <tr key={i}>
+                                                    <td colSpan={4} style={{ padding: 'var(--space-3) var(--space-4)', borderBottom: '1px solid var(--line)' }}>
+                                                        <div className="skeleton" style={{ height: '20px', width: '100%' }} />
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            dolarList.map((item, idx) => {
+                                                const lastVal = findLastDolar(item.casa)?.venta;
+                                                const diff = calcDelta(item.venta, lastVal);
+                                                const slug = CASA_SLUGS[item.casa] || `dolar-${item.casa}`;
+                                                const isLast = idx === dolarList.length - 1;
+                                                return (
+                                                    <tr
+                                                        key={item.casa || idx}
+                                                        style={{ transition: 'background-color 150ms ease-out' }}
+                                                        onMouseEnter={(e) => {
+                                                            e.currentTarget.style.background = 'var(--surface-200)';
+                                                        }}
+                                                        onMouseLeave={(e) => {
+                                                            e.currentTarget.style.background = 'transparent';
+                                                        }}
+                                                    >
+                                                        <td
+                                                            style={{
+                                                                padding: 'var(--space-3) var(--space-4)',
+                                                                borderBottom: isLast ? '0' : '1px solid var(--line)',
+                                                                textAlign: 'left',
+                                                            }}
+                                                        >
+                                                            <Link
+                                                                href={`/Cambios/${slug}`}
+                                                                style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+                                                            >
+                                                                <span
+                                                                    style={{
+                                                                        display: 'block',
+                                                                        fontFamily: 'var(--font-display)',
+                                                                        fontWeight: 700,
+                                                                        fontSize: '15px',
+                                                                        lineHeight: 1.2,
+                                                                        color: 'var(--ink)',
+                                                                    }}
+                                                                >
+                                                                    {item.nombre}
+                                                                </span>
+                                                                <span
+                                                                    style={{
+                                                                        display: 'block',
+                                                                        fontFamily: 'var(--font-mono)',
+                                                                        fontSize: '11px',
+                                                                        color: 'var(--ink-subtle)',
+                                                                    }}
+                                                                >
+                                                                    {formatUpdatedTime(item.fechaActualizacion)}
+                                                                </span>
+                                                            </Link>
+                                                        </td>
+                                                        <td
+                                                            className="data"
+                                                            style={{
+                                                                padding: 'var(--space-3) var(--space-4)',
+                                                                borderBottom: isLast ? '0' : '1px solid var(--line)',
+                                                                textAlign: 'right',
+                                                                color: 'var(--ink-muted)',
+                                                            }}
+                                                        >
+                                                            {item.compra ? formatCurrency(item.compra, 'ARS') : '—'}
+                                                        </td>
+                                                        <td
+                                                            className="data"
+                                                            style={{
+                                                                padding: 'var(--space-3) var(--space-4)',
+                                                                borderBottom: isLast ? '0' : '1px solid var(--line)',
+                                                                textAlign: 'right',
+                                                                color: 'var(--ink)',
+                                                                fontWeight: 500,
+                                                            }}
+                                                        >
+                                                            {item.venta ? formatCurrency(item.venta, 'ARS') : '—'}
+                                                        </td>
+                                                        <td
+                                                            className="data"
+                                                            style={{
+                                                                padding: 'var(--space-3) var(--space-4)',
+                                                                borderBottom: isLast ? '0' : '1px solid var(--line)',
+                                                                textAlign: 'right',
+                                                            }}
+                                                        >
+                                                            <Delta value={diff} unit="%" compact={true} pill={false} />
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* Columna 2: Variables Monetarias del BCRA */}
+                        <div>
+                            <SectionHeader
+                                kicker="BCRA · ESTADÍSTICAS MONETARIAS"
+                                title="Variables del Banco Central"
+                                actionHref="/Economia"
+                                actionLabel="Ver todas las series"
+                            />
+
+                            <div
+                                style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                                    gap: 'var(--space-4)',
+                                }}
+                            >
+                                <QuoteCard
+                                    label="TASA POLÍTICA MONETARIA · TNA"
+                                    value={tasaVar?.valor}
+                                    suffix="%"
+                                    decimals={2}
+                                    delta={tasaDelta}
+                                    deltaUnit="%"
+                                    updatedAt={tasaVar?.fecha}
+                                    href="/Economia/44"
+                                    loading={isLoading}
+                                />
+                                <QuoteCard
+                                    label="RESERVAS BCRA · MILLONES"
+                                    value={reservasVar?.valor}
+                                    prefix="US$"
+                                    decimals={0}
+                                    delta={reservasDelta}
+                                    deltaUnit="%"
+                                    updatedAt={reservasVar?.fecha}
+                                    href="/Economia/1"
+                                    loading={isLoading}
+                                />
+                                <QuoteCard
+                                    label="BASE MONETARIA · MILLONES"
+                                    value={baseVar?.valor}
+                                    prefix="$"
+                                    decimals={0}
+                                    delta={baseDelta}
+                                    deltaUnit="%"
+                                    updatedAt={baseVar?.fecha}
+                                    href="/Economia/15"
+                                    loading={isLoading}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section className="px-5 sm:px-8 pb-5">
-                <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-3">
-                    <div className="lg:col-span-4 flex flex-col gap-2">
-                        <SectionHead
-                            label="Tipos de Cambio"
-                            right={
-                                <Link href="/Cambios"
-                                      className="text-[9px] font-semibold uppercase tracking-[0.1em] flex-shrink-0"
-                                      style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
-                                    Ver todo →
-                                </Link>
-                            }
-                        />
-                        <div className="rounded-xl overflow-hidden flex flex-col h-full"
-                             style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}>
-                            {isLoading ? (
-                                [1, 2, 3, 4, 5].map(i => <LoadingDenseRow key={i} />)
-                            ) : (
-                                dolarList.map((item, i) => {
-                                    const lastVal = lastDolar.find(d => d.casa === item.casa)?.venta;
-                                    return (
-                                        <DenseRowItem
-                                            key={i}
-                                            titulo={item.nombre}
-                                            valor={item.venta}
-                                            valorAnterior={lastVal}
-                                            linkTo="/Cambios"
-                                        />
-                                    );
-                                })
-                            )}
-                        </div>
-                    </div>
+            {/* Sección: Mercado local e internacional */}
+            <section style={{ paddingTop: 'var(--space-12)' }}>
+                <div className="pulso-container">
+                    <SectionHeader
+                        kicker="BYMA · WALL STREET · COMMODITIES"
+                        title="Pulso de mercado"
+                        actionHref="/Mercado"
+                        actionLabel="Abrir panel de mercado"
+                    />
 
-                    <div className="lg:col-span-4 flex flex-col gap-2">
-                        <SectionHead label="Mercado y Riesgo Local" />
-                        <div className="flex flex-col gap-2 h-full">
-                            <MarketCard
-                                label="Riesgo País"
-                                sublabel="EMBI+ · JP Morgan"
-                                value={riesgoPaisVar?.valor}
-                                unit="pb"
-                                delta={rpDelta}
-                                deltaIsAbs
-                                source="ArgentinaDatos"
-                                loading={isLoading}
-                            />
-                            
-                            <div className="rounded-xl overflow-hidden flex flex-col flex-1"
-                                 style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)', minHeight: '120px' }}>
-                                <div className="px-3 pt-2 pb-0.5 flex items-center justify-between">
-                                    <p className="text-[9px] font-semibold uppercase tracking-[0.12em]"
-                                       style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                                        S&P Merval · Indice
-                                    </p>
-                                    <span className="source-badge">TradingView</span>
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                            gap: 'var(--space-6)',
+                        }}
+                    >
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                            <div
+                                style={{
+                                    background: 'var(--surface-100)',
+                                    border: '1px solid var(--line)',
+                                    borderRadius: 'var(--radius-md)',
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        padding: 'var(--space-4) var(--space-6) 0',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                    }}
+                                >
+                                    <span className="label" style={{ color: 'var(--ink-subtle)' }}>
+                                        S&P MERVAL · BCBA:IMV
+                                    </span>
+                                    <Link href="/Mercado" className="label" style={{ color: 'var(--signal-text)', textDecoration: 'none' }}>
+                                        MERCADO →
+                                    </Link>
                                 </div>
-                                <div className="flex-1 min-h-0">
-                                    <TradingViewContainer minHeight="110px" className="h-full">
+                                <div style={{ height: '165px' }}>
+                                    <TradingViewContainer height="165px">
                                         {(activeTheme) => (
-                                            <MiniChart colorTheme={activeTheme} width="100%" height="100%"
-                                                       symbol="BCBA:IMV" locale="es" isTransparent={true} />
+                                            <MiniChart
+                                                colorTheme={activeTheme}
+                                                width="100%"
+                                                height="100%"
+                                                symbol="BCBA:IMV"
+                                                locale="es"
+                                                isTransparent={true}
+                                            />
                                         )}
                                     </TradingViewContainer>
                                 </div>
                             </div>
 
-                            <div className="rounded-xl overflow-hidden flex flex-col flex-1"
-                                 style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)', minHeight: '120px' }}>
-                                <div className="px-3 pt-2 pb-0.5 flex items-center justify-between">
-                                    <p className="text-[9px] font-semibold uppercase tracking-[0.12em]"
-                                       style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                                        Bonos Soberanos · AL30
-                                    </p>
-                                    <span className="source-badge">TradingView</span>
+                            <div
+                                style={{
+                                    background: 'var(--surface-100)',
+                                    border: '1px solid var(--line)',
+                                    borderRadius: 'var(--radius-md)',
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        padding: 'var(--space-4) var(--space-6) 0',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                    }}
+                                >
+                                    <span className="label" style={{ color: 'var(--ink-subtle)' }}>
+                                        BONO BONAR 2030 · BCBA:AL30
+                                    </span>
+                                    <Link href="/RentaFija/AL30" className="label" style={{ color: 'var(--signal-text)', textDecoration: 'none' }}>
+                                        CALCULAR TIR →
+                                    </Link>
                                 </div>
-                                <div className="flex-1 min-h-0">
-                                    <TradingViewContainer minHeight="110px" className="h-full">
+                                <div style={{ height: '165px' }}>
+                                    <TradingViewContainer height="165px">
                                         {(activeTheme) => (
-                                            <MiniChart colorTheme={activeTheme} width="100%" height="100%"
-                                                       symbol="BCBA:AL30" locale="es" isTransparent={true} />
+                                            <MiniChart
+                                                colorTheme={activeTheme}
+                                                width="100%"
+                                                height="100%"
+                                                symbol="BCBA:AL30"
+                                                locale="es"
+                                                isTransparent={true}
+                                            />
                                         )}
                                     </TradingViewContainer>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="lg:col-span-4 flex flex-col gap-2">
-                        <SectionHead label="Índices Globales" />
-                        <div className="rounded-xl overflow-hidden flex flex-col h-full min-h-[380px]" style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}>
-                            <TradingViewContainer height="100%" minHeight="380px" className="flex-1">
+                        <div
+                            style={{
+                                background: 'var(--surface-100)',
+                                border: '1px solid var(--line)',
+                                borderRadius: 'var(--radius-md)',
+                                overflow: 'hidden',
+                                minHeight: '380px',
+                            }}
+                        >
+                            <TradingViewContainer height="100%" minHeight="380px">
                                 {(activeTheme) => (
-                                    <MarketData 
-                                        colorTheme={activeTheme} 
-                                        width="100%" 
-                                        height="100%" 
-                                        locale="es" 
+                                    <MarketData
+                                        colorTheme={activeTheme}
+                                        width="100%"
+                                        height="100%"
+                                        locale="es"
                                         isTransparent={true}
                                         showSymbolLogo={false}
-                                        symbolsGroups={[{
-                                            name: "Principales Mercados",
-                                            originalName: "Indices",
-                                            symbols: [
-                                                { name: "AMEX:SPY", displayName: "S&P 500" },
-                                                { name: "BMFBOVESPA:IBOV", displayName: "Bovespa" },
-                                                { name: "OANDA:JP225USD", displayName: "Nikkei 225" },
-                                                { name: "SSE:000001", displayName: "Shanghai" },
-                                                { name: "BCBA:IMV", displayName: "S&P Merval" }
-                                            ]
-                                        }]} 
+                                        symbolsGroups={[
+                                            {
+                                                name: 'Índices y Commodities',
+                                                originalName: 'Indices',
+                                                symbols: [
+                                                    { name: 'AMEX:SPY', displayName: 'S&P 500 (SPY)' },
+                                                    { name: 'NASDAQ:QQQ', displayName: 'Nasdaq 100 (QQQ)' },
+                                                    { name: 'BMFBOVESPA:IBOV', displayName: 'Bovespa Brasil' },
+                                                    { name: 'CAPITALCOM:SOYBEAN', displayName: 'Soja Chicago' },
+                                                    { name: 'TVC:USOIL', displayName: 'Petróleo WTI' },
+                                                    { name: 'OANDA:XAUUSD', displayName: 'Oro (USD/oz)' },
+                                                ],
+                                            },
+                                        ]}
                                     />
                                 )}
                             </TradingViewContainer>
@@ -579,9 +700,8 @@ export default function IndexClient({
                 </div>
             </section>
 
-            <div className="mt-2">
-                <NewsFeed initialNews={initialNews} />
-            </div>
+            {/* Noticias */}
+            <NewsFeed initialNews={initialNews} />
         </main>
     );
 }

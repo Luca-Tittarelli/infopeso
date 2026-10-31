@@ -1,156 +1,187 @@
-import { useEffect, useState } from "react";
-import DifferenceIcon from "../../utils/DifferenceIcons";
-import LineChart from "../../charts/ChartLine";
-import { filtrarUltimaSemana, getTimeDifference } from "../../utils/functions";
-import Link from "next/link";
+'use client';
+
+import { useEffect, useState } from 'react';
+import LineChart from '../../charts/ChartLine';
+import { filtrarUltimaSemana } from '../../utils/functions';
+import { formatCurrency, formatUpdatedTime, isValidNumber } from '@/utils/formatters';
+import { Delta } from '@/components/pulso/Delta';
+import Link from 'next/link';
 
 function PillToggle({ options, selected, onChange }) {
     return (
-        <div className="flex items-center gap-1 p-0.5 rounded-full"
-             style={{ background: 'var(--bg-surface-hover)', border: '1px solid var(--border-subtle)' }}>
-            {options.map(opt => (
-                <button
-                    key={opt.value}
-                    onClick={() => onChange(opt.value)}
-                    className={selected === opt.value ? 'pill-active' : 'pill-inactive'}
-                    style={{ padding: '3px 10px', fontSize: '11px' }}
-                >
-                    {opt.label}
-                </button>
-            ))}
+        <div
+            style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 'var(--space-1)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+        >
+            {options.map((opt) => {
+                const active = selected === opt.value;
+                return (
+                    <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => onChange(opt.value)}
+                        className="label"
+                        style={{
+                            padding: '4px 10px',
+                            borderRadius: 'var(--radius-pill)',
+                            background: active ? 'var(--surface-200)' : 'transparent',
+                            color: active ? 'var(--ink)' : 'var(--ink-subtle)',
+                            border: `1px solid ${active ? 'var(--ink-subtle)' : 'var(--line)'}`,
+                            cursor: 'pointer',
+                        }}
+                    >
+                        {opt.label}
+                    </button>
+                );
+            })}
         </div>
     );
 }
 
 export function ChangesCard({ titulo, compra, venta, cotizaciones, fecha, chart, linkTo }) {
-    const [difference, setDifference] = useState(0);
-    const [duration, setDuration]     = useState("week");
-    const [chartData, setChartData]   = useState([]);
-    const [chartColor, setChartColor] = useState('#C47B2B');
+    const [difference, setDifference] = useState(null);
+    const [duration, setDuration] = useState('week');
+    const [chartData, setChartData] = useState([]);
 
     const showChart = chart !== false;
-    const isDark    = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
 
-    const labels = (arr) => arr.map(item => item.fecha);
-    const values = (arr) => arr.map(item => item.venta);
+    const labels = (arr) => arr.map((item) => item.fecha);
+    const values = (arr) => arr.map((item) => item.venta);
 
-    const ventaAnterior = cotizaciones?.data?.length > 0
-        ? cotizaciones.data[cotizaciones.data.length - 1].venta
-        : 0;
+    const ventaAnterior =
+        cotizaciones?.data?.length > 0
+            ? cotizaciones.data[cotizaciones.data.length - 1].venta
+            : null;
 
     useEffect(() => {
-        if (ventaAnterior === 0 || venta === 0) return;
-        const diff = ((venta - ventaAnterior) / ventaAnterior) * 100;
-        setDifference(diff.toFixed(2));
+        if (!isValidNumber(ventaAnterior) || Number(ventaAnterior) === 0 || !isValidNumber(venta) || Number(venta) === 0) {
+            setDifference(null);
+            return;
+        }
+        const diff = ((Number(venta) - Number(ventaAnterior)) / Number(ventaAnterior)) * 100;
+        setDifference(diff);
     }, [venta, ventaAnterior]);
 
     useEffect(() => {
         if (cotizaciones?.data?.length > 0) {
-            const filtered = duration === 'month'
-                ? cotizaciones.data
-                : filtrarUltimaSemana(cotizaciones.data);
+            const filtered =
+                duration === 'month'
+                    ? cotizaciones.data
+                    : filtrarUltimaSemana(cotizaciones.data);
             setChartData(filtered || []);
         } else {
             setChartData([]);
         }
     }, [duration, cotizaciones]);
 
-    useEffect(() => {
-        if (chartData?.length > 0) {
-            const firstVenta = chartData[0].venta;
-            setChartColor(
-                firstVenta < venta  ? (isDark ? '#2ECC71' : '#1A8A4A') :
-                firstVenta > venta  ? (isDark ? '#E74C3C' : '#C0392B') :
-                                      '#9C9890'
-            );
-        }
-    }, [chartData, venta]);
+    const firstVenta = chartData?.length > 0 ? chartData[0].venta : null;
+    const isUp = firstVenta !== null && Number(venta) >= Number(firstVenta);
 
-    const isPositive = difference > 0;
-    const isNegative = difference < 0;
-    const diffColor  = isPositive ? 'var(--positive)' : isNegative ? 'var(--negative)' : 'var(--text-tertiary)';
-    const diffBg     = isPositive ? 'var(--positive-soft)' : isNegative ? 'var(--negative-soft)' : 'var(--bg-surface-hover)';
+    const getLineColor = () => (isUp ? 'up' : 'down');
+
+    const ventanum = Number(venta);
+    const compranum = Number(compra);
 
     return (
         <article
-            className="w-full p-5 rounded-xl flex flex-col gap-3 transition-colors duration-150"
-            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}
-            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-hover)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-surface)'}
+            style={{
+                background: 'var(--surface-100)',
+                border: '1px solid var(--line)',
+                borderRadius: 'var(--radius-md)',
+                padding: 'var(--space-6)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--space-3)',
+                height: '100%',
+                transition: 'background-color 150ms ease-out',
+            }}
         >
-            {/* Header */}
-            <div className="flex items-center justify-between gap-2">
-                <h3 className="text-sm font-semibold truncate"
-                    style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
+            {/* Fila superior: Etiqueta + Selector 1S/1M */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-2)' }}>
+                <p className="label" style={{ margin: 0, color: 'var(--ink-subtle)' }}>
                     {linkTo ? (
-                        <Link href={linkTo} className="hover:underline" style={{ color: 'var(--accent)' }}>
-                            {titulo}
+                        <Link href={linkTo} style={{ color: 'inherit', textDecoration: 'none' }}>
+                            {titulo} · VENTA
                         </Link>
-                    ) : titulo}
-                </h3>
+                    ) : (
+                        `${titulo} · VENTA`
+                    )}
+                </p>
                 {showChart && (
                     <PillToggle
-                        options={[{ label: '1S', value: 'week' }, { label: '1M', value: 'month' }]}
+                        options={[
+                            { label: '1S', value: 'week' },
+                            { label: '1M', value: 'month' },
+                        ]}
                         selected={duration}
                         onChange={setDuration}
                     />
                 )}
             </div>
 
-            {/* Chart */}
+            {/* Cifra protagonista (Venta) */}
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
+                <p className="figure" style={{ margin: 0, color: 'var(--ink)' }}>
+                    {isValidNumber(ventanum) && ventanum > 0 ? formatCurrency(ventanum, 'ARS') : '—'}
+                </p>
+                {isValidNumber(compranum) && compranum > 0 && (
+                    <span className="data" style={{ color: 'var(--ink-muted)' }}>
+                        COMPRA {formatCurrency(compranum, 'ARS')}
+                    </span>
+                )}
+            </div>
+
+            {/* Gráfico de evolución */}
             {showChart && (
-                <div style={{ height: '80px' }}>
+                <div style={{ height: '76px', marginBlock: 'var(--space-1)' }}>
                     {chartData.length > 0 ? (
-                        <LineChart dataset={values(chartData)} labels={labels(chartData)}
-                                   height={80} color={chartColor} duration={duration} />
+                        <LineChart
+                            dataset={values(chartData)}
+                            labels={labels(chartData)}
+                            height={76}
+                            color={getLineColor()}
+                            showAxes={false}
+                        />
                     ) : (
-                        <div className="skeleton w-full h-full rounded-lg" />
+                        <div className="skeleton" style={{ width: '100%', height: '100%' }} />
                     )}
                 </div>
             )}
 
-            {/* Buy / Sell + delta */}
-            <div className="flex items-center justify-between gap-3">
-                <div className="text-center">
-                    <p className="text-xs font-medium mb-0.5"
-                       style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                        Compra
-                    </p>
-                    <p className="text-lg font-medium tabular-nums"
-                       style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
-                        ${compra}
-                    </p>
+            {/* Fila inferior: Delta pastilla + Hora de actualización + Acción secundaria */}
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 'var(--space-2)',
+                    marginTop: 'auto',
+                    paddingTop: 'var(--space-2)',
+                    borderTop: '1px solid var(--line)',
+                }}
+            >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                    {difference !== null ? <Delta value={difference} unit="%" pill={true} /> : <span />}
                 </div>
-
-                {cotizaciones && (
-                    <span className="flex flex-col items-center gap-0.5">
-                        <span className="flex items-center gap-0.5 text-xs font-semibold px-2 py-1 rounded"
-                              style={{ background: diffBg, color: diffColor, fontFamily: 'var(--font-mono)' }}>
-                            <DifferenceIcon dif={difference} size={12} />
-                            {Math.abs(difference)}%
-                        </span>
-                        <span className="text-[10px]" style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                            hoy
-                        </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+                    <span className="label" style={{ color: 'var(--ink-subtle)' }}>
+                        {formatUpdatedTime(fecha)}
                     </span>
-                )}
-
-                <div className="text-center">
-                    <p className="text-xs font-medium mb-0.5"
-                       style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                        Venta
-                    </p>
-                    <p className="text-lg font-medium tabular-nums"
-                       style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
-                        ${venta}
-                    </p>
+                    {linkTo && (
+                        <Link
+                            href={linkTo}
+                            className="label"
+                            style={{ color: 'var(--signal-text)', textDecoration: 'none' }}
+                        >
+                            DETALLE →
+                        </Link>
+                    )}
                 </div>
             </div>
-
-            {/* Timestamp */}
-            <p className="text-xs" style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)' }}>
-                {getTimeDifference(fecha)}
-            </p>
         </article>
     );
 }

@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { formatNumber } from '@/utils/formatters';
 
 const STREAMING_SERVICES = [
     { name: 'Netflix Estándar', usd: 9.99 },
     { name: 'Spotify Individual', usd: 4.99 },
     { name: 'YouTube Premium', usd: 3.99 },
-    { name: 'Steam Juego ($10 USD)', usd: 10.00 },
+    { name: 'Steam Juego (US$ 10)', usd: 10.00 },
     { name: 'Amazon Prime', usd: 5.99 },
     { name: 'iCloud 200GB', usd: 2.99 }
 ];
@@ -15,7 +15,6 @@ const STREAMING_SERVICES = [
 export default function CalculadoraTarjetaClient({ initialDolar, initialTarjeta }) {
     const oficialVenta = initialDolar?.venta || 0;
 
-    // Recargo real = dólar tarjeta publicado / dólar oficial - 1 (percepción de Ganancias/Bienes Personales)
     const taxRatePct = oficialVenta && initialTarjeta?.venta
         ? Math.round((initialTarjeta.venta / oficialVenta - 1) * 1000) / 10
         : 30;
@@ -49,96 +48,155 @@ export default function CalculadoraTarjetaClient({ initialDolar, initialTarjeta 
     return (
         <section className="space-y-8 animate-fade-in">
             {/* Header: Cotización Actual */}
-            <div className="p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
+            <div className="pulso-card flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <span className="text-xs font-semibold uppercase tracking-wider mb-1 inline-block" style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
-                        Calculadora Impositiva de Servicios Digitales
+                    <span className="label" style={{ color: 'var(--signal-text)', display: 'inline-block', marginBottom: 'var(--space-1)' }}>
+                        CALCULADORA IMPOSITIVA DE SERVICIOS DIGITALES
                     </span>
-                    <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-                        Calculadora Dólar Tarjeta e Impuestos Hoy
+                    <h1 className="h1" style={{ color: 'var(--ink)', margin: 0 }}>
+                        Calculadora dólar tarjeta e impuestos hoy
                     </h1>
                 </div>
-                <div className="flex gap-8">
-                    <div className="text-center">
-                        <p className="text-xs font-medium mb-0.5" style={{ color: 'var(--text-tertiary)' }}>Oficial BNA</p>
-                        <p className="text-xl font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
-                            ${oficialVenta ? oficialVenta.toLocaleString('es-AR') : '—'}
+                <div className="flex flex-wrap gap-8">
+                    <div>
+                        <p className="label" style={{ color: 'var(--ink-subtle)', margin: '0 0 var(--space-1) 0' }}>
+                            Oficial BNA
+                        </p>
+                        <p className="figure" style={{ color: 'var(--ink)', margin: 0 }}>
+                            {oficialVenta ? (
+                                <>
+                                    <span style={{ color: 'var(--ink-muted)', fontSize: '0.68em', fontWeight: 500, marginRight: '0.2em' }}>$</span>
+                                    {formatNumber(oficialVenta, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </>
+                            ) : '—'}
                         </p>
                     </div>
-                    <div className="text-center">
-                        <p className="text-xs font-medium mb-0.5" style={{ color: 'var(--text-tertiary)' }}>Dólar Tarjeta Total</p>
-                        <p className="text-2xl font-bold" style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}>
-                            ${dolarTarjetaVal ? dolarTarjetaVal.toLocaleString('es-AR', { maximumFractionDigits: 1 }) : '—'}
+                    <div>
+                        <p className="label" style={{ color: 'var(--ink-subtle)', margin: '0 0 var(--space-1) 0' }}>
+                            Dólar tarjeta total
+                        </p>
+                        <p className="figure" style={{ color: 'var(--signal-text)', margin: 0 }}>
+                            {dolarTarjetaVal ? (
+                                <>
+                                    <span style={{ color: 'var(--ink-muted)', fontSize: '0.68em', fontWeight: 500, marginRight: '0.2em' }}>$</span>
+                                    {formatNumber(dolarTarjetaVal, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </>
+                            ) : '—'}
                         </p>
                     </div>
                 </div>
             </div>
 
             {/* Calculadora Interactiva Principal */}
-            <div className="p-6 sm:p-8 rounded-xl space-y-6" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
-                    Calculador de Consumos con Tarjeta en el Exterior
+            <div className="pulso-card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+                <h2 className="h2" style={{ color: 'var(--ink)', margin: 0 }}>
+                    Calculador de consumos con tarjeta en el exterior
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 'var(--space-6)' }}>
                     <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--text-secondary)' }}>
-                            Monto en Dólares (USD)
+                        <label className="label" style={{ display: 'block', color: 'var(--ink-muted)', marginBottom: 'var(--space-2)' }}>
+                            Monto en dólares (US$)
                         </label>
                         <div className="relative">
-                            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-base font-bold" style={{ color: 'var(--text-secondary)' }}>U$S</span>
+                            <span
+                                className="data"
+                                style={{
+                                    position: 'absolute',
+                                    left: 'var(--space-3)',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    color: 'var(--ink-subtle)',
+                                    fontWeight: 500,
+                                }}
+                            >
+                                US$
+                            </span>
                             <input
                                 type="number"
                                 value={amountUSD}
                                 onChange={(e) => handleUSDChange(e.target.value)}
                                 placeholder="10"
-                                className="w-full rounded-xl pl-12 pr-4 py-3 text-lg font-bold outline-none transition-all"
-                                style={{
-                                    background: 'var(--bg-page)',
-                                    border: '1px solid var(--border-subtle)',
-                                    color: 'var(--text-primary)',
-                                    fontFamily: 'var(--font-mono)'
-                                }}
+                                className="pulso-input data"
+                                style={{ paddingLeft: 'var(--space-12)' }}
                             />
                         </div>
                     </div>
 
                     {/* Desglose de Impuestos */}
-                    <div className="p-4 rounded-xl space-y-2 text-xs" style={{ background: 'var(--bg-page)', border: '1px solid var(--border-subtle)' }}>
-                        <div className="flex justify-between">
-                            <span style={{ color: 'var(--text-secondary)' }}>Subtotal Oficial:</span>
-                            <span className="font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>${baseARS.toLocaleString('es-AR', { maximumFractionDigits: 0 })}</span>
+                    <div
+                        style={{
+                            padding: 'var(--space-4)',
+                            borderRadius: 'var(--radius-md)',
+                            background: 'var(--ground-000)',
+                            border: '1px solid var(--line)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 'var(--space-2)',
+                        }}
+                    >
+                        <div className="flex justify-between items-center body-sm">
+                            <span style={{ color: 'var(--ink-muted)' }}>Subtotal oficial:</span>
+                            <span className="data" style={{ color: 'var(--ink)' }}>
+                                $ {formatNumber(baseARS, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                            </span>
                         </div>
-                        <div className="flex justify-between">
-                            <span style={{ color: 'var(--text-secondary)' }}>Percepción impositiva (+{taxRatePct.toLocaleString('es-AR')}%):</span>
-                            <span className="font-bold" style={{ color: 'var(--negative)', fontFamily: 'var(--font-mono)' }}>+${taxARS.toLocaleString('es-AR', { maximumFractionDigits: 0 })}</span>
+                        <div className="flex justify-between items-center body-sm">
+                            <span style={{ color: 'var(--ink-muted)' }}>
+                                Percepción impositiva (+{formatNumber(taxRatePct, { minimumFractionDigits: 0, maximumFractionDigits: 1 })} %):
+                            </span>
+                            <span className="data" style={{ color: 'var(--signal-text)' }}>
+                                +$ {formatNumber(taxARS, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                            </span>
                         </div>
-                        <div className="flex justify-between pt-2 border-t text-sm font-bold" style={{ borderColor: 'var(--border-subtle)' }}>
-                            <span style={{ color: 'var(--text-primary)' }}>Total Final Resumen:</span>
-                            <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}>${totalARS.toLocaleString('es-AR', { maximumFractionDigits: 0 })} ARS</span>
+                        <div
+                            className="flex justify-between items-center pt-2"
+                            style={{ borderTop: '1px solid var(--line)' }}
+                        >
+                            <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, color: 'var(--ink)' }}>
+                                Total final en resumen:
+                            </span>
+                            <span className="data" style={{ fontWeight: 600, color: 'var(--ink)', fontSize: 'var(--text-body)' }}>
+                                $ {formatNumber(totalARS, { minimumFractionDigits: 0, maximumFractionDigits: 0 })} ARS
+                            </span>
                         </div>
                     </div>
                 </div>
 
                 {/* Accesos Rápidos por Servicios de Streaming */}
                 <div>
-                    <p className="text-xs font-medium mb-2" style={{ color: 'var(--text-tertiary)' }}>Servicios y Suscripciones Frecuentes:</p>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {STREAMING_SERVICES.map((srv) => (
-                            <button
-                                key={srv.name}
-                                onClick={() => selectService(srv.usd)}
-                                className="p-2.5 rounded-lg text-left text-xs font-medium transition-all"
-                                style={{
-                                    background: amountUSD === srv.usd.toString() ? 'var(--accent-soft)' : 'var(--bg-page)',
-                                    border: amountUSD === srv.usd.toString() ? '1px solid var(--accent)' : '1px solid var(--border-subtle)',
-                                    color: 'var(--text-primary)'
-                                }}
-                            >
-                                <p className="font-semibold">{srv.name}</p>
-                                <p className="text-[10px]" style={{ color: 'var(--text-tertiary)' }}>U$S {srv.usd}</p>
-                            </button>
-                        ))}
+                    <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-2)' }}>
+                        Servicios y suscripciones frecuentes
+                    </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3" style={{ gap: 'var(--space-2)' }}>
+                        {STREAMING_SERVICES.map((srv) => {
+                            const active = amountUSD === srv.usd.toString();
+                            return (
+                                <button
+                                    key={srv.name}
+                                    type="button"
+                                    onClick={() => selectService(srv.usd)}
+                                    style={{
+                                        padding: 'var(--space-3)',
+                                        borderRadius: 'var(--radius-sm)',
+                                        textAlign: 'left',
+                                        background: active ? 'var(--surface-200)' : 'var(--ground-000)',
+                                        border: active ? '1px solid var(--ink)' : '1px solid var(--line)',
+                                        color: 'var(--ink)',
+                                        cursor: 'pointer',
+                                        minHeight: '44px',
+                                        transition: 'background-color 150ms ease, border-color 150ms ease',
+                                    }}
+                                >
+                                    <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-body-sm)', fontWeight: 600, margin: 0 }}>
+                                        {srv.name}
+                                    </p>
+                                    <p className="data" style={{ fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)', margin: 0 }}>
+                                        US$ {formatNumber(srv.usd, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </p>
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             </div>

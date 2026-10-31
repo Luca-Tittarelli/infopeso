@@ -1,0 +1,20 @@
+<!-- @dsCard group="Datos" height=120 subtitle="Variación con ▲ / ▼" -->
+<link rel="stylesheet" href="../../tokens/tokens.css">
+<style>body{margin:0;background:var(--ground-000)}</style>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .wrap{background:var(--ground-000);padding:var(--space-6);display:flex;flex-wrap:wrap;gap:var(--space-8);align-items:center}
+  .delta{display:inline-flex;align-items:center;gap:var(--space-1);font:500 14px/1 var(--font-mono);font-variant-numeric:tabular-nums}
+  .delta svg{width:10px;height:9px;flex:none}
+  .up{color:var(--signal-text)} .up svg{fill:var(--up)}
+  .down{color:var(--down)} .down svg{fill:var(--down)}
+  .flat{color:var(--ink-subtle)}
+  .pill{padding:6px 10px;border-radius:var(--radius-pill);background:var(--surface-200)}
+</style>
+<div class="wrap">
+  <span class="delta up" aria-label="sube 2,15 por ciento"><svg viewBox="0 0 10 9" aria-hidden="true"><polygon points="5,0 10,9 0,9"></polygon></svg>+2,15 %</span>
+  <span class="delta down" aria-label="baja 0,80 por ciento"><svg viewBox="0 0 10 9" aria-hidden="true"><polygon points="0,0 10,0 5,9"></polygon></svg>−0,80 %</span>
+  <span class="delta flat" aria-label="sin cambios">= 0,00 %</span>
+  <span class="delta up pill" aria-label="sube 35 puntos básicos"><svg viewBox="0 0 10 9" aria-hidden="true"><polygon points="5,0 10,9 0,9"></polygon></svg>+35 pb</span>
+</div>
+<script></script>

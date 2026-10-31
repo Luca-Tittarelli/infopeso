@@ -1,28 +1,18 @@
 export function LoadingCard() {
     return (
         <article
-            className="w-full p-5 rounded-[12px]"
+            className="pulso-card"
             style={{
-                background: 'var(--bg-surface)',
-                border: '1px solid var(--border-subtle)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--space-3)',
             }}
         >
-            {/* Title row */}
-            <div className="flex items-center justify-between mb-4">
-                <div className="skeleton h-4 w-2/5" />
-                <div className="skeleton h-5 w-12 rounded-full" />
-            </div>
-
-            {/* Sparkline placeholder */}
-            <div className="skeleton h-10 w-full mb-4 rounded-md" />
-
-            {/* Value */}
-            <div className="skeleton h-7 w-3/5 mb-2" />
-
-            {/* Variation + timestamp */}
-            <div className="flex items-center justify-between mt-3">
-                <div className="skeleton h-3.5 w-1/4" />
-                <div className="skeleton h-3.5 w-1/4" />
+            <div className="skeleton" style={{ height: '14px', width: '50%' }} />
+            <div className="skeleton" style={{ height: '40px', width: '70%' }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="skeleton" style={{ height: '26px', width: '80px', borderRadius: 'var(--radius-pill)' }} />
+                <div className="skeleton" style={{ height: '12px', width: '64px' }} />
             </div>
         </article>
     );

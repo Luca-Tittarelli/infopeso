@@ -1,23 +1,52 @@
 import Link from 'next/link';
 
-// links: [{ href, label, value? }]
-export default function RelatedLinks({ title = 'También te puede interesar', links }) {
+export default function RelatedLinks({ title = 'Seguí viendo datos relacionados', links }) {
     if (!links?.length) return null;
     return (
-        <nav aria-label={title} className="mt-10 pt-8" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-            <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
+        <nav
+            aria-label={title}
+            style={{
+                marginTop: 'var(--space-12)',
+                paddingTop: 'var(--space-8)',
+                borderTop: '1px solid var(--line)',
+            }}
+        >
+            <h2 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-4)', marginTop: 0 }}>
                 {title}
             </h2>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <ul
+                style={{
+                    listStyle: 'none',
+                    padding: 0,
+                    margin: 0,
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                    gap: 'var(--space-3)',
+                }}
+            >
                 {links.map(({ href, label, value }) => (
                     <li key={href}>
                         <Link
                             href={href}
-                            className="flex items-center justify-between gap-3 p-3 rounded-xl text-sm transition-colors hover:underline"
-                            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', color: 'var(--text-primary)' }}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: 'var(--space-3)',
+                                padding: 'var(--space-4)',
+                                borderRadius: 'var(--radius-md)',
+                                background: 'var(--surface-100)',
+                                border: '1px solid var(--line)',
+                                color: 'var(--ink)',
+                                textDecoration: 'none',
+                            }}
                         >
-                            <span>{label}</span>
-                            {value && <span className="text-xs" style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}>{value}</span>}
+                            <span className="body-sm" style={{ fontWeight: 700 }}>{label}</span>
+                            {value ? (
+                                <span className="data" style={{ color: 'var(--signal-text)' }}>{value}</span>
+                            ) : (
+                                <span className="label" style={{ color: 'var(--ink-subtle)' }}>→</span>
+                            )}
                         </Link>
                     </li>
                 ))}

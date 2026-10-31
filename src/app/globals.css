@@ -1,266 +1,418 @@
 @import "tailwindcss";
 
-/* ─── Font Tokens ────────────────────────────────────────────── */
-:root {
-  --font-mono:    var(--font-mono), 'Courier New', monospace;
-  --font-display: var(--font-display), Georgia, serif;
-  --font-ui:      var(--font-ui), system-ui, sans-serif;
-}
-
-/* ─── Color Tokens — Light ───────────────────────────────────── */
-:root {
-  color-scheme: light;
-  --bg-page:            #F7F6F2;
-  --bg-surface:         #FFFFFF;
-  --bg-surface-hover:   #F0EFE9;
-  --border-subtle:      #E2DFD8;
-  --border-strong:      #C8C4BC;
-
-  --text-primary:       #1A1916;
-  --text-secondary:     #5C5A55;
-  --text-tertiary:      #9C9890;
-
-  --accent:             #C47B2B;
-  --accent-soft:        #FDF3E7;
-  --accent-vivid:       #E8942B;
-
-  --positive:           #1A8A4A;
-  --positive-soft:      #EAF5EF;
-  --negative:           #C0392B;
-  --negative-soft:      #FAEAEA;
-
-  --header-bg:          rgba(247, 246, 242, 0.90);
-  --header-border:      rgba(226, 223, 216, 1);
-
-  --shimmer-base:       #EDE9E0;
-  --shimmer-shine:      #E5E1D8;
-}
-
-/* ─── Color Tokens — Dark ────────────────────────────────────── */
-.dark {
+/* ─── Infopeso Pulso — Tokens Oficiales (brand/tokens/tokens.css) ─── */
+:root, [data-theme="dark"] {
   color-scheme: dark;
-  --bg-page:            #0F0F0D;
-  --bg-surface:         #171715;
-  --bg-surface-hover:   #1F1F1C;
-  --border-subtle:      #262623;
-  --border-strong:      #363632;
-
-  --text-primary:       #F5F4F0;
-  --text-secondary:     #9C9A94;
-  --text-tertiary:      #5C5A55;
-
-  --accent:             #E8942B;
-  --accent-soft:        #2A2015;
-  --accent-vivid:       #F0A83A;
-
-  --positive:           #2ECC71;
-  --positive-soft:      #0D2B1A;
-  --negative:           #E74C3C;
-  --negative-soft:      #2B0D0D;
-
-  --header-bg:          rgba(15, 15, 13, 0.92);
-  --header-border:      rgba(38, 38, 35, 1);
-
-  --shimmer-base:       #1F1F1C;
-  --shimmer-shine:      #282826;
+  --ground-000: #141210;
+  --surface-100: #1C1916;
+  --surface-200: #2A2622;
+  --line: #332E29;
+  --ink: #F1ECE4;
+  --ink-muted: #C4BCB1;
+  --ink-subtle: #9C948A;
+  --signal: #FF6A33;
+  --signal-text: #FF8A5C;
+  --on-signal: #141210;
+  --up: var(--signal);
+  --down: #6E9BFF;
+  --focus: var(--signal);
 }
 
-/* ─── Base ───────────────────────────────────────────────────── */
-html { scroll-behavior: smooth; }
+[data-theme="light"] {
+  color-scheme: light;
+  --ground-000: #F1ECE4;
+  --surface-100: #FBF8F3;
+  --surface-200: #E6DFD3;
+  --line: #D9D0C2;
+  --ink: #141210;
+  --ink-muted: #4F4840;
+  --ink-subtle: #6E665C;
+  --signal: #D9461A;
+  --signal-text: #A33410;
+  --on-signal: #141210;
+  --up: var(--signal);
+  --down: #2F5BD0;
+  --focus: var(--signal);
+}
+
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --font-ui: var(--font-display);
+
+  /* Alias de compatibilidad estrictamente vinculados a tokens Pulso */
+  --bg-page: var(--ground-000);
+  --bg-surface: var(--surface-100);
+  --bg-surface-hover: var(--surface-200);
+  --bg-card: var(--surface-100);
+  --border-subtle: var(--line);
+  --border-strong: var(--line);
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-muted);
+  --text-tertiary: var(--ink-subtle);
+  --accent: var(--signal);
+  --accent-soft: var(--surface-200);
+  --accent-vivid: var(--signal);
+  --positive: var(--up);
+  --positive-soft: var(--surface-200);
+  --negative: var(--down);
+  --negative-soft: var(--surface-200);
+  --header-bg: var(--ground-000);
+  --header-border: var(--line);
+}
+
+/* ─── Base ──────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  background-color: var(--ground-000);
+  color: var(--ink);
+}
 
 body {
-  background-color: var(--bg-page);
-  color: var(--text-primary);
-  font-family: var(--font-ui);
-  transition: background-color 0.35s ease, color 0.25s ease;
+  margin: 0;
+  background-color: var(--ground-000);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: 16px;
+  line-height: 1.55;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+
+::selection {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+/* ─── Accesibilidad: Foco visible siempre (2px focus + 2px offset) ─── */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ─── Scrollbar sobria ──────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: var(--radius-pill);
+}
+
+/* ─── Escala Tipográfica Oficial (Infopeso Pulso) ──────────────── */
+.display-xl {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: clamp(44px, 6vw, 72px);
+  line-height: 0.95;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: var(--ink);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: clamp(32px, 4.5vw, 48px);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  color: var(--ink);
+}
+
+.figure {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: clamp(32px, 4vw, 40px);
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.body {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.55;
+  font-weight: 400;
 }
 
-::selection { background: var(--accent); color: #fff; }
+.body-sm {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 400;
+}
 
-/* ─── Scrollbar ──────────────────────────────────────────────── */
-* { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+.label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
 
-/* ─── Keyframes ──────────────────────────────────────────────── */
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
+.data {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
 }
-@keyframes fade-up {
-  0%   { opacity: 0; transform: translateY(10px); }
-  100% { opacity: 1; transform: translateY(0); }
+
+/* ─── Layout Container (Max 1280px, space-12 desktop / space-4 mobile) ─── */
+.pulso-container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
 }
-@keyframes fade-in {
-  0%   { opacity: 0; }
-  100% { opacity: 1; }
+
+@media (min-width: 768px) {
+  .pulso-container {
+    padding-inline: var(--space-12);
+  }
 }
-@keyframes slide-in-bottom {
-  0%   { opacity: 0; transform: translateY(100%); }
-  100% { opacity: 1; transform: translateY(0); }
+
+/* ─── Movimiento y Actualización en Vivo (600ms surface-200) ───── */
+@keyframes pulso-live-flash {
+  0% {
+    background-color: var(--surface-200);
+  }
+  100% {
+    background-color: var(--surface-100);
+  }
 }
-@keyframes pulse-slow {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.35; }
+
+.live-flash {
+  animation: pulso-live-flash 600ms ease-out;
 }
-@keyframes ticker {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+
+/* ─── Componentes del Sistema Pulso ────────────────────────────── */
+.pulso-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  height: 48px;
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  border: 0;
+  text-decoration: none;
+  transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
 }
-.animate-ticker {
+
+.pulso-btn-sm {
+  min-height: 44px;
+  height: 44px;
+  padding: 0 var(--space-4);
+  font-size: 14px;
+}
+
+.pulso-btn-primary {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+.pulso-btn-primary:disabled {
+  background: var(--surface-200);
+  color: var(--ink-subtle);
+  cursor: not-allowed;
+}
+
+.pulso-btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink-subtle);
+}
+
+.pulso-btn-secondary:hover {
+  background: var(--surface-200);
+  border-color: var(--ink);
+}
+
+.pulso-btn-ghost {
+  background: transparent;
+  color: var(--ink-muted);
+  padding: 0 var(--space-4);
+}
+
+.pulso-btn-ghost:hover {
+  background: var(--surface-200);
+  color: var(--ink);
+}
+
+/* Chips / Filtros pastilla (sin usar naranja relleno para no competir con la acción principal) */
+.pill-active {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--surface-200);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.pill-inactive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-muted);
+  border: 1px solid var(--line);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.pill-inactive:hover {
+  background: var(--surface-200);
+  color: var(--ink);
+}
+
+/* Tarjeta estándar */
+.pulso-card {
+  background: var(--surface-100);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.pulso-card-lg {
+  background: var(--surface-100);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+/* Campos de formulario */
+.pulso-input {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface-200);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  transition: border-color 150ms ease-out;
+}
+
+.pulso-input:focus {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Etiqueta de fuente / estado */
+.source-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--surface-200);
+  color: var(--ink-subtle);
+  flex-shrink: 0;
+}
+
+/* Placeholder de carga sin degradé */
+.skeleton {
+  background: var(--surface-200);
+  border-radius: var(--radius-sm);
+}
+
+/* Encabezado de sección */
+.section-head {
   display: flex;
-  width: fit-content;
-  animation: ticker 25s linear infinite;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line);
 }
-.animate-ticker:hover {
-  animation-play-state: paused;
-}
 
-/* ─── Components ─────────────────────────────────────────────── */
-@layer components {
-
-  /* Skeleton shimmer */
-  .skeleton {
-    background: linear-gradient(
-      90deg,
-      var(--shimmer-base) 25%,
-      var(--shimmer-shine) 50%,
-      var(--shimmer-base) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.8s ease-in-out infinite;
-    border-radius: 6px;
-  }
-
-  /* Card base */
-  .card-base {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 10px;
-    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
-  }
-  .card-base:hover {
-    background: var(--bg-surface-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-  }
-
-  /* Pill buttons */
-  .pill-active {
-    background-color: var(--accent);
-    color: #fff;
-    border-radius: 9999px;
-    padding: 4px 14px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    font-family: var(--font-ui);
-    letter-spacing: 0.01em;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-    cursor: pointer;
-  }
-  .pill-inactive {
-    background-color: transparent;
-    color: var(--text-secondary);
-    border-radius: 9999px;
-    padding: 4px 14px;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    font-family: var(--font-ui);
-    transition: all 0.2s ease;
-    border: 1px solid var(--border-subtle);
-    cursor: pointer;
-  }
-  .pill-inactive:hover {
-    color: var(--text-primary);
-    background-color: var(--bg-surface-hover);
-  }
-
-  /* Stagger animations */
-  .stagger-1 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 50ms  both; }
-  .stagger-2 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 100ms both; }
-  .stagger-3 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 150ms both; }
-  .stagger-4 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 200ms both; }
-  .stagger-5 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 250ms both; }
-  .stagger-6 { animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) 300ms both; }
-
-  .stagger-item {
-    animation: fade-up 0.4s cubic-bezier(0.16,1,0.3,1) both;
-  }
-
-  /* Source badge */
-  .source-badge {
-    display: inline-flex;
-    align-items: center;
-    font-size: 0.625rem;
-    font-weight: 600;
-    font-family: var(--font-ui);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 2px 7px;
-    border-radius: 9999px;
-    background: var(--bg-surface-hover);
-    color: var(--text-tertiary);
-    border: 1px solid var(--border-subtle);
-    flex-shrink: 0;
-  }
-
-  /* Nav link */
-  .nav-link {
-    position: relative;
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 0.875rem;
-    font-family: var(--font-ui);
-    letter-spacing: -0.01em;
-    transition: color 0.15s ease;
-    padding-bottom: 2px;
-  }
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    right: 50%;
-    height: 2px;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: left 0.2s ease, right 0.2s ease;
-  }
-  .nav-link:hover { color: var(--text-primary); }
-  .nav-link:hover::after, .nav-link.active::after { left: 0; right: 0; }
-  .nav-link.active { color: var(--text-primary); font-weight: 600; }
-
-  /* Delta utilities */
-  .text-positive { color: var(--positive); }
-  .text-negative { color: var(--negative); }
-  .text-neutral  { color: var(--text-tertiary); }
-
-  /* Section header divider */
-  .section-head {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .section-head-label {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    font-family: var(--font-ui);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-    white-space: nowrap;
-  }
-  .section-head-line {
-    flex: 1;
-    height: 1px;
-    background: var(--border-subtle);
+/* Respeto estricto por prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

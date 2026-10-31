@@ -69,7 +69,7 @@ export default function Page() {
                 "name": "¿Mis datos quedan guardados de forma segura?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Sí. Tu portafolio se guarda exclusivamente en el almacenamiento local de tu navegador (localStorage). No necesitas crear una cuenta, ni ingresar contraseñas, ni vincular cuentas bancarias."
+                    "text": "Podés usar la cartera sin registrarte: en ese caso se guarda en el almacenamiento local de tu navegador (localStorage). Si creás una cuenta gratuita, tu cartera se guarda en tu cuenta y la ves desde cualquier dispositivo. En ningún caso pedimos datos bancarios ni vinculamos cuentas de brokers."
                 }
             }
         ]
@@ -109,7 +109,7 @@ export default function Page() {
                                 ⚡ Herramienta Educativa Gratuita
                             </span>
                             <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                                Sin registro · Simulación y análisis fundamental
+                                Gratis, con o sin cuenta · Simulación y análisis fundamental
                             </span>
                         </div>
                         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
@@ -162,9 +162,9 @@ export default function Page() {
                         </p>
                     </div>
                     <div className="p-5 rounded-2xl border space-y-2" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                        <h3 className="font-bold text-sm text-accent">🔒 Privacidad Total</h3>
+                        <h3 className="font-bold text-sm text-accent">Tus datos, bajo tu control</h3>
                         <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                            Tu información queda almacenada exclusivamente en tu navegador (localStorage). Sin servidores externos ni vinculación de cuentas.
+                            Usala sin registrarte (se guarda en tu navegador) o creá una cuenta gratuita para guardar tu cartera en la nube. No pedimos datos bancarios ni vinculamos cuentas de brokers.
                         </p>
                     </div>
                 </div>

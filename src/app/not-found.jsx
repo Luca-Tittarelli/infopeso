@@ -8,34 +8,43 @@ export const metadata = {
 };
 
 const links = [
-    { href: '/Cambios/dolar-blue', label: 'Dólar blue hoy' },
-    { href: '/Cambios/calculadora-pesos-a-dolar-blue', label: 'Calculadora de pesos a dólar blue' },
-    { href: '/Cambios', label: 'Todas las cotizaciones' },
-    { href: '/RentaFija', label: 'Bonos y renta fija' },
-    { href: '/Empresas', label: 'Acciones y empresas' },
-    { href: '/guias', label: 'Guías de inversión' },
+    { href: '/Cambios/dolar-blue', label: 'Ver dólar blue hoy' },
+    { href: '/Cambios/calculadora-pesos-a-dolar-blue', label: 'Calcular pesos a dólar blue' },
+    { href: '/Cambios', label: 'Explorar todas las cotizaciones' },
+    { href: '/RentaFija', label: 'Consultar bonos y renta fija' },
+    { href: '/Empresas', label: 'Analizar acciones y empresas' },
+    { href: '/guias', label: 'Leer guías de inversión' },
 ];
 
 export default function NotFound() {
     return (
         <>
             <Header />
-            <main className="min-h-screen pt-24 pb-24 px-5 sm:px-8 max-w-[720px] mx-auto">
-                <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-                    No encontramos esta página
-                </h1>
-                <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
-                    La dirección no existe o cambió. Probá con alguna de estas secciones:
-                </p>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {links.map(({ href, label }) => (
-                        <li key={href}>
-                            <Link href={href} className="block p-3 rounded-xl text-sm hover:underline" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', color: 'var(--accent)' }}>
-                                {label}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
+            <main style={{ minHeight: '100vh', paddingTop: '96px', paddingBottom: 'var(--space-16)' }}>
+                <div className="pulso-container" style={{ maxWidth: '720px' }}>
+                    <p className="label" style={{ color: 'var(--signal-text)', marginBottom: 'var(--space-2)' }}>
+                        ERROR 404
+                    </p>
+                    <h1 className="h1" style={{ color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>
+                        No encontramos esta página
+                    </h1>
+                    <p className="body" style={{ color: 'var(--ink-muted)', marginBottom: 'var(--space-6)' }}>
+                        La dirección que buscás no existe o cambió de ubicación. Probá con alguna de estas secciones:
+                    </p>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 'var(--space-3)', listStyle: 'none', padding: 0, margin: 0 }}>
+                        {links.map(({ href, label }) => (
+                            <li key={href}>
+                                <Link
+                                    href={href}
+                                    className="pulso-card pulso-card--interactive block body-sm"
+                                    style={{ color: 'var(--signal-text)', fontWeight: 600 }}
+                                >
+                                    {label} →
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </main>
             <Footer />
         </>

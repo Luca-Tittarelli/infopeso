@@ -1,29 +1,30 @@
+'use client';
+
 import { useState } from 'react';
 import { useNews } from '../../hooks/useNews';
 
 const CATEGORIES = [
     { id: 'all', label: 'Todas' },
-    { id: 'Tipo de Cambio', label: 'Tipo de Cambio' },
+    { id: 'Tipo de Cambio', label: 'Dólar' },
     { id: 'Inflación', label: 'Inflación' },
-    { id: 'Política Monetaria', label: 'Política Monetaria' },
-    { id: 'Deuda & Bonos', label: 'Deuda & Bonos' },
+    { id: 'Política Monetaria', label: 'BCRA' },
+    { id: 'Deuda & Bonos', label: 'Bonos' },
     { id: 'Mercado', label: 'Mercado' },
-    { id: 'Regulaciones', label: 'Regulaciones' },
 ];
 
 function NewsCardSkeleton() {
     return (
-        <div className="p-4 rounded-xl animate-pulse" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-            <div className="flex justify-between items-center mb-3">
-                <div className="h-3 w-20 rounded" style={{ background: 'var(--bg-surface-hover)' }} />
-                <div className="h-3 w-12 rounded" style={{ background: 'var(--bg-surface-hover)' }} />
+        <div
+            className="pulso-card"
+            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}
+        >
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div className="skeleton" style={{ height: '12px', width: '90px' }} />
+                <div className="skeleton" style={{ height: '12px', width: '50px' }} />
             </div>
-            <div className="space-y-2">
-                <div className="h-4 w-full rounded" style={{ background: 'var(--bg-surface-hover)' }} />
-                <div className="h-4 w-4/5 rounded" style={{ background: 'var(--bg-surface-hover)' }} />
-                <div className="h-4 w-3/5 rounded" style={{ background: 'var(--bg-surface-hover)' }} />
-            </div>
-            <div className="mt-4 h-5 w-24 rounded-full" style={{ background: 'var(--bg-surface-hover)' }} />
+            <div className="skeleton" style={{ height: '18px', width: '100%' }} />
+            <div className="skeleton" style={{ height: '18px', width: '80%' }} />
+            <div className="skeleton" style={{ height: '24px', width: '100px', borderRadius: 'var(--radius-pill)', marginTop: 'var(--space-2)' }} />
         </div>
     );
 }
@@ -34,53 +35,54 @@ function NewsCard({ item }) {
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex flex-col p-4 rounded-xl transition-all duration-200 active:scale-[0.99]"
+            className="pulso-card"
             style={{
-                background: 'var(--bg-surface)',
-                border: '1px solid var(--border-subtle)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: 'var(--space-4)',
                 textDecoration: 'none',
-                minHeight: '140px',
+                minHeight: '160px',
             }}
-            onMouseEnter={e => {
-                e.currentTarget.style.background = 'var(--bg-surface-hover)';
-                e.currentTarget.style.borderColor = item.category.color + '44';
+            onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--surface-200)';
             }}
-            onMouseLeave={e => {
-                e.currentTarget.style.background = 'var(--bg-surface)';
-                e.currentTarget.style.borderColor = 'var(--border-subtle)';
+            onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'var(--surface-100)';
             }}
         >
-            {/* Header: source + time */}
-            <div className="flex items-center justify-between mb-2.5">
-                <span className="text-[11px] font-medium truncate max-w-[60%]" style={{ color: 'var(--text-tertiary)' }}>
-                    {item.source}
-                </span>
-                <span className="text-[11px] tabular-nums flex-shrink-0" style={{ color: 'var(--text-tertiary)' }}>
-                    {item.timeAgo}
-                </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-2)' }}>
+                    <span className="label" style={{ color: 'var(--ink-subtle)' }}>
+                        {item.source}
+                    </span>
+                    <span className="label" style={{ color: 'var(--ink-subtle)' }}>
+                        {item.timeAgo}
+                    </span>
+                </div>
+
+                <h3
+                    className="body"
+                    style={{
+                        margin: 0,
+                        fontWeight: 700,
+                        color: 'var(--ink)',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                    }}
+                >
+                    {item.title}
+                </h3>
             </div>
 
-            {/* Title */}
-            <h3
-                className="text-sm font-semibold leading-snug mb-auto line-clamp-3"
-                style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-ui)' }}
-            >
-                {item.title}
-            </h3>
-
-            {/* Footer */}
-            <div className="flex items-center justify-between mt-3">
-                <span
-                    className="inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                    style={{ background: item.category.bg, color: item.category.color }}
-                >
-                    {item.category.label}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-2)' }}>
+                <span className="source-badge">
+                    {item.category?.label || 'MERCADO'}
                 </span>
-                <span
-                    className="text-[11px] font-medium group-hover:translate-x-1 transition-transform duration-200"
-                    style={{ color: 'var(--accent)' }}
-                >
-                    Leer →
+                <span className="label" style={{ color: 'var(--signal-text)' }}>
+                    LEER NOTA →
                 </span>
             </div>
         </a>
@@ -91,43 +93,42 @@ export function NewsFeed({ initialNews = null }) {
     const { news, status } = useNews(initialNews);
     const [activeCategory, setActiveCategory] = useState('all');
 
-    const filtered = activeCategory === 'all'
-        ? news
-        : news.filter(n => n.category.label === activeCategory);
+    const filtered =
+        activeCategory === 'all'
+            ? news
+            : news.filter((n) => n.category?.label === activeCategory);
 
     return (
-        <section className="px-5 sm:px-8 py-8 mt-2">
-            <div className="max-w-[1400px] mx-auto">
-
-                {/* Section Header */}
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
+        <section style={{ paddingTop: 'var(--space-12)' }}>
+            <div className="pulso-container">
+                <div
+                    style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'flex-end',
+                        justifyContent: 'space-between',
+                        gap: 'var(--space-4)',
+                        marginBottom: 'var(--space-6)',
+                        paddingBottom: 'var(--space-4)',
+                        borderBottom: '1px solid var(--line)',
+                    }}
+                >
                     <div>
-                        <p
-                            className="text-xs font-semibold uppercase tracking-[0.12em] mb-1"
-                            style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}
-                        >
-                            Google News · Últimas 72hs
+                        <p className="label" style={{ color: 'var(--ink-subtle)', margin: '0 0 var(--space-1) 0' }}>
+                            PRENSA ECONÓMICA · ÚLTIMAS 72 HORAS
                         </p>
-                        <h2
-                            className="text-xl sm:text-2xl font-bold tracking-tight"
-                            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}
-                        >
+                        <h2 className="h1" style={{ margin: 0, color: 'var(--ink)' }}>
                             Noticias que mueven el mercado
                         </h2>
                     </div>
 
-                    {/* Category Filter Chips */}
-                    <div className="flex flex-wrap gap-2">
-                        {CATEGORIES.map(cat => (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
+                        {CATEGORIES.map((cat) => (
                             <button
                                 key={cat.id}
+                                type="button"
                                 onClick={() => setActiveCategory(cat.id)}
-                                className="text-[11px] font-semibold px-3 py-1.5 rounded-full transition-all duration-200 active:scale-95"
-                                style={{
-                                    background: activeCategory === cat.id ? 'var(--accent)' : 'var(--bg-surface)',
-                                    color: activeCategory === cat.id ? '#fff' : 'var(--text-secondary)',
-                                    border: activeCategory === cat.id ? '1px solid var(--accent)' : '1px solid var(--border-subtle)',
-                                }}
+                                className={activeCategory === cat.id ? 'pill-active' : 'pill-inactive'}
                             >
                                 {cat.label}
                             </button>
@@ -135,49 +136,58 @@ export function NewsFeed({ initialNews = null }) {
                     </div>
                 </div>
 
-                {/* Loading skeleton */}
                 {status === 'loading' && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <NewsCardSkeleton key={i} />)}
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+                            gap: 'var(--space-4)',
+                        }}
+                    >
+                        {[1, 2, 3, 4].map((i) => (
+                            <NewsCardSkeleton key={i} />
+                        ))}
                     </div>
                 )}
 
-                {/* Error state */}
                 {status === 'error' && (
-                    <div className="text-center py-12 rounded-2xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                        <p className="text-2xl mb-2">⚠️</p>
-                        <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>No se pudo cargar las noticias</p>
-                        <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>Revisá tu conexión o intentá más tarde</p>
+                    <div className="pulso-card" style={{ textAlign: 'center' }}>
+                        <p className="body" style={{ color: 'var(--ink)', fontWeight: 700, margin: 0 }}>
+                            No pudimos cargar las noticias
+                        </p>
+                        <p className="body-sm" style={{ color: 'var(--ink-muted)', marginTop: 'var(--space-1)', marginBottom: 0 }}>
+                            Revisá tu conexión o volvé a intentar en unos minutos.
+                        </p>
                     </div>
                 )}
 
-                {/* Empty state */}
                 {status === 'success' && filtered.length === 0 && (
-                    <div className="text-center py-12 rounded-2xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                        <p className="text-2xl mb-2">📭</p>
-                        <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                            Sin noticias recientes en esta categoría
+                    <div className="pulso-card" style={{ textAlign: 'center' }}>
+                        <p className="body" style={{ color: 'var(--ink)', fontWeight: 700, margin: 0 }}>
+                            Sin noticias recientes en este filtro
                         </p>
-                        <p className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>
-                            Solo mostramos noticias de los últimos 3 días
+                        <p className="body-sm" style={{ color: 'var(--ink-muted)', marginTop: 'var(--space-1)', marginBottom: 0 }}>
+                            Elegí otra categoría para ver los titulares de los últimos tres días.
                         </p>
                     </div>
                 )}
 
-                {/* News grid */}
                 {status === 'success' && filtered.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+                            gap: 'var(--space-4)',
+                        }}
+                    >
                         {filtered.map((item, i) => (
                             <NewsCard key={item.id || i} item={item} />
                         ))}
                     </div>
                 )}
 
-                {/* Disclaimer */}
-                <p className="text-[10px] text-center mt-6" style={{ color: 'var(--text-tertiary)' }}>
-                    Noticias curadas automáticamente por palabras clave financieras. Solo se muestran artículos de los últimos 3 días.
-                    <br />
-                    Infopeso no es autor ni afiliado de ningún medio. Hacé clic en "Leer →" para ir a la fuente original.
+                <p className="body-sm" style={{ color: 'var(--ink-subtle)', marginTop: 'var(--space-6)', marginBottom: 0 }}>
+                    Titulares recopilados de medios financieros argentinos. Tocá cualquier nota para leerla en su medio original.
                 </p>
             </div>
         </section>

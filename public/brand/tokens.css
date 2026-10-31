@@ -1,0 +1,60 @@
+/* Infopeso Pulso — tokens generados desde tokens.json. No editar a mano. */
+
+:root, [data-theme="dark"] {
+  --ground-000: #141210;
+  --surface-100: #1C1916;
+  --surface-200: #2A2622;
+  --line: #332E29;
+  --ink: #F1ECE4;
+  --ink-muted: #C4BCB1;
+  --ink-subtle: #9C948A;
+  --signal: #FF6A33;
+  --signal-text: #FF8A5C;
+  --on-signal: #141210;
+  --up: var(--signal);
+  --down: #6E9BFF;
+  --focus: var(--signal);
+}
+
+[data-theme="light"] {
+  --ground-000: #F1ECE4;
+  --surface-100: #FBF8F3;
+  --surface-200: #E6DFD3;
+  --line: #D9D0C2;
+  --ink: #141210;
+  --ink-muted: #4F4840;
+  --ink-subtle: #6E665C;
+  --signal: #D9461A;
+  --signal-text: #A33410;
+  --on-signal: #141210;
+  --up: var(--signal);
+  --down: #2F5BD0;
+  --focus: var(--signal);
+}
+
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+}
+
+.display-xl { font-family: var(--font-display); font-size: 72px; line-height: 0.95; font-weight: 800; letter-spacing: -0.05em; }
+.display { font-family: var(--font-display); font-size: 48px; line-height: 1; font-weight: 800; letter-spacing: -0.045em; }
+.figure { font-family: var(--font-display); font-size: 40px; line-height: 1; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.h1 { font-family: var(--font-display); font-size: 32px; line-height: 1.1; font-weight: 800; letter-spacing: -0.035em; }
+.h2 { font-family: var(--font-display); font-size: 22px; line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
+.body { font-family: var(--font-display); font-size: 16px; line-height: 1.55; font-weight: 400; }
+.body-sm { font-family: var(--font-display); font-size: 14px; line-height: 1.45; font-weight: 400; }
+.label { font-family: var(--font-mono); font-size: 12px; line-height: 1.3; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.data { font-family: var(--font-mono); font-size: 14px; line-height: 1.4; font-weight: 400; font-variant-numeric: tabular-nums; }

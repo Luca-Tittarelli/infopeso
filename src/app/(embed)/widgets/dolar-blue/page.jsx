@@ -1,4 +1,5 @@
 import { dolarAPI } from '@/apis';
+import { formatNumber } from '@/utils/formatters';
 
 async function getDolarBlue() {
     try {
@@ -16,65 +17,70 @@ export default async function DolarBlueWidgetPage({ searchParams }) {
     const isLight = resolvedParams?.theme === 'light';
     const blue = await getDolarBlue();
 
-    const bg = isLight ? '#FFFFFF' : '#141412';
-    const cardBg = isLight ? '#F7F7F5' : '#1C1C19';
-    const textPrimary = isLight ? '#111110' : '#EDEDEC';
-    const textSecondary = isLight ? '#666664' : '#9E9E9C';
-    const border = isLight ? '#E5E5E3' : '#2A2A26';
-    const accent = '#C47B2B';
-
     return (
-        <div 
+        <div
+            data-theme={isLight ? 'light' : 'dark'}
             style={{
-                background: bg,
-                color: textPrimary,
-                fontFamily: 'system-ui, -apple-system, sans-serif',
+                background: 'var(--ground-000)',
+                color: 'var(--ink)',
+                fontFamily: 'var(--font-sans)',
                 padding: '14px',
-                borderRadius: '12px',
-                border: `1px solid ${border}`,
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--line)',
                 boxSizing: 'border-box',
-                userSelect: 'none'
+                userSelect: 'none',
             }}
         >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '15px', fontWeight: '800', color: textPrimary }}>Dólar Blue</span>
-                    <span style={{ fontSize: '10px', background: 'rgba(196,123,43,0.15)', color: accent, padding: '2px 6px', borderRadius: '4px', fontWeight: '700' }}>EN VIVO</span>
+                    <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--ink)' }}>Dólar blue</span>
+                    <span
+                        className="label"
+                        style={{
+                            fontSize: '10px',
+                            background: 'var(--surface-200)',
+                            color: 'var(--signal-text)',
+                            padding: '2px 6px',
+                            borderRadius: 'var(--radius-sm)',
+                        }}
+                    >
+                        EN VIVO
+                    </span>
                 </div>
-                <a 
-                    href="https://www.infopeso.com.ar/Cambios/dolar-blue" 
-                    target="_blank" 
+                <a
+                    href="https://www.infopeso.com.ar/Cambios/dolar-blue"
+                    target="_blank"
                     rel="noopener noreferrer"
-                    style={{ fontSize: '11px', color: accent, textDecoration: 'none', fontWeight: '600' }}
+                    style={{ fontSize: '11px', color: 'var(--signal-text)', textDecoration: 'none', fontWeight: 600 }}
                 >
                     Infopeso ↗
                 </a>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                <div style={{ background: cardBg, padding: '8px 10px', borderRadius: '8px', border: `1px solid ${border}` }}>
-                    <div style={{ fontSize: '10px', color: textSecondary, textTransform: 'uppercase', fontWeight: '700' }}>Compra</div>
-                    <div style={{ fontSize: '18px', fontWeight: '800', color: textPrimary, marginTop: '2px', fontFamily: 'monospace' }}>
-                        ${blue?.compra ? blue.compra.toLocaleString('es-AR') : '—'}
+                <div style={{ background: 'var(--surface-100)', padding: '8px 10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--line)' }}>
+                    <div className="label" style={{ fontSize: '10px', color: 'var(--ink-subtle)' }}>Compra</div>
+                    <div className="data" style={{ fontSize: '18px', fontWeight: 600, color: 'var(--ink)', marginTop: '2px' }}>
+                        {blue?.compra ? `$ ${formatNumber(blue.compra, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—'}
                     </div>
                 </div>
-                <div style={{ background: cardBg, padding: '8px 10px', borderRadius: '8px', border: `1px solid ${border}` }}>
-                    <div style={{ fontSize: '10px', color: textSecondary, textTransform: 'uppercase', fontWeight: '700' }}>Venta</div>
-                    <div style={{ fontSize: '18px', fontWeight: '800', color: accent, marginTop: '2px', fontFamily: 'monospace' }}>
-                        ${blue?.venta ? blue.venta.toLocaleString('es-AR') : '—'}
+                <div style={{ background: 'var(--surface-100)', padding: '8px 10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--line)' }}>
+                    <div className="label" style={{ fontSize: '10px', color: 'var(--ink-subtle)' }}>Venta</div>
+                    <div className="data" style={{ fontSize: '18px', fontWeight: 600, color: 'var(--signal-text)', marginTop: '2px' }}>
+                        {blue?.venta ? `$ ${formatNumber(blue.venta, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—'}
                     </div>
                 </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', fontSize: '10px', color: textSecondary }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', fontSize: '10px', color: 'var(--ink-subtle)' }}>
                 <span>Actualizado hace instantes</span>
-                <a 
-                    href="https://www.infopeso.com.ar" 
-                    target="_blank" 
+                <a
+                    href="https://www.infopeso.com.ar"
+                    target="_blank"
                     rel="noopener noreferrer"
-                    style={{ color: textSecondary, textDecoration: 'none' }}
+                    style={{ color: 'var(--ink-subtle)', textDecoration: 'none' }}
                 >
-                    Por <strong style={{ color: textPrimary }}>Infopeso</strong>
+                    Por <strong style={{ color: 'var(--ink)' }}>Infopeso</strong>
                 </a>
             </div>
         </div>

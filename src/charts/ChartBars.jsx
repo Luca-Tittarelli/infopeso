@@ -11,23 +11,35 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const BarsChart = ({ labels, dataset, height = 100, color = '#0066FF', duration, showAxes = true }) => {
-    // Build per-bar gradient color array
-    const colors = dataset.map((v, i, arr) => {
-        // Last bar is the latest value
-        if (i === arr.length - 1) return color;
-        return color + 'AA';
-    });
+function getCssVar(name) {
+    if (typeof window === 'undefined') return '';
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function resolveChartTone(colorProp) {
+    if (!colorProp || colorProp === 'signal') return getCssVar('--signal');
+    if (colorProp === 'up') return getCssVar('--up');
+    if (colorProp === 'down') return getCssVar('--down');
+    if (colorProp === 'neutral') return getCssVar('--ink-subtle');
+    return colorProp;
+}
+
+const BarsChart = ({ labels, dataset, height = 100, color, showAxes = true }) => {
+    const resolvedColor = resolveChartTone(color);
+    const inkColor = getCssVar('--ink');
+    const inkSubtleColor = getCssVar('--ink-subtle');
+    const lineGridColor = getCssVar('--line');
+    const surfaceBg = getCssVar('--surface-200');
 
     const data = {
         labels,
         datasets: [
             {
                 data: dataset,
-                backgroundColor: colors,
+                backgroundColor: resolvedColor,
                 borderRadius: 4,
                 borderSkipped: false,
-                hoverBackgroundColor: color,
+                hoverBackgroundColor: resolvedColor,
             },
         ],
     };
@@ -39,35 +51,36 @@ const BarsChart = ({ labels, dataset, height = 100, color = '#0066FF', duration,
             x: {
                 display: showAxes,
                 grid: { display: false },
+                border: { display: false },
                 ticks: {
-                    color: '#8B98A5',
-                    font: { size: 10, family: 'General Sans' },
+                    color: inkSubtleColor,
+                    font: { size: 11, family: '"Geist Mono", monospace' },
                     maxTicksLimit: 6,
                     maxRotation: 0,
                     autoSkip: true,
-                }
+                },
             },
             y: {
                 display: showAxes,
                 position: 'right',
                 beginAtZero: true,
-                grid: { 
+                grid: {
                     display: showAxes,
-                    color: 'rgba(139, 152, 165, 0.1)',
+                    color: lineGridColor,
                     drawBorder: false,
                 },
                 border: { display: false },
                 ticks: {
                     maxTicksLimit: 5,
-                    color: '#8B98A5',
-                    font: { size: 10, family: 'General Sans' },
+                    color: inkSubtleColor,
+                    font: { size: 11, family: '"Geist Mono", monospace' },
                     padding: 8,
                     callback: (value) => {
                         if (Math.abs(value) >= 1_000_000)
-                            return (value / 1_000_000).toFixed(1) + 'M';
+                            return (value / 1_000_000).toLocaleString('es-AR', { maximumFractionDigits: 1 }) + ' M';
                         if (Math.abs(value) >= 1_000)
-                            return (value / 1_000).toFixed(0) + 'k';
-                        return value.toLocaleString('es-AR');
+                            return (value / 1_000).toLocaleString('es-AR', { maximumFractionDigits: 0 }) + ' mil';
+                        return Number(value).toLocaleString('es-AR');
                     },
                 },
             },
@@ -76,17 +89,19 @@ const BarsChart = ({ labels, dataset, height = 100, color = '#0066FF', duration,
             legend: { display: false },
             tooltip: {
                 enabled: true,
-                backgroundColor: 'rgba(10,14,23,0.88)',
-                titleColor: '#94A3B8',
-                bodyColor: '#F0F4F8',
+                backgroundColor: surfaceBg,
+                titleColor: inkSubtleColor,
+                bodyColor: inkColor,
+                borderColor: lineGridColor,
+                borderWidth: 1,
                 padding: 10,
                 cornerRadius: 8,
                 displayColors: false,
-                titleFont: { size: 11, family: 'General Sans' },
-                bodyFont: { size: 13, family: 'Satoshi', weight: '600' },
+                titleFont: { size: 11, family: '"Geist Mono", monospace', weight: '500' },
+                bodyFont: { size: 13, family: '"Geist Mono", monospace', weight: '500' },
                 callbacks: {
                     title: (items) => items[0]?.label || '',
-                    label: (item) => item.raw.toLocaleString('es-AR'),
+                    label: (item) => Number(item.raw).toLocaleString('es-AR'),
                 },
             },
             title: { display: false },

@@ -1,4 +1,5 @@
 import { dolarAPI } from '@/apis';
+import { formatNumber } from '@/utils/formatters';
 
 async function getDolarData() {
     try {
@@ -12,99 +13,69 @@ async function getDolarData() {
 
 export const metadata = {
     title: 'Widget Dólar Hoy',
-    robots: { index: false, follow: false } // No index, it's just for embed
+    robots: { index: false, follow: false }
 };
 
-export default async function Page() {
+export default async function Page({ searchParams }) {
+    const resolvedParams = await searchParams;
+    const isLight = resolvedParams?.theme === 'light';
     const data = await getDolarData();
     const blue = data.find(item => item.casa === 'blue');
     const mep = data.find(item => item.casa === 'bolsa');
 
     return (
-        <>
-                <style>{`
-                    :root {
-                        --bg: #171715;
-                        --border: #262623;
-                        --text: #F5F4F0;
-                        --text-sec: #9C9A94;
-                        --accent: #E8942B;
-                        --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                    }
-                    div.w {
-                        margin: 0;
-                        padding: 12px;
-                        background: var(--bg);
-                        color: var(--text);
-                        font-family: var(--font);
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-between;
-                        height: calc(100vh - 24px);
-                        box-sizing: border-box;
-                        border: 1px solid var(--border);
-                        border-radius: 12px;
-                        overflow: hidden;
-                    }
-                    .header {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        border-bottom: 1px solid var(--border);
-                        padding-bottom: 6px;
-                        margin-bottom: 8px;
-                    }
-                    .title {
-                        font-size: 10px;
-                        text-transform: uppercase;
-                        letter-spacing: 0.1em;
-                        color: var(--text-sec);
-                        font-weight: 700;
-                    }
-                    .logo {
-                        font-size: 11px;
-                        font-weight: bold;
-                        color: var(--accent);
-                        text-decoration: none;
-                    }
-                    .row {
-                        display: flex;
-                        justify-content: space-around;
-                        align-items: center;
-                        flex-grow: 1;
-                    }
-                    .item {
-                        text-align: center;
-                    }
-                    .label {
-                        font-size: 10px;
-                        color: var(--text-sec);
-                        margin-bottom: 2px;
-                    }
-                    .value {
-                        font-size: 18px;
-                        font-weight: bold;
-                        font-family: monospace;
-                    }
-                `}</style>
-                <div className="w">
-                <div className="header">
-                    <span className="title">Cotizaciones Hoy</span>
-                    <a href="https://www.infopeso.com.ar/Cambios/dolar-blue" target="_blank" rel="noopener noreferrer" className="logo">
-                        Infopeso
-                    </a>
-                </div>
-                <div className="row">
-                    <div className="item">
-                        <div className="label">Dólar Blue</div>
-                        <div className="value">${blue ? blue.venta : '—'}</div>
-                    </div>
-                    <div className="item">
-                        <div className="label">Dólar MEP</div>
-                        <div className="value">${mep ? mep.venta : '—'}</div>
+        <div
+            data-theme={isLight ? 'light' : 'dark'}
+            style={{
+                margin: 0,
+                padding: 'var(--space-3)',
+                background: 'var(--ground-000)',
+                color: 'var(--ink)',
+                fontFamily: 'var(--font-sans)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: 'calc(100vh - 24px)',
+                boxSizing: 'border-box',
+                border: '1px solid var(--line)',
+                borderRadius: 'var(--radius-md)',
+                overflow: 'hidden',
+            }}
+        >
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderBottom: '1px solid var(--line)',
+                    paddingBottom: '6px',
+                    marginBottom: '8px',
+                }}
+            >
+                <span className="label" style={{ color: 'var(--ink-subtle)' }}>Cotizaciones hoy</span>
+                <a
+                    href="https://www.infopeso.com.ar/Cambios/dolar-blue"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ fontSize: '11px', fontWeight: 700, color: 'var(--signal-text)', textDecoration: 'none' }}
+                >
+                    Infopeso
+                </a>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexGrow: 1 }}>
+                <div style={{ textAlign: 'center' }}>
+                    <div className="label" style={{ color: 'var(--ink-subtle)', marginBottom: '2px' }}>Dólar blue</div>
+                    <div className="data" style={{ fontSize: '18px', fontWeight: 600, color: 'var(--ink)' }}>
+                        {blue?.venta ? `$ ${formatNumber(blue.venta, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—'}
                     </div>
                 </div>
+                <div style={{ textAlign: 'center' }}>
+                    <div className="label" style={{ color: 'var(--ink-subtle)', marginBottom: '2px' }}>Dólar MEP</div>
+                    <div className="data" style={{ fontSize: '18px', fontWeight: 600, color: 'var(--ink)' }}>
+                        {mep?.venta ? `$ ${formatNumber(mep.venta, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—'}
+                    </div>
                 </div>
-        </>
+            </div>
+        </div>
     );
 }

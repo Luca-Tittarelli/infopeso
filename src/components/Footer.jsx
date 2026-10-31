@@ -1,197 +1,225 @@
+'use client';
+
 import Link from 'next/link';
+import { useTheme } from '../hooks/useTheme';
 
 export function Footer() {
+    const [theme, , mounted] = useTheme();
     const currentYear = new Date().getFullYear();
+    const currentTheme = mounted ? theme : 'dark';
+    const logoSrc =
+        currentTheme === 'light'
+            ? '/assets/Logos/logo-principal-sobre-claro.svg'
+            : '/assets/Logos/logo-principal-sobre-oscuro.svg';
+
     return (
         <footer
-            className="mt-24 pb-24 md:pb-0"
             style={{
-                borderTop: '1px solid var(--border-subtle)',
-                background: 'var(--bg-surface)',
-                color: 'var(--text-secondary)',
+                marginTop: 'var(--space-16)',
+                paddingBottom: 'var(--space-16)',
+                borderTop: '1px solid var(--line)',
+                background: 'var(--surface-100)',
+                color: 'var(--ink-muted)',
             }}
         >
-            {/* ── Main footer grid ─────────────────────────── */}
-            <div className="max-w-[1200px] mx-auto px-5 sm:px-8 py-12 grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-8">
-
-                {/* Col 1 — About */}
-                <div>
-                    <h3
-                        className="text-sm font-semibold uppercase tracking-widest mb-4"
-                        style={{ color: 'var(--text-tertiary)' }}
-                    >
-                        Acerca de Infopeso
-                    </h3>
-                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                        Infopeso es una plataforma abierta de datos financieros argentinos y seguimiento inteligente de carteras.
-                        Centraliza información sobre el dólar, variables monetarias del BCRA, bonos, acciones y CEDEARs para potenciar tus decisiones de inversión.
-                    </p>
-                    <div className="flex items-center gap-4 mt-4">
-                        <a
-                            href="https://x.com/infopeso"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 text-sm font-medium transition-colors hover:underline"
-                            style={{ color: 'var(--accent)' }}
-                        >
-                            <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
-                                <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
-                            </svg>
-                            X / Twitter
-                        </a>
-                        <span>·</span>
-                        <Link href="/widgets" className="text-sm font-medium hover:underline text-accent">
-                            Widgets para tu web
-                        </Link>
-                    </div>
-                </div>
-
-                {/* Col 2 — Sources */}
-                <div>
-                    <h3
-                        className="text-sm font-semibold uppercase tracking-widest mb-4"
-                        style={{ color: 'var(--text-tertiary)' }}
-                    >
-                        Fuentes de datos
-                    </h3>
-                    <ul className="space-y-2 text-sm">
-                        {[
-                            { label: 'BCRA — Variables monetarias', href: 'https://bcra.gob.ar/Catalogo/apis.asp?fileName=principales-variables-v2&sectionName=Estad%EDsticas' },
-                            { label: 'DolarAPI — Cotizaciones en vivo', href: 'https://dolarapi.com/' },
-                            { label: 'ArgentinaDatos — Riesgo País y Series', href: 'https://argentinadatos.com/' },
-                            { label: 'TradingView — Mercados globales', href: 'https://tradingview.com/' },
-                        ].map(({ label, href }) => (
-                            <li key={href}>
-                                <a
-                                    href={href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="transition-colors hover:underline"
-                                    style={{ color: 'var(--text-secondary)' }}
-                                >
-                                    {label}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-
-                {/* Col 3 — Support & Portfolio CTA */}
-                <div>
-                    <h3
-                        className="text-sm font-semibold uppercase tracking-widest mb-4"
-                        style={{ color: 'var(--text-tertiary)' }}
-                    >
-                        Herramientas Destacadas
-                    </h3>
-                    <div className="space-y-3">
-                        <Link 
-                            href="/Cartera"
-                            className="block p-3 rounded-xl border transition-all hover:scale-[1.02]"
-                            style={{ background: 'var(--bg-surface-hover)', borderColor: 'var(--accent)' }}
-                        >
-                            <div className="text-xs font-bold text-accent">⚡ SEGUÍ TU CARTERA</div>
-                            <div className="text-xs text-[var(--text-secondary)] mt-0.5">Diagnóstico y múltiplos de acciones argentinas y CEDEARs.</div>
-                        </Link>
-
-                        <a
-                            href="https://cafecito.app/ucode-wd"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all border"
-                            style={{
-                                background: 'var(--bg-surface-hover)',
-                                borderColor: 'var(--border-subtle)',
-                                color: 'var(--text-primary)',
-                            }}
-                        >
-                            <img src="https://cdn.cafecito.app/imgs/cafecito_logo.svg" alt="Cafecito" className="h-4" />
-                            Invitar un cafecito
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            {/* ── SEO Links Grid — Internal Linking for Indexation ──────── */}
-            <div className="border-t" style={{ borderColor: 'var(--border-subtle)' }}>
-                <div className="max-w-[1200px] mx-auto px-5 sm:px-8 py-8 grid grid-cols-2 sm:grid-cols-4 gap-6 text-xs">
-                    <div>
-                        <h4 className="font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-tertiary)' }}>
-                            Divisas y Dólar
-                        </h4>
-                        <ul className="space-y-1.5">
-                            <li><Link href="/Cambios/dolar-blue" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Dólar Blue Hoy</Link></li>
-                            <li><Link href="/Cambios/dolar-oficial" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Dólar Oficial BNA</Link></li>
-                            <li><Link href="/Cambios/dolar-mep" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Dólar MEP (Bolsa)</Link></li>
-                            <li><Link href="/Cambios/dolar-ccl" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Dólar CCL (Contado con Liqui)</Link></li>
-                            <li><Link href="/Cambios/dolar-tarjeta" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Dólar Tarjeta / Turista</Link></li>
-                            <li><Link href="/Cambios/euro" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Euro Oficial</Link></li>
-                            <li><Link href="/Cambios/real" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Real Brasileño</Link></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 className="font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-tertiary)' }}>
-                            Macroeconomía & Renta Fija
-                        </h4>
-                        <ul className="space-y-1.5">
-                            <li><Link href="/Economia/riesgo-pais" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Riesgo País Argentina</Link></li>
-                            <li><Link href="/Economia/27" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Inflación Mensual INDEC</Link></li>
-                            <li><Link href="/Economia/1" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Reservas Internacionales BCRA</Link></li>
-                            <li><Link href="/Economia/15" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Base Monetaria</Link></li>
-                            <li><Link href="/RentaFija/AL30" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Bono AL30 (Bonar 2030)</Link></li>
-                            <li><Link href="/RentaFija/GD30" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Bono GD30 (Global 2030)</Link></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 className="font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-tertiary)' }}>
-                            Guías de Inversión
-                        </h4>
-                        <ul className="space-y-1.5">
-                            <li><Link href="/guias" className="hover:underline font-bold text-accent">Ver Todas las Guías →</Link></li>
-                            <li><Link href="/guias/armar-cartera-inversiones-argentina" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Cómo Armar una Cartera</Link></li>
-                            <li><Link href="/guias/que-son-cedears-como-invertir" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Qué son los CEDEARs</Link></li>
-                            <li><Link href="/guias/dolar-mep-vs-ccl-vs-blue" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Dólar MEP vs CCL vs Blue</Link></li>
-                            <li><Link href="/guias/bonos-argentinos-al30-vs-gd30" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Bonos AL30 vs GD30</Link></li>
-                            <li><Link href="/guias/acciones-vaca-muerta-ypf-vista-pampa" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Acciones de Vaca Muerta</Link></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 className="font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--text-tertiary)' }}>
-                            Herramientas y Portafolio
-                        </h4>
-                        <ul className="space-y-1.5">
-                            <li><Link href="/Cartera" className="hover:underline font-bold" style={{ color: 'var(--accent)' }}>Tracker de Cartera Gratis</Link></li>
-                            <li><Link href="/widgets" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Widgets para Webmasters</Link></li>
-                            <li><Link href="/Cambios/calculadora-pesos-a-dolar-blue" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Calculadora Dólar Blue</Link></li>
-                            <li><Link href="/Cambios/calculadora-dolar-tarjeta" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Calculadora Dólar Tarjeta</Link></li>
-                            <li><Link href="/Empresas" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Terminal de Empresas</Link></li>
-                            <li><Link href="/Mercado" className="hover:underline" style={{ color: 'var(--text-secondary)' }}>Mercado Financiero</Link></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            {/* ── Bottom bar ───────────────────────────────── */}
             <div
-                className="border-t"
-                style={{ borderColor: 'var(--border-subtle)' }}
+                className="pulso-container"
+                style={{
+                    paddingTop: 'var(--space-12)',
+                    paddingBottom: 'var(--space-12)',
+                }}
             >
-                <div className="max-w-[1200px] mx-auto px-5 sm:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs"
-                    style={{ color: 'var(--text-tertiary)' }}>
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
-                        <p>© {currentYear} Infopeso. Todos los derechos reservados.</p>
-                        <div className="flex gap-3">
-                            <Link href="/privacidad" className="hover:underline">Privacidad</Link>
-                            <span>·</span>
-                            <Link href="/terminos" className="hover:underline">Términos</Link>
-                            <span>·</span>
-                            <Link href="/contacto" className="hover:underline">Contacto</Link>
+                {/* Bloque principal */}
+                <div
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                        gap: 'var(--space-8)',
+                        paddingBottom: 'var(--space-12)',
+                        borderBottom: '1px solid var(--line)',
+                    }}
+                >
+                    {/* Col 1: Marca */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                        <Link href="/" aria-label="Infopeso" style={{ display: 'inline-block', paddingBlock: 'var(--space-1)' }}>
+                            <img
+                                src={logoSrc}
+                                alt="Infopeso"
+                                width={124}
+                                height={30}
+                                style={{ width: '124px', height: 'auto', display: 'block' }}
+                            />
+                        </Link>
+                        <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                            Seguí el dólar, la inflación, el mercado y tu cartera en pesos y dólares. Datos claros, alineados y verificables en tiempo real.
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
+                            <a
+                                href="https://x.com/infopeso"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="body-sm"
+                                style={{ color: 'var(--ink)', textDecoration: 'none', fontWeight: 700 }}
+                            >
+                                @infopeso en X →
+                            </a>
+                            <Link
+                                href="/widgets"
+                                className="body-sm"
+                                style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}
+                            >
+                                Widgets para tu web →
+                            </Link>
                         </div>
                     </div>
-                    <p className="text-center sm:text-right max-w-md leading-normal text-[11px]">
-                        El contenido, simuladores y datos de Infopeso son de carácter estrictamente informativo y educativo. No constituyen asesoramiento financiero, recomendación de inversión ni oferta de valores negociables (Ley N° 26.831 CNV).
+
+                    {/* Col 2: Fuentes */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                        <h3 className="label" style={{ color: 'var(--ink-subtle)', margin: 0 }}>
+                            Fuentes verificables
+                        </h3>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                            {[
+                                { label: 'BCRA — Estadísticas monetarias', href: 'https://www.bcra.gob.ar/' },
+                                { label: 'INDEC — Índice de precios (IPC)', href: 'https://www.indec.gob.ar/' },
+                                { label: 'DolarAPI — Cotizaciones cambiarias', href: 'https://dolarapi.com/' },
+                                { label: 'ArgentinaDatos — Series históricas', href: 'https://argentinadatos.com/' },
+                                { label: 'BYMA / TradingView — Mercado', href: 'https://www.tradingview.com/' },
+                            ].map(({ label, href }) => (
+                                <li key={href}>
+                                    <a
+                                        href={href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="body-sm"
+                                        style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}
+                                    >
+                                        {label}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Col 3: Accesos directos */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                        <h3 className="label" style={{ color: 'var(--ink-subtle)', margin: 0 }}>
+                            Tu cartera en Infopeso
+                        </h3>
+                        <div
+                            style={{
+                                padding: 'var(--space-6)',
+                                borderRadius: 'var(--radius-md)',
+                                background: 'var(--ground-000)',
+                                border: '1px solid var(--line)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 'var(--space-3)',
+                            }}
+                        >
+                            <p className="h2" style={{ margin: 0, color: 'var(--ink)' }}>
+                                ¿Tu plata le ganó a la inflación?
+                            </p>
+                            <p className="body-sm" style={{ margin: 0, color: 'var(--ink-muted)' }}>
+                                Armá tu cartera de acciones argentinas y CEDEARs para seguir valuación, dividendos y noticias.
+                            </p>
+                            <div>
+                                <Link href="/Cartera" className="pulso-btn pulso-btn-secondary pulso-btn-sm">
+                                    Ver mi cartera →
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Grilla de enlaces internos SEO */}
+                <div
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                        gap: 'var(--space-6)',
+                        paddingTop: 'var(--space-8)',
+                        paddingBottom: 'var(--space-8)',
+                        borderBottom: '1px solid var(--line)',
+                    }}
+                >
+                    <div>
+                        <h4 className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-3)', marginTop: 0 }}>
+                            Dólar y divisas
+                        </h4>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                            <li><Link href="/Cambios/dolar-blue" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Dólar Blue hoy</Link></li>
+                            <li><Link href="/Cambios/dolar-mep" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Dólar MEP (Bolsa)</Link></li>
+                            <li><Link href="/Cambios/dolar-ccl" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Dólar CCL</Link></li>
+                            <li><Link href="/Cambios/dolar-oficial" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Dólar Oficial BNA</Link></li>
+                            <li><Link href="/Cambios/dolar-tarjeta" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Dólar Tarjeta</Link></li>
+                            <li><Link href="/Cambios/euro" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Euro Oficial</Link></li>
+                            <li><Link href="/Cambios/real" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Real Brasileño</Link></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-3)', marginTop: 0 }}>
+                            Macro y bonos
+                        </h4>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                            <li><Link href="/Economia/riesgo-pais" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Riesgo país</Link></li>
+                            <li><Link href="/Economia/27" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Inflación mensual INDEC</Link></li>
+                            <li><Link href="/Economia/1" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Reservas BCRA</Link></li>
+                            <li><Link href="/Economia/15" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Base monetaria</Link></li>
+                            <li><Link href="/RentaFija/AL30" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Bono AL30</Link></li>
+                            <li><Link href="/RentaFija/GD30" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Bono GD30</Link></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-3)', marginTop: 0 }}>
+                            Guías para invertir
+                        </h4>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                            <li><Link href="/guias" className="body-sm" style={{ color: 'var(--ink)', fontWeight: 700, textDecoration: 'none' }}>Ver todas las guías →</Link></li>
+                            <li><Link href="/guias/armar-cartera-inversiones-argentina" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Cómo armar una cartera</Link></li>
+                            <li><Link href="/guias/que-son-cedears-como-invertir" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Qué son los CEDEARs</Link></li>
+                            <li><Link href="/guias/dolar-mep-vs-ccl-vs-blue" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Dólar MEP vs CCL vs Blue</Link></li>
+                            <li><Link href="/guias/bonos-argentinos-al30-vs-gd30" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Bonos AL30 vs GD30</Link></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-3)', marginTop: 0 }}>
+                            Herramientas
+                        </h4>
+                        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                            <li><Link href="/Cartera" className="body-sm" style={{ color: 'var(--ink)', fontWeight: 700, textDecoration: 'none' }}>Cargá tu cartera</Link></li>
+                            <li><Link href="/Cambios/calculadora-pesos-a-dolar-blue" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Calculadora dólar blue</Link></li>
+                            <li><Link href="/Cambios/calculadora-dolar-tarjeta" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Calculadora dólar tarjeta</Link></li>
+                            <li><Link href="/Empresas" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Panel de empresas</Link></li>
+                            <li><Link href="/Mercado" className="body-sm" style={{ color: 'var(--ink-muted)', textDecoration: 'none' }}>Panel de mercado</Link></li>
+                        </ul>
+                    </div>
+                </div>
+
+                {/* Pie legal */}
+                <div
+                    style={{
+                        paddingTop: 'var(--space-6)',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: 'var(--space-4)',
+                    }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
+                        <span className="label" style={{ color: 'var(--ink-subtle)' }}>
+                            © {currentYear} INFOPESO
+                        </span>
+                        <Link href="/privacidad" className="body-sm" style={{ color: 'var(--ink-subtle)', textDecoration: 'none' }}>Privacidad</Link>
+                        <Link href="/terminos" className="body-sm" style={{ color: 'var(--ink-subtle)', textDecoration: 'none' }}>Términos</Link>
+                        <Link href="/contacto" className="body-sm" style={{ color: 'var(--ink-subtle)', textDecoration: 'none' }}>Contacto</Link>
+                    </div>
+                    <p className="body-sm" style={{ color: 'var(--ink-subtle)', margin: 0 }}>
+                        Información con fines informativos. No es una recomendación de inversión.
                     </p>
                 </div>
             </div>

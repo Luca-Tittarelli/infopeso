@@ -23,14 +23,12 @@ async function getInitialSeries(id) {
     }
 }
 
-// Generate static params for SSG
 export const dynamicParams = false;
 
 export function generateStaticParams() {
     return Object.keys(variablesMetadata).map((id) => ({ id }));
 }
 
-// Generate dynamic metadata
 export async function generateMetadata({ params }) {
     const resolvedParams = await params;
     const id = resolvedParams.id;
@@ -59,7 +57,6 @@ export default async function Page({ params }) {
     const meta = getVariableMetadata(id);
     const initialData = await getInitialSeries(id);
 
-    // Build structured data schemas
     const datasetSchema = meta.dataset ? {
         "@context": "https://schema.org",
         "@type": "Dataset",
@@ -90,104 +87,77 @@ export default async function Page({ params }) {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Inicio",
-                "item": "https://www.infopeso.com.ar"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Economía",
-                "item": "https://www.infopeso.com.ar/Economia"
-            },
-            {
-                "@type": "ListItem",
-                "position": 3,
-                "name": meta.title.split('—')[0].trim(),
-                "item": `https://www.infopeso.com.ar/Economia/${id}`
-            }
+            { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.infopeso.com.ar" },
+            { "@type": "ListItem", "position": 2, "name": "Economía", "item": "https://www.infopeso.com.ar/Economia" },
+            { "@type": "ListItem", "position": 3, "name": meta.title.split('—')[0].trim(), "item": `https://www.infopeso.com.ar/Economia/${id}` }
         ]
     };
 
     return (
-        <main className="min-h-screen pt-14 pb-16 md:pb-12">
-            {/* Inject JSON-LD Schema on Server Side */}
+        <main style={{ minHeight: '100vh', paddingTop: '56px', paddingBottom: 'var(--space-16)' }}>
             {datasetSchema && (
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: jsonLd(datasetSchema) }}
-                />
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(datasetSchema) }} />
             )}
             {faqSchema && (
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }}
-                />
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
             )}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }}
-            />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
 
-            <section className="max-w-[1100px] mx-auto px-5 sm:px-8 py-8">
-                {/* Breadcrumbs (Server-rendered) */}
-                <nav className="flex items-center gap-2 mb-6">
+            <section className="pulso-container" style={{ paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-8)' }}>
+                {/* Breadcrumbs */}
+                <nav className="flex items-center gap-2 mb-6" aria-label="Breadcrumb">
                     <Link
                         href="/Economia"
-                        className="flex items-center gap-1.5 text-sm font-medium transition-colors hover:underline"
-                        style={{ color: 'var(--text-secondary)' }}
+                        className="flex items-center gap-1.5 body-sm hover:underline"
+                        style={{ color: 'var(--ink-muted)' }}
                     >
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                             <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                         Economía
                     </Link>
-                    <span style={{ color: 'var(--border-subtle)' }}>/</span>
-                    <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                    <span style={{ color: 'var(--line)' }}>/</span>
+                    <span className="body-sm" style={{ color: 'var(--ink-subtle)' }}>
                         {meta.title.split('—')[0].trim()}
                     </span>
                 </nav>
 
-                {/* Client interactivity component (chart, updates, filters) */}
                 <EconomiaDetalleClient id={id} meta={meta} initialData={initialData} />
 
-                {/* Rich text section (Server-rendered, indexable!) */}
                 {meta.faqs && meta.faqs.length > 0 && (
-                    <section className="mt-10 pt-8" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-                        <h2 className="text-lg font-bold mb-4 animate-fade-in" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-                            Información y Contexto Económico
+                    <section style={{ marginTop: 'var(--space-12)', paddingTop: 'var(--space-8)', borderTop: '1px solid var(--line)' }}>
+                        <h2 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-4)' }}>
+                            Información y contexto económico
                         </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div className="p-4 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                                <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 mb-6" style={{ gap: 'var(--space-4)' }}>
+                            <div className="pulso-card">
+                                <h3 className="label" style={{ color: 'var(--signal-text)', marginBottom: 'var(--space-2)' }}>
                                     ¿Qué es?
                                 </h3>
-                                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                                <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
                                     {meta.definition}
                                 </p>
                             </div>
-                            <div className="p-4 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                                <h3 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--accent)', fontFamily: 'var(--font-ui)' }}>
+                            <div className="pulso-card">
+                                <h3 className="label" style={{ color: 'var(--signal-text)', marginBottom: 'var(--space-2)' }}>
                                     ¿Por qué es importante?
                                 </h3>
-                                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                                <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
                                     {meta.importance}
                                 </p>
                             </div>
                         </div>
 
-                        <h2 className="text-lg font-bold mb-4 mt-8" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
-                            Preguntas Frecuentes
+                        <h2 className="h2" style={{ color: 'var(--ink)', marginTop: 'var(--space-8)', marginBottom: 'var(--space-4)' }}>
+                            Preguntas frecuentes
                         </h2>
-                        <div className="space-y-3">
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
                             {meta.faqs.map((faq, idx) => (
-                                <div key={idx} className="p-4 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                                    <h3 className="text-sm font-bold mb-1.5" style={{ color: 'var(--text-primary)' }}>
+                                <div key={idx} className="pulso-card">
+                                    <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-body)', fontWeight: 700, color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>
                                         {faq.question}
                                     </h3>
-                                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                                    <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
                                         {faq.answer}
                                     </p>
                                 </div>

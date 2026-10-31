@@ -1,13 +1,11 @@
 /**
- * News fetcher using Google News RSS via Vite dev proxy (/gnews-rss).
- * The Vite server proxies /gnews-rss -> news.google.com to bypass CORS.
+ * News fetcher using Google News RSS via proxy (/gnews-rss).
  * Uses when:3d in the search query to restrict results to last 3 days on Google's side,
  * plus a client-side 14-day cutoff as a safety net.
  */
 
-const MAX_AGE_DAYS = 14; // discard anything older than 14 days
+const MAX_AGE_DAYS = 14;
 
-// Financial keyword whitelist - must match at least one to show
 const FINANCIAL_KEYWORDS = [
     'dólar', 'dolar', 'dollar', 'bcra', 'tasa', 'inflación', 'inflacion', 'ipc', 'indec',
     'reservas', 'bono', 'bonos', 'al30', 'gd30', 'mep', 'ccl', 'brecha',
@@ -25,31 +23,31 @@ export function detectCategory(title) {
         t.includes('tipo de cambio') || t.includes('mep') || t.includes('ccl') ||
         t.includes('cepo') || t.includes('blue') || t.includes('brecha') ||
         t.includes('divisa') || t.includes('cambi')) {
-        return { label: 'Tipo de Cambio', color: '#3B82F6', bg: 'rgba(59,130,246,0.12)' };
+        return { label: 'Tipo de Cambio', color: 'var(--signal-text)', bg: 'var(--surface-200)' };
     }
     if (t.includes('inflación') || t.includes('inflacion') || t.includes('ipc') ||
         t.includes('indec') || t.includes('precios') || t.includes('tarifas')) {
-        return { label: 'Inflación', color: '#F97316', bg: 'rgba(249,115,22,0.12)' };
+        return { label: 'Inflación', color: 'var(--signal-text)', bg: 'var(--surface-200)' };
     }
     if (t.includes('bcra') || t.includes('tasa') || t.includes('reservas') ||
         t.includes('banco central') || t.includes('lecap') || t.includes('swap') ||
         t.includes('carry') || t.includes('base monetaria')) {
-        return { label: 'Política Monetaria', color: '#8B5CF6', bg: 'rgba(139,92,246,0.12)' };
+        return { label: 'Política Monetaria', color: 'var(--signal-text)', bg: 'var(--surface-200)' };
     }
     if (t.includes('bono') || t.includes('bonos') || t.includes('al30') || t.includes('gd30') ||
         t.includes('deuda') || t.includes('fmi') || t.includes('licitaci') ||
         t.includes('obligaci') || t.includes('tir') || t.includes('rendimiento')) {
-        return { label: 'Deuda & Bonos', color: '#10B981', bg: 'rgba(16,185,129,0.12)' };
+        return { label: 'Deuda y Bonos', color: 'var(--signal-text)', bg: 'var(--surface-200)' };
     }
     if (t.includes('bolsa') || t.includes('merval') || t.includes('acciones') ||
         t.includes('cnv') || t.includes('cedear')) {
-        return { label: 'Mercado', color: '#06B6D4', bg: 'rgba(6,182,212,0.12)' };
+        return { label: 'Mercado', color: 'var(--signal-text)', bg: 'var(--surface-200)' };
     }
     if (t.includes('retenciones') || t.includes('arancel') || t.includes('afip') ||
         t.includes('decreto') || t.includes('resolución') || t.includes('regulac')) {
-        return { label: 'Regulaciones', color: '#6B7280', bg: 'rgba(107,114,128,0.12)' };
+        return { label: 'Regulaciones', color: 'var(--ink-subtle)', bg: 'var(--surface-200)' };
     }
-    return { label: 'Economía', color: '#6B7280', bg: 'rgba(107,114,128,0.12)' };
+    return { label: 'Economía', color: 'var(--ink-subtle)', bg: 'var(--surface-200)' };
 }
 
 function isFinancialNews(title) {
@@ -85,7 +83,6 @@ export function parseXMLFeed(xmlText) {
         });
     }
 
-    // Node.js SSR / API route fallback using regex
     const items = [];
     const itemMatches = xmlText.match(/<item[\s\S]*?<\/item>/gi) || [];
     for (const itemXml of itemMatches) {
@@ -132,11 +129,6 @@ export function formatNewsFromXml(xmlText) {
         }));
 }
 
-/**
- * Fetch financial news.
- * On server: queries Google News RSS directly with ISR caching.
- * On client: queries /api/news.
- */
 export async function fetchFinancialNews() {
     const isServer = typeof window === 'undefined';
     const query = encodeURIComponent('BCRA dólar argentina economía inflación bonos when:3d');
@@ -149,7 +141,6 @@ export async function fetchFinancialNews() {
         return formatNewsFromXml(xml);
     }
 
-    // Client-side: fetch from cached Next.js API route
     try {
         const res = await fetch('/api/news');
         if (res.ok) {

@@ -80,22 +80,22 @@ export default async function Page() {
     };
 
     return (
-        <main className="min-h-screen pt-14 pb-16 md:pb-12">
+        <main style={{ minHeight: '100vh', paddingTop: '56px', paddingBottom: 'var(--space-16)' }}>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(webAppSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
 
-            <section className="max-w-[1100px] mx-auto px-5 sm:px-8 py-8">
-                <nav className="flex items-center gap-2 mb-6">
-                    <Link href="/Cambios" className="flex items-center gap-1.5 text-sm font-medium transition-colors hover:underline" style={{ color: 'var(--text-secondary)' }}>
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <section className="pulso-container" style={{ paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-8)' }}>
+                <nav className="flex items-center gap-2 mb-6" aria-label="Breadcrumb">
+                    <Link href="/Cambios" className="flex items-center gap-1.5 body-sm hover:underline" style={{ color: 'var(--ink-muted)' }}>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                             <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                         Divisas
                     </Link>
-                    <span style={{ color: 'var(--border-subtle)' }}>/</span>
-                    <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                        Calculadora Dólar Tarjeta
+                    <span style={{ color: 'var(--line)' }}>/</span>
+                    <span className="body-sm" style={{ color: 'var(--ink-subtle)' }}>
+                        Calculadora dólar tarjeta
                     </span>
                 </nav>
 
@@ -103,18 +103,17 @@ export default async function Page() {
 
                 <AdSlot slot="inContentA" />
 
-                {/* Explicación SEO Contextual */}
-                <article className="mt-12 pt-8 border-t border-[var(--border-subtle)] space-y-6">
-                    <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
+                <article style={{ marginTop: 'var(--space-12)', paddingTop: 'var(--space-8)', borderTop: '1px solid var(--line)' }}>
+                    <h2 className="h2" style={{ color: 'var(--ink)', marginBottom: 'var(--space-3)' }}>
                         ¿Cómo calcular impuestos en compras en dólares?
                     </h2>
-                    <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                        Los consumos realizados en moneda extranjera con tarjeta en Argentina se liquidan al dólar oficial minorista del banco emisor más los recargos impositivos dictaminados por la AFIP. Al calcular el valor final en tu resumen bancario, podés usar nuestra herramienta interactiva para conocer el monto exacto en pesos.
+                    <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                        Los consumos realizados en moneda extranjera con tarjeta en Argentina se liquidan al dólar oficial minorista del banco emisor más los recargos impositivos vigentes. Al calcular el valor final en tu resumen bancario, podés usar esta herramienta interactiva para conocer el monto exacto en pesos.
                     </p>
                 </article>
-            </section>
-        <AdSlot slot="multiplex" />
 
-                </main>
+                <AdSlot slot="multiplex" />
+            </section>
+        </main>
     );
 }

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-export function BinaryToggleButton({ onToggle, options = ["Mensual", "Semanal"] }) {
+export function BinaryToggleButton({ onToggle, options = ['Mensual', 'Semanal'] }) {
     const [selected, setSelected] = useState(options[1]);
 
     const handleToggle = (option) => {
@@ -9,16 +9,11 @@ export function BinaryToggleButton({ onToggle, options = ["Mensual", "Semanal"] 
     };
 
     return (
-        <div
-            className="flex items-center gap-0.5 p-0.5 rounded-full"
-            style={{
-                background: 'var(--bg-surface-hover)',
-                border: '1px solid var(--border-subtle)',
-            }}
-        >
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)' }}>
             {options.map((opt) => (
                 <button
                     key={opt}
+                    type="button"
                     onClick={() => handleToggle(opt)}
                     className={selected === opt ? 'pill-active' : 'pill-inactive'}
                 >

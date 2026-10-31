@@ -6,10 +6,12 @@ import RelatedLinks from '@/components/RelatedLinks';
 import { getQuote } from '@/lib/yahoo';
 import { getCedearPricing } from '@/lib/market';
 import AdSlot from '@/components/ads/AdSlot';
+import { Delta } from '@/components/pulso/Delta';
+import { formatNumber } from '@/utils/formatters';
 
 const tickerOf = (c) => c.symbol.replace('.BA', '');
 const isLocal = (c) => c.symbol.endsWith('.BA');
-const money = (n, d = 2) => (typeof n === 'number' ? n.toLocaleString('es-AR', { minimumFractionDigits: d, maximumFractionDigits: d }) : '—');
+const money = (n, d = 2) => (typeof n === 'number' ? formatNumber(n, { minimumFractionDigits: d, maximumFractionDigits: d }) : '—');
 
 function resolveCompany(symbolParam) {
     if (!symbolParam) return null;
@@ -58,7 +60,7 @@ export async function generateMetadata({ params }) {
     const title = isLocal(company)
         ? `${company.name} (${tickerOf(company)}) hoy: cotización y precio de la acción`
         : `${company.name} (${tickerOf(company)}) hoy: cotización y CEDEAR en pesos`;
-    const description = `Ficha informativa y análisis fundamental de ${company.name} (${company.symbol}). ${company.description} Plan de negocios y ratios clave con fines educativos.`;
+    const description = `Ficha informativa y análisis fundamental de ${company.name} (${company.symbol}). ${company.description} Plan de negocios y ratios clave con fines informativos.`;
 
     return {
         title,
@@ -149,217 +151,229 @@ export default async function EmpresaFichaPage({ params }) {
     };
 
     return (
-        <main className="min-h-screen pt-20 pb-16 px-5 sm:px-8 max-w-[1000px] mx-auto space-y-10">
-            {/* Inject Structured Data Schemas */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: jsonLd(financialProductSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }}
-            />
+        <main style={{ minHeight: '100vh', paddingTop: '56px', paddingBottom: 'var(--space-16)' }}>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(financialProductSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
 
-            {/* Breadcrumbs */}
-            <nav className="flex items-center gap-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                <Link href="/" className="hover:underline">Inicio</Link>
-                <span>/</span>
-                <Link href="/Empresas" className="hover:underline">Empresas</Link>
-                <span>/</span>
-                <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>{company.name} ({company.symbol})</span>
-            </nav>
+            <div className="pulso-container" style={{ paddingTop: 'var(--space-8)', display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
+                {/* Breadcrumbs */}
+                <nav className="flex items-center gap-2 body-sm" style={{ color: 'var(--ink-subtle)' }} aria-label="Breadcrumb">
+                    <Link href="/" className="hover:underline" style={{ color: 'var(--ink-muted)' }}>Inicio</Link>
+                    <span>/</span>
+                    <Link href="/Empresas" className="hover:underline" style={{ color: 'var(--ink-muted)' }}>Empresas</Link>
+                    <span>/</span>
+                    <span style={{ color: 'var(--ink)' }}>{company.name} ({company.symbol})</span>
+                </nav>
 
-            {/* Hero Header */}
-            <header className="p-6 sm:p-8 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6"
-                    style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                <div className="space-y-3 max-w-2xl">
-                    <div className="flex items-center gap-3">
-                        <span className="px-3 py-1 rounded-full text-xs font-bold"
-                              style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-                            {company.sector}
-                        </span>
-                        <span className="text-xs px-2.5 py-0.5 rounded-md border font-mono font-bold"
-                              style={{ borderColor: 'var(--border-subtle)', color: 'var(--text-secondary)' }}>
-                            Ticker: {company.symbol}
-                        </span>
-                        <span className="text-xs text-tertiary">
-                            TradingView: {company.tvSymbol}
-                        </span>
+                {/* Hero Header */}
+                <header className="pulso-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', maxWidth: '68ch' }}>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span
+                                className="label"
+                                style={{
+                                    padding: '2px var(--space-3)',
+                                    borderRadius: 'var(--radius-pill)',
+                                    background: 'var(--surface-200)',
+                                    border: '1px solid var(--line)',
+                                    color: 'var(--signal-text)',
+                                }}
+                            >
+                                {company.sector}
+                            </span>
+                            <span className="source-badge">
+                                Ticker: {company.symbol}
+                            </span>
+                            <span className="source-badge">
+                                {company.tvSymbol}
+                            </span>
+                        </div>
+
+                        <h1 className="h1" style={{ color: 'var(--ink)', margin: 0 }}>
+                            {company.name}{' '}
+                            <span className="data" style={{ color: 'var(--ink-muted)', fontSize: 'var(--text-h2)', fontWeight: 500 }}>
+                                ({company.symbol})
+                            </span>
+                        </h1>
+
+                        <p className="body" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                            {company.description}
+                        </p>
                     </div>
 
-                    <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-                        {company.name} <span className="text-accent text-lg sm:text-2xl font-mono">({company.symbol})</span>
-                    </h1>
+                    <Link href="/Cartera" className="pulso-btn pulso-btn--primary shrink-0">
+                        Simular en mi cartera
+                    </Link>
+                </header>
 
-                    <p className="text-sm sm:text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                        {company.description}
-                    </p>
-                </div>
-
-                <Link
-                    href="/Cartera"
-                    className="px-5 py-3 rounded-xl font-bold text-xs sm:text-sm text-white shrink-0 hover:scale-105 active:scale-95 transition-transform shadow-md flex items-center gap-2"
-                    style={{ background: 'var(--accent)' }}
-                >
-                    <span>➕ Simular en mi Cartera</span>
-                </Link>
-            </header>
-
-
-            {/* Cotización (datos de Yahoo Finance y BYMA, con demora) */}
-            {(quote?.price || cedear) && (
-                <section className="p-6 rounded-2xl border grid grid-cols-2 sm:grid-cols-4 gap-4"
-                         style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                    {quote?.price && (
-                        <div>
-                            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Precio ({quote.currency || 'USD'})</p>
-                            <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>{money(quote.price)}</p>
-                            {typeof quote.changePercent === 'number' && (
-                                <p className="text-xs font-semibold" style={{ color: quote.changePercent >= 0 ? 'var(--positive)' : 'var(--negative)' }}>
-                                    {quote.changePercent.toLocaleString('es-AR', { maximumFractionDigits: 2, signDisplay: 'always' })}% hoy
+                {/* Cotización */}
+                {(quote?.price || cedear) && (
+                    <section className="pulso-card grid grid-cols-2 sm:grid-cols-4" style={{ gap: 'var(--space-4)' }}>
+                        {quote?.price && (
+                            <div>
+                                <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-1)' }}>
+                                    Precio ({quote.currency === 'ARS' ? 'ARS' : 'US$'})
                                 </p>
-                            )}
-                        </div>
-                    )}
-                    {cedear && (
-                        <div>
-                            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>CEDEAR en pesos</p>
-                            <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>${money(cedear.ars, 0)}</p>
-                        </div>
-                    )}
-                    {cedear?.impliedCcl && (
-                        <div>
-                            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Dólar CCL implícito</p>
-                            <p className="text-2xl font-bold" style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}>${money(cedear.impliedCcl, 0)}</p>
-                        </div>
-                    )}
-                    {quote?.fiftyTwoWeekLow && quote?.fiftyTwoWeekHigh && (
-                        <div>
-                            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Rango 52 semanas</p>
-                            <p className="text-sm font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>{money(quote.fiftyTwoWeekLow)} – {money(quote.fiftyTwoWeekHigh)}</p>
-                        </div>
-                    )}
-                    {quote?.marketCap && (
-                        <div>
-                            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Capitalización</p>
-                            <p className="text-sm font-bold" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>{(quote.marketCap / 1e9).toLocaleString('es-AR', { maximumFractionDigits: 1 })} mil M</p>
-                        </div>
-                    )}
-                    {cedear && (
-                        <p className="col-span-2 sm:col-span-4 text-[11px]" style={{ color: 'var(--text-tertiary)' }}>
-                            El CCL implícito es el precio del CEDEAR en pesos dividido por el de su especie en dólares cable (C). Es una estimación informativa.
-                        </p>
-                    )}
+                                <p className="figure" style={{ fontSize: 'var(--text-h1)', color: 'var(--ink)', margin: 0 }}>
+                                    <span style={{ color: 'var(--ink-muted)', fontSize: '0.68em', fontWeight: 500, marginRight: '0.2em' }}>
+                                        {quote.currency === 'ARS' ? '$' : 'US$'}
+                                    </span>
+                                    {money(quote.price)}
+                                </p>
+                                {typeof quote.changePercent === 'number' && (
+                                    <div style={{ marginTop: 'var(--space-2)' }}>
+                                        <Delta value={quote.changePercent} pill={true} />
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {cedear && (
+                            <div>
+                                <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-1)' }}>CEDEAR en pesos</p>
+                                <p className="figure" style={{ fontSize: 'var(--text-h1)', color: 'var(--ink)', margin: 0 }}>
+                                    <span style={{ color: 'var(--ink-muted)', fontSize: '0.68em', fontWeight: 500, marginRight: '0.2em' }}>$</span>
+                                    {money(cedear.ars, 0)}
+                                </p>
+                            </div>
+                        )}
+                        {cedear?.impliedCcl && (
+                            <div>
+                                <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-1)' }}>Dólar CCL implícito</p>
+                                <p className="figure" style={{ fontSize: 'var(--text-h1)', color: 'var(--signal-text)', margin: 0 }}>
+                                    <span style={{ color: 'var(--ink-muted)', fontSize: '0.68em', fontWeight: 500, marginRight: '0.2em' }}>$</span>
+                                    {money(cedear.impliedCcl, 0)}
+                                </p>
+                            </div>
+                        )}
+                        {quote?.fiftyTwoWeekLow && quote?.fiftyTwoWeekHigh && (
+                            <div>
+                                <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-1)' }}>Rango 52 semanas</p>
+                                <p className="data" style={{ fontSize: 'var(--text-body)', fontWeight: 500, color: 'var(--ink)', margin: 0 }}>
+                                    {money(quote.fiftyTwoWeekLow)} – {money(quote.fiftyTwoWeekHigh)}
+                                </p>
+                            </div>
+                        )}
+                        {quote?.marketCap && (
+                            <div>
+                                <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-1)' }}>Capitalización</p>
+                                <p className="data" style={{ fontSize: 'var(--text-body)', fontWeight: 500, color: 'var(--ink)', margin: 0 }}>
+                                    US$ {formatNumber(quote.marketCap / 1e9, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} mil M
+                                </p>
+                            </div>
+                        )}
+                        {cedear && (
+                            <p className="col-span-2 sm:col-span-4" style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)', margin: 0 }}>
+                                El CCL implícito es el precio del CEDEAR en pesos dividido por el de su especie en dólares cable (C). Es una estimación informativa.
+                            </p>
+                        )}
+                    </section>
+                )}
+
+                <AdSlot slot="inContentA" />
+
+                {/* Aviso legal requerido por manual */}
+                <div
+                    style={{
+                        padding: 'var(--space-4)',
+                        borderRadius: 'var(--radius-md)',
+                        background: 'var(--surface-200)',
+                        border: '1px solid var(--line)',
+                        color: 'var(--ink-muted)',
+                        fontSize: 'var(--text-caption)',
+                        lineHeight: 1.5,
+                    }}
+                >
+                    <strong style={{ color: 'var(--signal-text)' }}>AVISO INFORMATIVO: </strong>
+                    Información con fines informativos. No es una recomendación de inversión. Los datos sobre {company.name} ({company.symbol}) provienen de balances públicos y hechos relevantes de mercado y no constituyen asesoramiento financiero bajo la Ley N.º 26.831 de la CNV.
+                </div>
+
+                {/* Plan de Negocios */}
+                <section className="pulso-card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                    <h2 className="h2" style={{ color: 'var(--ink)', margin: 0 }}>
+                        Plan de negocios y visión estratégica
+                    </h2>
+                    <p className="body" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                        {company.planDeNegocios}
+                    </p>
                 </section>
-            )}
 
-            <AdSlot slot="inContentA" />
-
-            {/* Legal Disclaimer Box */}
-            <div className="p-4 rounded-xl border text-xs leading-relaxed"
-                 style={{ 
-                     background: 'rgba(232, 148, 43, 0.05)', 
-                     borderColor: 'rgba(232, 148, 43, 0.25)',
-                     color: 'var(--text-secondary)'
-                 }}>
-                <strong style={{ color: 'var(--accent)' }}>⚖️ AVISO LEGAL: </strong>
-                La información presentada sobre {company.name} ({company.symbol}) es de carácter estrictamente informativo, técnico y educativo, recopilada de balances públicos y hechos relevantes de mercado. <strong>No constituye asesoramiento financiero, recomendación de inversión ni invitación a comprar o vender valores</strong> bajo la Ley N° 26.831 de la CNV.
-            </div>
-
-            {/* Business Plan & Strategy */}
-            <section className="p-6 sm:p-8 rounded-2xl border space-y-4"
-                     style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                <div className="flex items-center gap-2">
-                    <span className="text-lg">🎯</span>
-                    <h2 className="text-lg sm:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                        Plan de Negocios y Visión Estratégica
+                {/* Métricas y Fundamentales */}
+                <section className="pulso-card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                    <h2 className="h2" style={{ color: 'var(--ink)', margin: 0 }}>
+                        Métricas y fundamentales a monitorear
                     </h2>
-                </div>
-                <p className="text-sm sm:text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                    {company.planDeNegocios}
-                </p>
-            </section>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 'var(--space-3)', listStyle: 'none', padding: 0, margin: 0 }}>
+                        {company.fundamentosClave.map((item, idx) => (
+                            <li
+                                key={idx}
+                                className="body-sm flex items-start gap-2.5"
+                                style={{
+                                    padding: 'var(--space-3) var(--space-4)',
+                                    borderRadius: 'var(--radius-sm)',
+                                    background: 'var(--ground-000)',
+                                    border: '1px solid var(--line)',
+                                    color: 'var(--ink-muted)',
+                                }}
+                            >
+                                <span style={{ color: 'var(--signal-text)', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>—</span>
+                                <span>{item}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
 
-            {/* Key Fundamentals */}
-            <section className="p-6 sm:p-8 rounded-2xl border space-y-4"
-                     style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                <div className="flex items-center gap-2">
-                    <span className="text-lg">📊</span>
-                    <h2 className="text-lg sm:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                        Métricas y Fundamentales a Monitorear
+                {/* Análisis Sectorial Informativo */}
+                <section className="pulso-card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                    <p className="label" style={{ color: 'var(--signal-text)', margin: 0 }}>
+                        CONTEXTO SECTORIAL
+                    </p>
+                    <h2 className="h2" style={{ color: 'var(--ink)', margin: 0 }}>
+                        Análisis sectorial informativo
                     </h2>
-                </div>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {company.fundamentosClave.map((item, idx) => (
-                        <li key={idx} className="p-3.5 rounded-xl border flex items-start gap-2.5 text-xs sm:text-sm"
-                            style={{ background: 'var(--bg-surface-hover)', borderColor: 'var(--border-subtle)', color: 'var(--text-secondary)' }}>
-                            <span className="text-positive font-bold">✓</span>
-                            <span>{item}</span>
-                        </li>
-                    ))}
-                </ul>
-            </section>
+                    <p className="body" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                        {company.analisisProfesional}
+                    </p>
+                </section>
 
-            {/* Professional Equity Research Analysis */}
-            <section className="p-6 sm:p-8 rounded-2xl border space-y-4"
-                     style={{ background: 'var(--bg-surface)', borderColor: 'var(--accent)' }}>
-                <div className="flex items-center gap-2">
-                    <span className="text-lg">🔍</span>
-                    <h2 className="text-lg sm:text-xl font-bold" style={{ color: 'var(--accent)' }}>
-                        Análisis Sectorial Informativo
-                    </h2>
-                </div>
-                <p className="text-sm sm:text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                    {company.analisisProfesional}
-                </p>
-            </section>
-
-            <AdSlot slot="multiplex" />
+                <AdSlot slot="multiplex" />
 
                 <RelatedLinks title={`Otras empresas de ${company.sector}`} links={sectorPeers} />
 
-            {/* Strategic Call to action */}
-            <div className="p-6 sm:p-8 rounded-2xl border text-center space-y-4"
-                 style={{ background: 'linear-gradient(135deg, rgba(196, 123, 43, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)', borderColor: 'var(--accent)' }}>
-                <h3 className="text-lg sm:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                    ¿Querés evaluar {company.name} en conjunto con tus otras inversiones?
-                </h3>
-                <p className="text-xs sm:text-sm max-w-xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-                    Nuestro simulador de cartera calcula el P/E ponderado, el riesgo y los múltiplos fundamentales en un panel consolidado y gratuito.
-                </p>
-                <div className="pt-2">
-                    <Link
-                        href="/Cartera"
-                        className="px-6 py-3 rounded-xl font-bold text-sm text-white inline-flex items-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-md"
-                        style={{ background: 'var(--accent)' }}
-                    >
-                        Abrir Simulador de Cartera →
-                    </Link>
+                {/* Call to action secundario */}
+                <div className="pulso-card text-center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-3)' }}>
+                    <h3 className="h2" style={{ color: 'var(--ink)', margin: 0 }}>
+                        ¿Querés evaluar {company.name} junto con tus otras posiciones?
+                    </h3>
+                    <p className="body-sm" style={{ color: 'var(--ink-muted)', maxWidth: '58ch', margin: 0 }}>
+                        El simulador de cartera calcula el P/E ponderado, la distribución por sector y los múltiplos fundamentales en un panel consolidado.
+                    </p>
+                    <div style={{ paddingTop: 'var(--space-2)' }}>
+                        <Link href="/Cartera" className="pulso-btn pulso-btn--secondary">
+                            Abrir simulador de cartera
+                        </Link>
+                    </div>
                 </div>
-            </div>
 
-            {/* FAQs */}
-            <section className="space-y-4 pt-4 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
-                <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                    Preguntas Frecuentes sobre {company.name}
-                </h2>
-                <div className="space-y-3">
-                    {faqSchema.mainEntity.map((faq, idx) => (
-                        <div key={idx} className="p-4 rounded-xl border" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
-                            <h3 className="text-sm font-bold mb-1.5" style={{ color: 'var(--text-primary)' }}>
-                                {faq.name}
-                            </h3>
-                            <p className="text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                                {faq.acceptedAnswer.text}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            </section>
+                {/* FAQs */}
+                <section style={{ paddingTop: 'var(--space-6)', borderTop: '1px solid var(--line)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                    <h2 className="h2" style={{ color: 'var(--ink)', margin: 0 }}>
+                        Preguntas frecuentes sobre {company.name}
+                    </h2>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                        {faqSchema.mainEntity.map((faq, idx) => (
+                            <div key={idx} className="pulso-card">
+                                <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-body)', fontWeight: 700, color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>
+                                    {faq.name}
+                                </h3>
+                                <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                                    {faq.acceptedAnswer.text}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            </div>
         </main>
     );
 }

@@ -6,8 +6,8 @@ import { RiesgoPaisHistoricoAPI, variableAPI } from "@/apis";
 import { Loading } from "@/components/LoadingAnim";
 import { getTodayDate } from "@/utils/functions";
 import LineChart from "@/charts/ChartLine";
-import { useTheme } from '@/hooks/useTheme';
-import DifferenceIcon from "@/utils/DifferenceIcons";
+import { Delta } from "@/components/pulso/Delta";
+import { formatNumber } from "@/utils/formatters";
 
 const PERIODS = [
     { label: '7D', value: '7D' },
@@ -20,7 +20,6 @@ const PERIODS = [
 ];
 
 export default function EconomiaDetalleClient({ id, meta = null, initialData = null }) {
-    const [theme] = useTheme();
     const [fullChartData, setFullChartData] = useState(initialData || []);
     const [chartDataStatus, setChartDataStatus] = useState(initialData ? 'success' : 'loading');
     const [selected, setSelected] = useState('1M');
@@ -68,69 +67,54 @@ export default function EconomiaDetalleClient({ id, meta = null, initialData = n
         return fullChartData.filter(d => new Date(d.fecha) >= pastDate);
     }, [fullChartData, selected]);
 
-    const latestValue = chartData.length > 0 ? chartData[chartData.length - 1].valor : 0;
+    const latestValue = chartData.length > 0 ? chartData[chartData.length - 1].valor : null;
     const initialValue = chartData.length > 0 ? chartData[0].valor : 0;
-    const difference = initialValue !== 0
-        ? (((latestValue - initialValue) / initialValue) * 100).toFixed(2)
+    const difference = initialValue !== 0 && latestValue !== null
+        ? (((latestValue - initialValue) / initialValue) * 100)
         : 0;
 
-    const isPositive = difference > 0;
-    const isNegative = difference < 0;
-    const chartColor = isPositive ? '#00C853' : isNegative ? '#FF1744' : '#8B98A5';
-    const diffColor = isPositive ? 'var(--positive)' : isNegative ? 'var(--negative)' : 'var(--text-tertiary)';
+    const chartTone = difference > 0 ? 'up' : difference < 0 ? 'down' : 'neutral';
 
     const displayTitle = meta?.title ? meta.title.split('—')[0].trim() : '—';
     const displaySubtitle = meta?.dataset?.variableMeasured || meta?.description || null;
     const latestDate = fullChartData.length > 0 ? fullChartData[fullChartData.length - 1].fecha : '—';
 
-    const isLoading = chartDataStatus === 'loading';
-
-    if (isLoading) {
+    if (chartDataStatus === 'loading') {
         return <Loading />;
     }
 
     return (
         <div className="space-y-6">
             {/* Hero card */}
-            <div
-                className="p-6 sm:p-8 rounded-[16px]"
-                style={{
-                    background: 'var(--bg-surface)',
-                    border: '1px solid var(--border-subtle)',
-                }}
-            >
+            <div className="pulso-card">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                     <div>
-                        <h1
-                            className="text-xl sm:text-2xl font-bold tracking-tight mb-1"
-                            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}
-                        >
+                        <p className="label" style={{ color: 'var(--signal-text)', margin: '0 0 var(--space-1) 0' }}>
+                            INDICADOR MACROECONÓMICO · {id === 'riesgo-pais' ? 'ARGENTINADATOS' : 'BCRA'}
+                        </p>
+                        <h1 className="h1" style={{ color: 'var(--ink)', margin: 0 }}>
                             {displayTitle}
                         </h1>
                         {displaySubtitle && (
-                            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                            <p className="body-sm" style={{ color: 'var(--ink-muted)', marginTop: 'var(--space-1)', marginBottom: 0 }}>
                                 {displaySubtitle}
                             </p>
                         )}
                     </div>
 
-                    <div className="flex flex-col items-start sm:items-end gap-1">
-                        <p
-                            className="text-3xl sm:text-4xl font-bold tracking-tight leading-none"
-                            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }}
-                        >
-                            {latestValue.toLocaleString('es-AR')}
+                    <div className="flex flex-col items-start sm:items-end gap-2">
+                        <p className="figure" style={{ color: 'var(--ink)', margin: 0 }}>
+                            {latestValue !== null ? formatNumber(latestValue, { minimumFractionDigits: 0, maximumFractionDigits: 2 }) : '—'}
+                            {id === 'riesgo-pais' && latestValue !== null ? (
+                                <span style={{ color: 'var(--ink-muted)', fontSize: '0.68em', fontWeight: 500, marginLeft: '0.2em' }}>pb</span>
+                            ) : null}
                         </p>
-                        <span
-                            className="flex items-center gap-1 text-sm font-semibold px-2 py-0.5 rounded-full"
-                            style={{
-                                background: isPositive ? 'var(--positive-soft)' : isNegative ? 'var(--negative-soft)' : 'var(--bg-surface-hover)',
-                                color: diffColor,
-                            }}
-                        >
-                            <DifferenceIcon dif={difference} size={14} />
-                            {difference}% · {PERIODS.find(p => p.value === selected)?.label}
-                        </span>
+                        <div className="flex items-center gap-2">
+                            <Delta value={difference} pill={true} />
+                            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--ink-subtle)' }}>
+                                {PERIODS.find(p => p.value === selected)?.label}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -140,8 +124,10 @@ export default function EconomiaDetalleClient({ id, meta = null, initialData = n
                 {PERIODS.map(period => (
                     <button
                         key={period.value}
+                        type="button"
                         onClick={() => setSelected(period.value)}
                         className={selected === period.value ? 'pill-active' : 'pill-inactive'}
+                        style={{ cursor: 'pointer' }}
                     >
                         {period.label}
                     </button>
@@ -149,15 +135,9 @@ export default function EconomiaDetalleClient({ id, meta = null, initialData = n
             </div>
 
             {/* Chart */}
-            <div
-                className="p-5 rounded-[12px]"
-                style={{
-                    background: 'var(--bg-surface)',
-                    border: '1px solid var(--border-subtle)',
-                }}
-            >
+            <div className="pulso-card">
                 {chartData.length === 0 ? (
-                    <p className="text-center text-sm py-16" style={{ color: 'var(--text-tertiary)' }}>
+                    <p className="body-sm text-center py-16" style={{ color: 'var(--ink-subtle)' }}>
                         Sin datos disponibles para este período.
                     </p>
                 ) : (
@@ -165,17 +145,17 @@ export default function EconomiaDetalleClient({ id, meta = null, initialData = n
                         labels={getLabels(chartData)}
                         dataset={getValues(chartData)}
                         height={320}
-                        color={chartColor}
+                        color={chartTone}
                     />
                 )}
             </div>
 
             {/* Metadata */}
-            <div className="flex items-center justify-between mt-4 px-1">
-                <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                    Última actualización: {latestDate}
+            <div className="flex items-center justify-between px-1">
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)', margin: 0 }}>
+                    ACTUALIZADO {latestDate}
                 </p>
-                <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)', margin: 0 }}>
                     Fuente: {id === 'riesgo-pais' ? 'ArgentinaDatos API' : 'BCRA'}
                 </p>
             </div>

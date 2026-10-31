@@ -1,6 +1,6 @@
 export const metadata = {
     title: 'Contacto',
-    description: 'Ponte en contacto con el equipo de Infopeso.',
+    description: 'Ponete en contacto con el equipo de Infopeso.',
     alternates: {
         canonical: 'https://www.infopeso.com.ar/contacto',
     }
@@ -8,30 +8,48 @@ export const metadata = {
 
 export default function Page() {
     return (
-        <main className="min-h-screen pt-24 pb-16 px-5 sm:px-8">
-            <article className="max-w-[600px] mx-auto p-6 sm:p-8 rounded-xl" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)' }}>
-                <h1 className="text-2xl font-bold mb-4" style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', color: 'var(--text-primary)' }}>
-                    Contacto
-                </h1>
-                <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-                    ¿Tenés sugerencias, consultas comerciales, feedback técnico o encontraste algún error en los datos? Nos encantaría escucharte. Podés ponerte en contacto con nosotros a través de nuestro canal oficial:
-                </p>
+        <main style={{ minHeight: '100vh', paddingTop: '56px', paddingBottom: 'var(--space-16)' }}>
+            <div className="pulso-container" style={{ maxWidth: '640px', paddingTop: 'var(--space-12)' }}>
+                <article className="pulso-card" style={{ padding: 'var(--space-8)' }}>
+                    <p className="label" style={{ color: 'var(--signal-text)', marginBottom: 'var(--space-2)' }}>
+                        CANAL OFICIAL
+                    </p>
+                    <h1 className="h1" style={{ color: 'var(--ink)', marginBottom: 'var(--space-4)' }}>
+                        Contacto
+                    </h1>
+                    <p className="body" style={{ color: 'var(--ink-muted)', marginBottom: 'var(--space-6)' }}>
+                        ¿Tenés sugerencias, consultas comerciales, comentarios técnicos o encontraste algún error en los datos? Podés comunicarte con nosotros a través de nuestro canal oficial:
+                    </p>
 
-                <div className="space-y-4">
-                    <div className="p-4 rounded-lg" style={{ background: 'var(--bg-page)', border: '1px solid var(--border-subtle)' }}>
-                        <h2 className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: 'var(--text-tertiary)' }}>X / Twitter Oficial</h2>
-                        <a href="https://x.com/infopeso" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold hover:underline" style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}>
+                    <div
+                        style={{
+                            padding: 'var(--space-4)',
+                            borderRadius: 'var(--radius-sm)',
+                            background: 'var(--ground-000)',
+                            border: '1px solid var(--line)',
+                        }}
+                    >
+                        <h2 className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-1)' }}>
+                            X / Twitter oficial
+                        </h2>
+                        <a
+                            href="https://x.com/infopeso"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="data hover:underline"
+                            style={{ color: 'var(--signal-text)', fontWeight: 500 }}
+                        >
                             @infopeso
                         </a>
                     </div>
-                </div>
 
-                <div className="mt-8 pt-6 border-t" style={{ borderColor: 'var(--border-subtle)' }}>
-                    <p className="text-xs leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
-                        * Intentamos responder a todos los mensajes en un plazo de 24 a 48 horas hábiles. Infopeso es mantenido de forma voluntaria, por lo que agradecemos tu paciencia.
-                    </p>
-                </div>
-            </article>
+                    <div style={{ marginTop: 'var(--space-8)', paddingTop: 'var(--space-6)', borderTop: '1px solid var(--line)' }}>
+                        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)', margin: 0 }}>
+                            Intentamos responder todos los mensajes en un plazo de 24 a 48 horas hábiles.
+                        </p>
+                    </div>
+                </article>
+            </div>
         </main>
     );
 }
