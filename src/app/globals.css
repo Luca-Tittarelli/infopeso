@@ -52,6 +52,17 @@
   --font-mono: "Geist Mono", ui-monospace, monospace;
   --font-ui: var(--font-display);
 
+  /* Alias que varias pantallas ya usaban sin estar definidos (sin ellos el navegador ignoraba esas reglas:
+     paddings en 0, tamaños de texto por defecto). Salen de la escala tipográfica y de espaciado de Pulso. */
+  --space-5: 20px;
+  --space-10: 40px;
+  --font-sans: var(--font-display);
+  --text-h1: 32px;
+  --text-h2: 22px;
+  --text-body: 16px;
+  --text-body-sm: 14px;
+  --text-caption: 12px;
+
   /* Alias de compatibilidad estrictamente vinculados a tokens Pulso */
   --bg-page: var(--ground-000);
   --bg-surface: var(--surface-100);
@@ -264,24 +275,29 @@ body {
   font-size: 14px;
 }
 
-.pulso-btn-primary {
+/* Variantes con doble guion (pulso-btn--primary) usadas en varias páginas: mismo estilo */
+.pulso-btn-primary,
+.pulso-btn--primary {
   background: var(--signal);
   color: var(--on-signal);
 }
 
-.pulso-btn-primary:disabled {
+.pulso-btn-primary:disabled,
+.pulso-btn--primary:disabled {
   background: var(--surface-200);
   color: var(--ink-subtle);
   cursor: not-allowed;
 }
 
-.pulso-btn-secondary {
+.pulso-btn-secondary,
+.pulso-btn--secondary {
   background: transparent;
   color: var(--ink);
   border: 1.5px solid var(--ink-subtle);
 }
 
-.pulso-btn-secondary:hover {
+.pulso-btn-secondary:hover,
+.pulso-btn--secondary:hover {
   background: var(--surface-200);
   border-color: var(--ink);
 }

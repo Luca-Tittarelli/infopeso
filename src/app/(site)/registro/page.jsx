@@ -21,7 +21,11 @@ export default async function Page({ searchParams }) {
         <AuthShell
             eyebrow="CUENTA GRATUITA"
             title="Crear cuenta"
-            intro="Guardá tu cartera en tu cuenta y accedé desde el celular o la compu. Es gratis y no pedimos datos bancarios."
+            intro={
+                safe.startsWith('/Cartera')
+                    ? 'Guardamos el valor de tu cartera cada día para que veas cómo evoluciona en dólares, y accedés desde el celular o la compu. Es gratis y no pedimos claves ni datos bancarios.'
+                    : 'Guardá tu cartera en tu cuenta y accedé desde el celular o la compu. Es gratis y no pedimos datos bancarios.'
+            }
         >
             <RegisterForm next={safe} google={google} />
         </AuthShell>

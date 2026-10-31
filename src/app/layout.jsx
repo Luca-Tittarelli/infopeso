@@ -1,5 +1,6 @@
 import "./globals.css";
 import { SITE_URL } from "@/utils/site";
+import { carteraActivaScript } from "@/lib/portfolio/landingHint";
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -68,7 +69,8 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
         <link rel="stylesheet" href="/brand/tokens.css" />
-        {/* Oscuro primero: sincroniza data-theme antes de hidratar */}
+        {/* Oscuro primero: sincroniza data-theme antes de hidratar. También marca data-cartera si el navegador
+            ya tiene una cartera cargada, para que /Cartera abra directo en el tablero sin parpadeo. */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){
@@ -77,6 +79,7 @@ export default function RootLayout({ children }) {
                 var theme = (saved === 'light' || saved === 'dark') ? saved : 'dark';
                 document.documentElement.setAttribute('data-theme', theme);
                 document.documentElement.classList.toggle('dark', theme === 'dark');
+                ${carteraActivaScript}
               } catch(e) {}
             })();`,
           }}

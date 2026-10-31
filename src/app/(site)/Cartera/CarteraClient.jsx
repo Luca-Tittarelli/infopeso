@@ -63,51 +63,44 @@ const SectorIcon = ({ sector, size = 14 }) => {
     return <Ico name={map[sector] || 'sparkle'} size={size} />;
 };
 
+// Monograma con las iniciales: el servicio de logos que se usaba (Clearbit) dejó de funcionar
+// y cada imagen rota era un pedido fallido.
 const CompanyLogo = ({ company, className = 'w-7 h-7' }) => {
-    const [error, setError] = useState(false);
-    useEffect(() => { setError(false); }, [company?.symbol]);
     if (!company) return null;
-
-    if (error || !company.logo) {
-        return (
-            <div
-                className={`${className} flex items-center justify-center shrink-0`}
-                style={{
-                    background: 'var(--surface-200)',
-                    color: 'var(--ink)',
-                    border: '1px solid var(--line)',
-                    borderRadius: 'var(--radius-sm)',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '10px',
-                    fontWeight: 500,
-                }}
-            >
-                {company.name.slice(0, 2).toUpperCase()}
-            </div>
-        );
-    }
     return (
-        <img
-            src={company.logo}
-            alt={company.name}
-            loading="lazy"
-            onError={() => setError(true)}
-            className={`${className} object-contain p-0.5 shrink-0`}
+        <div
+            aria-hidden="true"
+            className={`${className} flex items-center justify-center shrink-0`}
             style={{
-                background: 'var(--ground-000)',
+                background: 'var(--surface-200)',
+                color: 'var(--ink)',
                 border: '1px solid var(--line)',
                 borderRadius: 'var(--radius-sm)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '10px',
+                fontWeight: 500,
             }}
-        />
+        >
+            {company.name.slice(0, 2).toUpperCase()}
+        </div>
     );
+};
+
+// Traduce la recomendación de Yahoo Finance a un consenso descriptivo. Se informa como opinión de
+// terceros (analistas), nunca como una indicación de comprar o vender de Infopeso (Ley 26.831).
+const consensusSignal = (key) => {
+    if (['strong_buy', 'strongBuy', 'buy'].includes(key)) return 'positive';
+    if (key === 'hold') return 'neutral';
+    if (['underperform', 'sell', 'strong_sell', 'strongSell'].includes(key)) return 'negative';
+    return 'unknown';
 };
 
 const SemaphoreIndicator = ({ signal }) => {
     const cfg = {
-        buy:     { label: '▲ Comprar',  color: 'var(--signal-text)' },
-        hold:    { label: '= Mantener', color: 'var(--ink-muted)'   },
-        sell:    { label: '▼ Vender',   color: 'var(--down)'        },
-        unknown: { label: '—',          color: 'var(--ink-subtle)'  },
+        positive: { label: 'Optimista', color: 'var(--signal-text)' },
+        neutral:  { label: 'Neutral',   color: 'var(--ink-muted)'   },
+        negative: { label: 'Pesimista', color: 'var(--down)'        },
+        unknown:  { label: '—',         color: 'var(--ink-subtle)'  },
     }[signal || 'unknown'];
 
     return (
@@ -129,7 +122,11 @@ const SemaphoreIndicator = ({ signal }) => {
 };
 
 // ─── Slider de Noticias ───────────────────────────────────────────────────────
-const BloombergNewsSlider = ({ holdings }) => {
+const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const titleMentions = (title, term) =>
+    Boolean(term) && new RegExp(`(^|[^\\p{L}\\p{N}])${escapeRegExp(term)}($|[^\\p{L}\\p{N}])`, 'iu').test(title);
+
+export const BloombergNewsSlider = ({ holdings }) => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -200,14 +197,12 @@ const BloombergNewsSlider = ({ holdings }) => {
 
                 const items = rawNews.slice(0, 20).map(item => {
                     const title = (item.title || '').replace(/\s+-\s+[^-\n]+$/, '');
-                    let matchedSymbol = holdings[0]?.symbol || 'MERCADO';
+                    // Sin coincidencia la noticia queda como "MERCADO" (antes se le asignaba la primera
+                    // empresa de la cartera). El ticker se busca como palabra entera: "KO" no debe coincidir con "Tokio".
+                    let matchedSymbol = 'MERCADO';
                     for (const h of holdings) {
                         const comp = getCompanyBySymbol(h.symbol);
-                        const lowerTitle = title.toLowerCase();
-                        if (
-                            lowerTitle.includes(h.symbol.toLowerCase().replace('.ba', '')) ||
-                            (comp && lowerTitle.includes(comp.name.toLowerCase()))
-                        ) {
+                        if (titleMentions(title, h.symbol.replace(/\.BA$/i, '')) || (comp && titleMentions(title, comp.name))) {
                             matchedSymbol = h.symbol;
                             break;
                         }
@@ -514,12 +509,25 @@ const WeightsModal = ({ holdings, onSave, onClose }) => {
     const [localHoldings, setLocalHoldings] = useState(() => normalizeHoldings(holdings));
     const [searchQuery, setSearchQuery] = useState('');
 
+    // Escape cierra el modal y la página de fondo no se desplaza mientras está abierto.
+    useEffect(() => {
+        const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+        document.addEventListener('keydown', onKey);
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.removeEventListener('keydown', onKey);
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [onClose]);
+
     const totalWeight = useMemo(() => {
         return localHoldings.reduce((sum, h) => sum + (Number(h.weight) || 0), 0);
     }, [localHoldings]);
+    const totalOk = Math.round(totalWeight) === 100;
 
     const handleWeightChange = (symbol, val) => {
-        const num = Math.max(0, Math.min(100, Number(val) || 0));
+        const num = Math.max(0, Math.min(100, Number(String(val).replace(',', '.')) || 0));
         setLocalHoldings(prev => prev.map(h => h.symbol === symbol ? { ...h, weight: num } : h));
     };
 
@@ -554,49 +562,54 @@ const WeightsModal = ({ holdings, onSave, onClose }) => {
         )
     })).filter(cat => cat.companies.length > 0);
 
+    const sectionLabel = { color: 'var(--ink-subtle)', margin: 0 };
+
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: 'var(--ground-000)' }}
+            className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6"
+            style={{ background: 'rgba(20, 18, 16, 0.62)' }}
             role="dialog"
             aria-modal="true"
-            aria-label="Personalizar cartera"
+            aria-labelledby="weights-modal-title"
+            onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
             <div
-                className="w-full max-w-2xl overflow-hidden flex flex-col max-h-[88vh]"
+                className="flex w-full flex-col overflow-hidden sm:max-w-2xl"
                 style={{
+                    maxHeight: 'min(92vh, 860px)',
                     background: 'var(--surface-100)',
                     border: '1px solid var(--line)',
-                    borderRadius: 'var(--radius-md)',
+                    borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
                 }}
             >
-                {/* Header */}
+                {/* Encabezado */}
                 <div
-                    className="flex items-center justify-between"
-                    style={{
-                        padding: 'var(--space-4) var(--space-5)',
-                        borderBottom: '1px solid var(--line)',
-                    }}
+                    className="flex items-start justify-between gap-4"
+                    style={{ padding: 'var(--space-6) var(--space-6) var(--space-4)', borderBottom: '1px solid var(--line)' }}
                 >
                     <div>
                         <p className="label" style={{ color: 'var(--signal-text)', margin: '0 0 var(--space-1) 0' }}>
-                            Personalizar cartera
+                            Probar ideas
                         </p>
-                        <h2 className="h2" style={{ color: 'var(--ink)', margin: 0 }}>
+                        <h2 id="weights-modal-title" className="h2" style={{ color: 'var(--ink)', margin: 0 }}>
                             Elegí tus acciones y porcentajes
                         </h2>
+                        <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 'var(--space-2) 0 0 0' }}>
+                            Mové los controles como quieras: al guardar, los porcentajes se ajustan para sumar 100 %.
+                        </p>
                     </div>
                     <button
                         type="button"
                         onClick={onClose}
-                        aria-label="Cerrar modal"
+                        aria-label="Cerrar"
+                        className="shrink-0"
                         style={{
-                            width: '36px',
-                            height: '36px',
+                            width: '44px',
+                            height: '44px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            borderRadius: 'var(--radius-sm)',
+                            borderRadius: 'var(--radius-pill)',
                             border: '1px solid var(--line)',
                             background: 'var(--ground-000)',
                             color: 'var(--ink-muted)',
@@ -607,60 +620,53 @@ const WeightsModal = ({ holdings, onSave, onClose }) => {
                     </button>
                 </div>
 
-                {/* Body */}
-                <div className="flex-1 overflow-y-auto space-y-6" style={{ padding: 'var(--space-5)' }}>
-                    {/* Presets rápidos */}
-                    <div>
-                        <p className="label" style={{ color: 'var(--ink-subtle)', marginBottom: 'var(--space-2)' }}>
-                            Carteras sugeridas (1 clic)
+                {/* Contenido con scroll */}
+                <div className="flex-1 overflow-y-auto" style={{ padding: 'var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
+                    {/* Carteras sugeridas */}
+                    <section aria-label="Carteras sugeridas">
+                        <p className="label" style={{ ...sectionLabel, marginBottom: 'var(--space-3)' }}>
+                            Empezar desde una cartera sugerida
                         </p>
-                        <div className="grid grid-cols-2 sm:grid-cols-3" style={{ gap: 'var(--space-2)' }}>
+                        <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 'var(--space-3)' }}>
                             {PRESETS.map(p => (
                                 <button
                                     key={p.id}
                                     type="button"
                                     onClick={() => handleApplyPreset(p)}
+                                    className="text-left transition-colors hover:bg-[var(--surface-200)]"
                                     style={{
-                                        padding: 'var(--space-3)',
+                                        padding: 'var(--space-3) var(--space-4)',
                                         borderRadius: 'var(--radius-sm)',
                                         border: '1px solid var(--line)',
                                         background: 'var(--ground-000)',
-                                        textAlign: 'left',
                                         cursor: 'pointer',
+                                        minHeight: '64px',
                                     }}
                                 >
-                                    <p className="body-sm truncate" style={{ fontWeight: 700, color: 'var(--ink)', margin: 0 }}>
-                                        {p.name.split('(')[0]}
-                                    </p>
-                                    <p className="truncate mt-0.5" style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--ink-subtle)', margin: 0 }}>
-                                        {p.holdings.map(h => h.symbol).join(' · ')}
-                                    </p>
+                                    <span className="body-sm block" style={{ fontWeight: 700, color: 'var(--ink)' }}>
+                                        {p.name.split('(')[0].trim()}
+                                    </span>
+                                    <span className="block" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--ink-subtle)', marginTop: 'var(--space-1)', wordBreak: 'break-word' }}>
+                                        {p.holdings.map(h => h.symbol.replace('.BA', '')).join(' · ')}
+                                    </span>
                                 </button>
                             ))}
                         </div>
-                    </div>
+                    </section>
 
-                    {/* Tus acciones seleccionadas */}
-                    <div>
-                        <div className="flex items-center justify-between mb-2">
-                            <p className="label" style={{ color: 'var(--ink-subtle)', margin: 0 }}>
+                    {/* Acciones elegidas */}
+                    <section aria-label="Tus acciones">
+                        <div className="flex flex-wrap items-center justify-between gap-3" style={{ marginBottom: 'var(--space-3)' }}>
+                            <p className="label" style={sectionLabel}>
                                 Tus acciones ({localHoldings.length})
                             </p>
                             <button
                                 type="button"
                                 onClick={handleEquiponderar}
-                                style={{
-                                    padding: '4px var(--space-3)',
-                                    borderRadius: 'var(--radius-sm)',
-                                    border: '1px solid var(--line)',
-                                    background: 'var(--ground-000)',
-                                    color: 'var(--ink-muted)',
-                                    fontSize: 'var(--text-caption)',
-                                    fontWeight: 600,
-                                    cursor: 'pointer',
-                                }}
+                                disabled={localHoldings.length === 0}
+                                className="pulso-btn pulso-btn-secondary pulso-btn-sm"
                             >
-                                Equiponderar partes iguales
+                                Repartir en partes iguales
                             </button>
                         </div>
 
@@ -668,102 +674,105 @@ const WeightsModal = ({ holdings, onSave, onClose }) => {
                             <div
                                 className="body-sm text-center"
                                 style={{
-                                    padding: 'var(--space-6)',
+                                    padding: 'var(--space-8) var(--space-6)',
                                     borderRadius: 'var(--radius-sm)',
                                     border: '1px dashed var(--line)',
-                                    color: 'var(--ink-subtle)',
+                                    color: 'var(--ink-muted)',
                                 }}
                             >
-                                No hay acciones seleccionadas. Elegí una cartera sugerida o buscá abajo.
+                                Todavía no elegiste ninguna acción. Probá con una cartera sugerida o buscá una más abajo.
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                            <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
                                 {localHoldings.map(h => {
                                     const comp = getCompanyBySymbol(h.symbol);
+                                    const name = comp?.name || h.symbol;
                                     return (
-                                        <div
+                                        <li
                                             key={h.symbol}
-                                            className="flex items-center gap-3"
                                             style={{
-                                                padding: 'var(--space-3)',
+                                                padding: 'var(--space-3) var(--space-4)',
                                                 borderRadius: 'var(--radius-sm)',
                                                 background: 'var(--ground-000)',
                                                 border: '1px solid var(--line)',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: 'var(--space-2)',
                                             }}
                                         >
-                                            <CompanyLogo company={comp} className="w-7 h-7" />
-                                            <div className="w-28 min-w-0">
-                                                <p className="body-sm truncate" style={{ fontWeight: 700, color: 'var(--ink)', margin: 0 }}>
-                                                    {comp?.name || h.symbol}
-                                                </p>
-                                                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--ink-subtle)', margin: 0 }}>
-                                                    {h.symbol}
-                                                </p>
+                                            <div className="flex items-center gap-3">
+                                                <CompanyLogo company={comp} className="w-8 h-8" />
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="body-sm truncate" style={{ fontWeight: 700, color: 'var(--ink)', margin: 0 }}>{name}</p>
+                                                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--ink-subtle)', margin: 0 }}>{h.symbol}</p>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleToggleCompany(h.symbol)}
+                                                    aria-label={`Quitar ${name}`}
+                                                    className="shrink-0 transition-colors hover:bg-[var(--surface-200)]"
+                                                    style={{
+                                                        width: '44px',
+                                                        height: '44px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderRadius: 'var(--radius-pill)',
+                                                        color: 'var(--ink-subtle)',
+                                                        background: 'transparent',
+                                                        border: 'none',
+                                                        cursor: 'pointer',
+                                                    }}
+                                                >
+                                                    <Ico name="trash" size={16} />
+                                                </button>
                                             </div>
-
-                                            <div className="flex-1 flex items-center gap-3">
+                                            <div className="flex items-center gap-3">
                                                 <input
                                                     type="range"
                                                     min="1"
                                                     max="100"
                                                     value={h.weight}
                                                     onChange={e => handleWeightChange(h.symbol, e.target.value)}
+                                                    aria-label={`Porcentaje de ${name}`}
                                                     className="flex-1 cursor-pointer"
-                                                    style={{ accentColor: 'var(--signal)' }}
+                                                    style={{ accentColor: 'var(--signal)', minHeight: '44px' }}
                                                 />
-                                                <div className="flex items-center gap-1">
+                                                <div className="flex shrink-0 items-center gap-2">
                                                     <input
                                                         type="number"
-                                                        min="1"
+                                                        min="0"
                                                         max="100"
+                                                        step="0.1"
+                                                        inputMode="decimal"
                                                         value={h.weight}
                                                         onChange={e => handleWeightChange(h.symbol, e.target.value)}
-                                                        className="data text-center"
-                                                        style={{
-                                                            width: '52px',
-                                                            padding: '2px 4px',
-                                                            borderRadius: 'var(--radius-sm)',
-                                                            background: 'var(--surface-100)',
-                                                            border: '1px solid var(--line)',
-                                                            color: 'var(--ink)',
-                                                        }}
+                                                        aria-label={`Porcentaje de ${name}, número`}
+                                                        className="pulso-input text-center"
+                                                        style={{ width: '88px', paddingInline: 'var(--space-2)' }}
                                                     />
-                                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--ink-subtle)' }}>%</span>
+                                                    <span className="data" style={{ color: 'var(--ink-subtle)' }}>%</span>
                                                 </div>
                                             </div>
-
-                                            <button
-                                                type="button"
-                                                onClick={() => handleToggleCompany(h.symbol)}
-                                                aria-label={`Quitar ${comp?.name || h.symbol}`}
-                                                style={{
-                                                    padding: 'var(--space-1)',
-                                                    color: 'var(--ink-subtle)',
-                                                    background: 'transparent',
-                                                    border: 'none',
-                                                    cursor: 'pointer',
-                                                }}
-                                            >
-                                                <Ico name="trash" size={14} />
-                                            </button>
-                                        </div>
+                                        </li>
                                     );
                                 })}
-                            </div>
+                            </ul>
                         )}
-                    </div>
+                    </section>
 
-                    {/* Catálogo de acciones */}
-                    <div className="space-y-3 pt-4" style={{ borderTop: '1px solid var(--line)' }}>
-                        <p className="label" style={{ color: 'var(--ink-subtle)', margin: 0 }}>
-                            Agregar otras acciones al portafolio
+                    {/* Buscador de acciones */}
+                    <section aria-label="Agregar acciones" style={{ borderTop: '1px solid var(--line)', paddingTop: 'var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                        <p className="label" style={sectionLabel}>
+                            Agregar otras acciones
                         </p>
 
                         <div className="relative">
                             <span
+                                aria-hidden="true"
                                 style={{
                                     position: 'absolute',
-                                    left: 'var(--space-3)',
+                                    left: 'var(--space-4)',
                                     top: '50%',
                                     transform: 'translateY(-50%)',
                                     color: 'var(--ink-subtle)',
@@ -772,87 +781,86 @@ const WeightsModal = ({ holdings, onSave, onClose }) => {
                                 <Ico name="search" size={14} />
                             </span>
                             <input
-                                type="text"
+                                type="search"
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
-                                placeholder="Buscar por nombre o ticker… (ej. YPF, Apple, bancos)"
+                                placeholder="Buscá por nombre, ticker o sector (ej. YPF, Apple, bancos)"
+                                aria-label="Buscar acciones"
                                 className="pulso-input body-sm"
-                                style={{ paddingLeft: 'var(--space-8)', minHeight: '40px' }}
+                                style={{ paddingLeft: 'var(--space-12)', fontFamily: 'var(--font-display)' }}
                             />
                         </div>
 
-                        <div className="space-y-3 max-h-48 overflow-y-auto pr-1">
-                            {availableCategories.map(cat => (
-                                <div key={cat.name} className="space-y-1.5">
-                                    <p className="label" style={{ color: 'var(--ink-subtle)', margin: 0 }}>
-                                        {cat.name}
-                                    </p>
-                                    <div className="grid grid-cols-2 sm:grid-cols-3" style={{ gap: 'var(--space-2)' }}>
-                                        {cat.companies.map(c => {
-                                            const isSelected = localHoldings.some(h => h.symbol === c.symbol);
-                                            return (
-                                                <button
-                                                    key={c.symbol}
-                                                    type="button"
-                                                    onClick={() => handleToggleCompany(c.symbol)}
-                                                    className="flex items-center gap-2 text-left"
-                                                    style={{
-                                                        padding: 'var(--space-2)',
-                                                        borderRadius: 'var(--radius-sm)',
-                                                        background: isSelected ? 'var(--surface-200)' : 'var(--ground-000)',
-                                                        border: isSelected ? '1px solid var(--ink)' : '1px solid var(--line)',
-                                                        cursor: 'pointer',
-                                                    }}
-                                                >
-                                                    <CompanyLogo company={c} className="w-5 h-5" />
-                                                    <span className="body-sm truncate flex-1" style={{ color: 'var(--ink)', fontWeight: 500 }}>
-                                                        {c.name}
-                                                    </span>
-                                                    <Ico
-                                                        name={isSelected ? 'check' : 'plus'}
-                                                        size={12}
-                                                        style={{ color: isSelected ? 'var(--signal-text)' : 'var(--ink-subtle)' }}
-                                                    />
-                                                </button>
-                                            );
-                                        })}
+                        {availableCategories.length === 0 ? (
+                            <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>No encontramos acciones con “{searchQuery}”.</p>
+                        ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                                {availableCategories.map(cat => (
+                                    <div key={cat.name} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                                        <p className="label" style={sectionLabel}>{cat.name}</p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 'var(--space-2)' }}>
+                                            {cat.companies.map(c => {
+                                                const isSelected = localHoldings.some(h => h.symbol === c.symbol);
+                                                return (
+                                                    <button
+                                                        key={c.symbol}
+                                                        type="button"
+                                                        onClick={() => handleToggleCompany(c.symbol)}
+                                                        aria-pressed={isSelected}
+                                                        className="flex items-center gap-3 text-left transition-colors hover:bg-[var(--surface-200)]"
+                                                        style={{
+                                                            padding: 'var(--space-2) var(--space-3)',
+                                                            minHeight: '48px',
+                                                            borderRadius: 'var(--radius-sm)',
+                                                            background: isSelected ? 'var(--surface-200)' : 'var(--ground-000)',
+                                                            border: isSelected ? '1.5px solid var(--ink)' : '1px solid var(--line)',
+                                                            cursor: 'pointer',
+                                                        }}
+                                                    >
+                                                        <CompanyLogo company={c} className="w-7 h-7" />
+                                                        <span className="min-w-0 flex-1">
+                                                            <span className="body-sm block truncate" style={{ color: 'var(--ink)', fontWeight: 600 }}>{c.name}</span>
+                                                            <span className="block" style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--ink-subtle)' }}>{c.symbol}</span>
+                                                        </span>
+                                                        <span aria-hidden="true" style={{ color: isSelected ? 'var(--signal-text)' : 'var(--ink-subtle)' }}>
+                                                            <Ico name={isSelected ? 'check' : 'plus'} size={14} />
+                                                        </span>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </section>
                 </div>
 
-                {/* Footer */}
+                {/* Pie fijo con el total y las acciones */}
                 <div
-                    className="flex items-center justify-between"
+                    className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3"
                     style={{
-                        padding: 'var(--space-4) var(--space-5)',
+                        padding: 'var(--space-4) var(--space-6)',
                         borderTop: '1px solid var(--line)',
                         background: 'var(--ground-000)',
                     }}
                 >
-                    <span className="body-sm" style={{ color: 'var(--ink-muted)' }}>
-                        Total:{' '}
-                        <strong className="data" style={{ color: Math.round(totalWeight) === 100 ? 'var(--ink)' : 'var(--signal-text)' }}>
-                            {formatNumber(totalWeight, { minimumFractionDigits: 0, maximumFractionDigits: 0 })} %
+                    <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }} aria-live="polite">
+                        Total{' '}
+                        <strong className="data" style={{ color: totalOk ? 'var(--ink)' : 'var(--signal-text)' }}>
+                            {formatNumber(totalWeight, { minimumFractionDigits: 0, maximumFractionDigits: 1 })} %
                         </strong>
-                    </span>
-                    <div className="flex gap-2">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="pulso-btn pulso-btn--secondary"
-                            style={{ height: '40px' }}
-                        >
+                        {!totalOk && localHoldings.length > 0 && <span style={{ color: 'var(--ink-subtle)' }}> · se ajusta a 100 % al guardar</span>}
+                    </p>
+                    <div className="flex gap-3">
+                        <button type="button" onClick={onClose} className="pulso-btn pulso-btn-secondary pulso-btn-sm">
                             Cancelar
                         </button>
                         <button
                             type="button"
                             onClick={() => onSave(localHoldings)}
                             disabled={localHoldings.length === 0}
-                            className="pulso-btn pulso-btn--primary"
-                            style={{ height: '40px' }}
+                            className="pulso-btn pulso-btn-primary pulso-btn-sm"
                         >
                             Guardar cartera
                         </button>
@@ -887,7 +895,8 @@ export default function CarteraClient() {
     const [fundamentalsMap, setFundamentalsMap] = useState({});
     const [googleNews, setGoogleNews] = useState([]);
     const [newsLoading, setNewsLoading] = useState(false);
-    const [showMoreCompanyNews, setShowMoreCompanyNews] = useState(false);
+    // "Ver más" queda asociado a la empresa en la que se abrió: al cambiar de empresa vuelve a cerrarse solo.
+    const [showMoreNewsFor, setShowMoreNewsFor] = useState(null);
 
     // Cuentas: con sesión la cartera vive en Supabase; sin sesión (o sin Supabase) sigue en localStorage.
     const { user, ready, enabled } = useSupabaseUser();
@@ -1016,9 +1025,9 @@ export default function CarteraClient() {
     }, [detailSymbol, holdings]);
 
     const activeFundamentals = activeCompany ? fundamentalsMap[activeCompany.symbol] || {} : {};
+    const showMoreCompanyNews = showMoreNewsFor !== null && showMoreNewsFor === activeCompany?.symbol;
 
     useEffect(() => {
-        setShowMoreCompanyNews(false);
         if (!activeCompany?.newsQuery) return;
         let alive = true;
         const fetchNews = async () => {
@@ -1061,7 +1070,7 @@ export default function CarteraClient() {
     if (!isMounted) return <main style={{ minHeight: '100vh' }} aria-busy="true" />;
 
     return (
-        <main style={{ minHeight: '100vh', paddingTop: '56px', paddingBottom: 'var(--space-16)' }}>
+        <main style={{ minHeight: '100vh', paddingBottom: 'var(--space-16)' }}>
             {showWeightsModal && (
                 <WeightsModal
                     holdings={holdings}
@@ -1083,13 +1092,14 @@ export default function CarteraClient() {
                 <div className="pulso-container flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
                         <p className="label" style={{ color: 'var(--signal-text)', margin: '0 0 var(--space-2) 0' }}>
-                            Centro de monitoreo · Inversión personal
+                            Simulador por porcentajes
                         </p>
-                        <h1 className="h1" style={{ color: 'var(--ink)', margin: 0 }}>
-                            Mi cartera de acciones
-                        </h1>
+                        {/* H2: el H1 de la página es el encabezado renderizado en el servidor (page.jsx) */}
+                        <h2 className="h2" style={{ color: 'var(--ink)', margin: 0 }}>
+                            Probar ideas con porcentajes
+                        </h2>
                         <p className="body" style={{ color: 'var(--ink-muted)', marginTop: 'var(--space-1)', marginBottom: 0 }}>
-                            Métricas clave, rentabilidad y diagnóstico consolidado de tus inversiones en tiempo real.
+                            Armá una cartera por porcentajes y mirá sus métricas y su diagnóstico. Es un simulador: no usa tus cantidades reales.
                         </p>
                     </div>
 
@@ -1151,6 +1161,9 @@ export default function CarteraClient() {
                             </p>
                             <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-caption)', color: 'var(--ink-subtle)', margin: 0 }}>
                                 Ganancia anual sobre el patrimonio neto de las empresas.
+                                {metrics.roeExcluded?.length > 0 && (
+                                    <> No incluye {metrics.roeExcluded.map(s => s.replace('.BA', '')).join(', ')}: su ROE supera el 100% (patrimonio muy reducido) y distorsionaría el promedio.</>
+                                )}
                             </p>
                         </article>
 
@@ -1410,7 +1423,7 @@ export default function CarteraClient() {
                                                 <th scope="col" className="label text-right" style={{ padding: 'var(--space-3) var(--space-3)' }}>Rentabilidad (ROE)</th>
                                                 <th scope="col" className="label text-right" style={{ padding: 'var(--space-3) var(--space-3)' }}>Dividendos</th>
                                                 <th scope="col" className="label text-right" style={{ padding: 'var(--space-3) var(--space-3)' }}>Upside est.</th>
-                                                <th scope="col" className="label text-center" style={{ padding: 'var(--space-3) var(--space-4)' }}>Consenso</th>
+                                                <th scope="col" className="label text-center" style={{ padding: 'var(--space-3) var(--space-4)' }}>Consenso analistas</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1459,7 +1472,7 @@ export default function CarteraClient() {
                                                             )}
                                                         </td>
                                                         <td className="text-center" style={{ padding: 'var(--space-3) var(--space-4)' }}>
-                                                            <SemaphoreIndicator signal={f.recommendationKey === 'hold' ? 'hold' : ['buy', 'strong_buy', 'strongBuy'].includes(f.recommendationKey) ? 'buy' : 'unknown'} />
+                                                            <SemaphoreIndicator signal={consensusSignal(f.recommendationKey)} />
                                                         </td>
                                                     </tr>
                                                 );
@@ -1467,6 +1480,9 @@ export default function CarteraClient() {
                                         </tbody>
                                     </table>
                                 </div>
+                                <p className="body-sm" style={{ margin: 0, padding: 'var(--space-3) var(--space-4)', borderTop: '1px solid var(--line)', color: 'var(--ink-subtle)' }}>
+                                    Consenso: opinión promedio de los analistas relevados por Yahoo Finance. Es información de terceros, no una recomendación de Infopeso.
+                                </p>
                             </div>
                         </div>
                     )}
@@ -1646,7 +1662,7 @@ export default function CarteraClient() {
                                                     {googleNews.length > 5 && (
                                                         <button
                                                             type="button"
-                                                            onClick={() => setShowMoreCompanyNews(prev => !prev)}
+                                                            onClick={() => setShowMoreNewsFor(prev => (prev === activeCompany?.symbol ? null : activeCompany?.symbol))}
                                                             className="body-sm hover:underline"
                                                             style={{
                                                                 color: 'var(--signal-text)',

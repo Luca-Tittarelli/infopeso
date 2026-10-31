@@ -89,7 +89,7 @@ function GoogleButton({ next }) {
                 <Link href="/privacidad" target="_blank" style={linkStyle}>
                     política de privacidad
                 </Link>
-                .
+                . Si creás una cuenta, te enviamos un resumen semanal de tu cartera; te das de baja en un clic.
             </p>
             <div
                 role="separator"
@@ -239,6 +239,10 @@ export function RegisterForm({ next, google = false }) {
                         .
                     </span>
                 </label>
+
+                <p className="body-sm" style={{ margin: 0, color: 'var(--ink-subtle)' }}>
+                    Te enviamos un resumen semanal de tu cartera los viernes; te das de baja en un clic.
+                </p>
 
                 <Button type="submit" loading={pending} loadingText="Creando cuenta…">
                     Crear cuenta

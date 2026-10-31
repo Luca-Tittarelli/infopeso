@@ -45,3 +45,6 @@ next-env.d.ts
 # GSC exports
 *Performance-on-Search*
 seo-stats/
+
+# Archivo de cookies generado por curl en pruebas locales
+cookies.txt

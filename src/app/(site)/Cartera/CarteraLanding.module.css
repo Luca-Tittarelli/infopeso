@@ -1,0 +1,240 @@
+/* Presentación de /Cartera. Si <html> tiene data-cartera="activa" (el navegador ya tiene una cartera cargada,
+   ver src/lib/portfolio/landingHint.js) se ocultan las partes de presentación y el tablero queda arriba. */
+
+.hero {
+  display: grid;
+  gap: var(--space-8);
+  align-items: center;
+  padding-top: var(--space-12);
+  padding-bottom: var(--space-8);
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    gap: var(--space-12);
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-12);
+  }
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
+}
+
+.title {
+  margin: 0;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+.lead {
+  margin: 0;
+  max-width: 56ch;
+  font-size: 18px;
+  color: var(--ink-muted);
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  color: var(--ink-muted);
+}
+
+.checks li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.check {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--signal-text);
+}
+
+.brokers {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+  color: var(--ink-muted);
+}
+
+/* ─── Vista previa del tablero ─────────────────────────────────── */
+
+.preview {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.bar {
+  display: flex;
+  height: 12px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  color: var(--ink-muted);
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid var(--line);
+}
+
+.alert {
+  margin: 0;
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--signal);
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--line);
+}
+
+.rowName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─── Secciones debajo del tablero ─────────────────────────────── */
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding-top: var(--space-4);
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.questions {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.split {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .questions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .questions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stepNum {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--signal-text);
+}
+
+.closing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+/* ─── Usuario que ya tiene cartera: directo al tablero ─────────── */
+
+:global(html[data-cartera='activa']) .landingOnly {
+  display: none;
+}
+
+:global(html[data-cartera='activa']) .hero {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-4);
+}
+
+:global(html[data-cartera='activa']) .intro {
+  gap: var(--space-2);
+}
+
+:global(html[data-cartera='activa']) .title {
+  max-width: none;
+  font-size: 32px;
+  line-height: 1.1;
+}

@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { track } from '@/lib/track';
 
 const linkStyle = {
     color: 'var(--signal-text)',
@@ -59,10 +62,10 @@ export default function CarteraAccountBar({ user, syncState, imported, onRetry }
                     <>
                         <span>Tu cartera se guarda solo en este navegador.</span>
                         <span>
-                            <Link href="/registro?next=/Cartera" style={linkStyle}>
+                            <Link href="/registro?next=/Cartera" style={linkStyle} onClick={() => track('signup_cta', { location: 'barra' })}>
                                 Creá una cuenta gratis
                             </Link>{' '}
-                            para tenerla en todos tus dispositivos, o{' '}
+                            para ver cómo evoluciona en dólares, recibir un resumen semanal y tenerla en todos tus dispositivos, o{' '}
                             <Link href="/ingresar?next=/Cartera" style={linkStyle}>
                                 ingresá
                             </Link>

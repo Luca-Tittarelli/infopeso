@@ -5,7 +5,6 @@ export const CATEGORIES = [
             {
                 symbol: 'YPFD.BA', name: 'YPF', tvSymbol: 'BCBA:YPFD',
                 sector: 'Energía y Commodities', riskLevel: 'medio',
-                logo: 'https://logo.clearbit.com/ypf.com',
                 newsQuery: 'YPF argentina OR YPFD OR "Vaca Muerta"',
                 description: 'La mayor petrolera argentina con control estatal, líder en la exploración y producción de hidrocarburos en Vaca Muerta.',
                 planDeNegocios: 'Foco estratégico en el desarrollo no convencional de Vaca Muerta, desinvirtiendo en áreas convencionales maduras. Proyectos clave: oleoducto Vaca Muerta Sur y planta de GNL para exportación a escala global.',
@@ -15,7 +14,6 @@ export const CATEGORIES = [
             {
                 symbol: 'VIST', name: 'Vista Energy', tvSymbol: 'NYSE:VIST',
                 sector: 'Energía y Commodities', riskLevel: 'alto',
-                logo: 'https://logo.clearbit.com/vistaenergy.com',
                 newsQuery: 'Vista Energy OR VIST OR "Vaca Muerta"',
                 description: 'Operador puro e independiente de Vaca Muerta con bajos costos de producción y perfil marcadamente exportador.',
                 planDeNegocios: 'Modelo "pure play" en Vaca Muerta con objetivo de duplicar producción hacia 100,000 boe/d. Desarrollo intensivo del bloque Bajada del Palo Oeste con exportación directa de crudo Medanito.',
@@ -25,7 +23,6 @@ export const CATEGORIES = [
             {
                 symbol: 'PAMP.BA', name: 'Pampa Energía', tvSymbol: 'BCBA:PAMP',
                 sector: 'Energía y Commodities', riskLevel: 'medio',
-                logo: 'https://logo.clearbit.com/pampaenergia.com',
                 newsQuery: 'Pampa Energia PAMP argentina',
                 description: 'Conglomerado energético integrado: líder en generación eléctrica y producción de gas natural en Neuquén.',
                 planDeNegocios: 'Consolidación como productor de gas en la Cuenca Neuquina orientado al Plan Gas.Ar, y expansión en generación renovable (parques eólicos) y termoeléctrica eficiente.',
@@ -35,7 +32,6 @@ export const CATEGORIES = [
             {
                 symbol: 'TGSU2.BA', name: 'TGS', tvSymbol: 'BCBA:TGSU2',
                 sector: 'Energía y Commodities', riskLevel: 'medio',
-                logo: 'https://logo.clearbit.com/tgs.com.ar',
                 newsQuery: 'Transportadora de Gas del Sur TGSU2 TGS',
                 description: 'Líder en transporte de gas natural en Argentina y procesamiento de líquidos de gas en planta Cerri.',
                 planDeNegocios: 'Expansión de capacidad de transporte para el gas de Vaca Muerta, exportación a países limítrofes y maximización de exportaciones de GLP y gasolina natural.',
@@ -45,7 +41,6 @@ export const CATEGORIES = [
             {
                 symbol: 'GGAL.BA', name: 'Grupo Galicia', tvSymbol: 'BCBA:GGAL',
                 sector: 'Finanzas y Fintech', riskLevel: 'alto',
-                logo: 'https://logo.clearbit.com/galicia.com.ar',
                 newsQuery: 'Galicia GGAL argentina OR "Grupo Galicia"',
                 description: 'El mayor grupo financiero de capitales privados de Argentina: banca minorista, corporativa y seguros.',
                 planDeNegocios: 'Crecimiento de escala mediante la absorción de activos de HSBC Argentina. Foco en la transformación digital del crédito y canalización de liquidez hacia el crédito privado productivo.',
@@ -55,7 +50,6 @@ export const CATEGORIES = [
             {
                 symbol: 'BMA.BA', name: 'Banco Macro', tvSymbol: 'BCBA:BMA',
                 sector: 'Finanzas y Fintech', riskLevel: 'alto',
-                logo: 'https://logo.clearbit.com/macro.com.ar',
                 newsQuery: 'Banco Macro BMA argentina',
                 description: 'Banco de capitales nacionales con fuerte presencia en el interior del país, líder en préstamos regionales.',
                 planDeNegocios: 'Fortalecimiento post-integración de Banco Itaú Argentina. Red física con servicios digitales integrados, apuntando a segmentos medios/altos, pymes y recaudación de provincias.',
@@ -65,7 +59,6 @@ export const CATEGORIES = [
             {
                 symbol: 'BBAR.BA', name: 'BBVA Argentina', tvSymbol: 'BCBA:BBAR',
                 sector: 'Finanzas y Fintech', riskLevel: 'alto',
-                logo: 'https://logo.clearbit.com/bbva.com.ar',
                 newsQuery: 'BBVA Argentina BBAR OR Banco Frances',
                 description: 'Filial argentina del grupo global BBVA, uno de los tres bancos privados más grandes del país.',
                 planDeNegocios: 'Crecimiento en banca corporativa digital y financiación de consumo, con eficiencias basadas en la plataforma tecnológica global del grupo.',
@@ -75,7 +68,6 @@ export const CATEGORIES = [
             {
                 symbol: 'CEPU.BA', name: 'Central Puerto', tvSymbol: 'BCBA:CEPU',
                 sector: 'Energía y Commodities', riskLevel: 'medio',
-                logo: 'https://logo.clearbit.com/centralpuerto.com',
                 newsQuery: 'Central Puerto CEPU argentina',
                 description: 'Líder en generación de energía eléctrica en Argentina con activos térmicos, hidroeléctricos y eólicos.',
                 planDeNegocios: 'Diversificación del portafolio sumando generación renovable y termoeléctrica eficiente, con expansión en agronegocios y forestería como cobertura macroeconómica.',
@@ -85,7 +77,6 @@ export const CATEGORIES = [
             {
                 symbol: 'ALUA.BA', name: 'Aluar', tvSymbol: 'BCBA:ALUA',
                 sector: 'Energía y Commodities', riskLevel: 'alto',
-                logo: 'https://logo.clearbit.com/aluar.com.ar',
                 newsQuery: 'Aluar ALUA argentina',
                 description: 'Único productor primario de aluminio en Argentina, con planta de clase mundial en Puerto Madryn.',
                 planDeNegocios: 'Orientación exportadora (75-80% de la producción). Optimización del costo energético mediante parque eólico propio y venta de aluminio de valor agregado.',
@@ -95,7 +86,6 @@ export const CATEGORIES = [
             {
                 symbol: 'TXAR.BA', name: 'Ternium Argentina', tvSymbol: 'BCBA:TXAR',
                 sector: 'Energía y Commodities', riskLevel: 'medio',
-                logo: 'https://logo.clearbit.com/ternium.com',
                 newsQuery: 'Ternium TXAR argentina',
                 description: 'Mayor fabricante de aceros planos en Argentina, controlada por el Grupo Techint.',
                 planDeNegocios: 'Abastecimiento de chapa de acero para los sectores automotriz, electrodomésticos, agro y construcción. Participación en proyectos estratégicos de infraestructura.',
@@ -105,7 +95,6 @@ export const CATEGORIES = [
             {
                 symbol: 'CRES.BA', name: 'Cresud', tvSymbol: 'BCBA:CRES',
                 sector: 'Consumo y Otros', riskLevel: 'alto',
-                logo: 'https://logo.clearbit.com/cresud.com.ar',
                 newsQuery: 'Cresud CRES argentina OR "agro soja"',
                 description: 'Compañía agropecuaria líder que gestiona tierras agrícolas en Argentina y la región, y controla el holding inmobiliario IRSA.',
                 planDeNegocios: 'Adquisición, desarrollo y revalorización de tierras en Argentina, Brasil, Paraguay y Bolivia. Venta estratégica de campos optimizados y gestión de IRSA.',
@@ -115,7 +104,6 @@ export const CATEGORIES = [
             {
                 symbol: 'LOMA.BA', name: 'Loma Negra', tvSymbol: 'BCBA:LOMA',
                 sector: 'Consumo y Otros', riskLevel: 'medio',
-                logo: 'https://logo.clearbit.com/lomanegra.com.ar',
                 newsQuery: 'Loma Negra LOMA cemento',
                 description: 'El principal fabricante de cemento portland en Argentina con más del 40% de participación de mercado.',
                 planDeNegocios: 'Producción y distribución de cemento, hormigón y agregados para infraestructura pública, minería y edificación privada.',
@@ -130,7 +118,6 @@ export const CATEGORIES = [
             {
                 symbol: 'SPCX', name: 'SpaceX', tvSymbol: 'NASDAQ:SPCX',
                 sector: 'Tecnología y Crecimiento', riskLevel: 'muy_alto',
-                logo: 'https://logo.clearbit.com/spacex.com',
                 newsQuery: 'SpaceX OR "SPCX" OR "Starlink" OR "Elon Musk space"',
                 description: 'Corporación aeroespacial y de telecomunicaciones fundada por Elon Musk, dueña de Starlink. Cotiza en NASDAQ desde su IPO en junio de 2026.',
                 planDeNegocios: 'Desarrollo del sistema Starship para transporte interplanetario y misiones a Luna/Marte. Expansión comercial y monetización de Starlink.',
@@ -140,7 +127,6 @@ export const CATEGORIES = [
             {
                 symbol: 'TSM', name: 'TSMC', tvSymbol: 'NYSE:TSM',
                 sector: 'Tecnología y Crecimiento', riskLevel: 'medio',
-                logo: 'https://logo.clearbit.com/tsmc.com',
                 newsQuery: 'TSMC OR "Taiwan Semiconductor" OR TSM',
                 description: 'La mayor fundición de semiconductores independiente del mundo: fabrica los chips de Apple, NVIDIA y AMD.',
                 planDeNegocios: 'Fabricación de microchips avanzados para clientes líderes globales. Expansión de plantas internacionales en EE.UU., Japón y Alemania.',
@@ -150,7 +136,6 @@ export const CATEGORIES = [
             {
                 symbol: 'META', name: 'Meta Platforms', tvSymbol: 'NASDAQ:META',
                 sector: 'Tecnología y Crecimiento', riskLevel: 'medio',
-                logo: 'https://logo.clearbit.com/meta.com',
                 newsQuery: 'Meta Platforms OR "META" OR Zuckerberg',
                 description: 'Matriz de Facebook, Instagram y WhatsApp. Más de 3.000 millones de usuarios activos monetizados principalmente con publicidad digital.',
                 planDeNegocios: 'Monetizar la atención de usuarios mediante anuncios altamente personalizados e integración de asistentes de IA generativa (Llama) para maximizar la permanencia.',
@@ -160,7 +145,6 @@ export const CATEGORIES = [
             {
                 symbol: 'NU', name: 'Nubank', tvSymbol: 'NYSE:NU',
                 sector: 'Finanzas y Fintech', riskLevel: 'alto',
-                logo: 'https://logo.clearbit.com/nu.com.br',
                 newsQuery: 'Nubank OR "NU bank" fintech',
                 description: 'El banco digital más grande fuera de Asia, con más de 100 millones de clientes en Brasil, México y Colombia.',
                 planDeNegocios: 'Escalar la base de clientes activos superando los 100 millones y expandir operaciones en México y Colombia.',
@@ -170,7 +154,6 @@ export const CATEGORIES = [
             {
                 symbol: 'MELI', name: 'Mercado Libre', tvSymbol: 'NASDAQ:MELI',
                 sector: 'Tecnología y Crecimiento', riskLevel: 'medio',
-                logo: 'https://logo.clearbit.com/mercadolibre.com',
                 newsQuery: 'Mercado Libre MELI ecommerce',
                 description: 'Gigante latinoamericano de e-commerce y servicios financieros digitales a través de Mercado Pago.',
                 planDeNegocios: 'Consolidación del ecosistema integrado e-commerce/fintech y expansión de la red logística propia para entregas en el mismo día.',
@@ -180,7 +163,6 @@ export const CATEGORIES = [
             {
                 symbol: 'AAPL', name: 'Apple', tvSymbol: 'NASDAQ:AAPL',
                 sector: 'Tecnología y Crecimiento', riskLevel: 'bajo',
-                logo: 'https://logo.clearbit.com/apple.com',
                 newsQuery: 'Apple AAPL iphone',
                 description: 'Líder tecnológico global creador del iPhone, iPad y un ecosistema cerrado de software y servicios recurrentes de alto margen.',
                 planDeNegocios: 'Monetización de más de 2.000 millones de dispositivos activos. Transición hacia empresa de servicios de alto margen e integración de inteligencia artificial híbrida (Apple Intelligence).',
@@ -190,7 +172,6 @@ export const CATEGORIES = [
             {
                 symbol: 'MSFT', name: 'Microsoft', tvSymbol: 'NASDAQ:MSFT',
                 sector: 'Tecnología y Crecimiento', riskLevel: 'bajo',
-                logo: 'https://logo.clearbit.com/microsoft.com',
                 newsQuery: 'Microsoft MSFT ai Azure',
                 description: 'Pionero de software empresarial e infraestructura en la nube con Azure, colíder global en Inteligencia Artificial.',
                 planDeNegocios: 'Liderar la IA comercial integrando Copilot en Office, Windows e infraestructura Azure. Contratos multianuales con empresas de todo el mundo.',
@@ -200,7 +181,6 @@ export const CATEGORIES = [
             {
                 symbol: 'NVDA', name: 'NVIDIA', tvSymbol: 'NASDAQ:NVDA',
                 sector: 'Tecnología y Crecimiento', riskLevel: 'muy_alto',
-                logo: 'https://logo.clearbit.com/nvidia.com',
                 newsQuery: 'Nvidia NVDA GPU ai',
                 description: 'Diseñador líder de GPUs e infraestructura de supercomputación para inteligencia artificial. Proveedor de infraestructura clave de toda la revolución de IA.',
                 planDeNegocios: 'Proveer el hardware (GPUs Blackwell/Hopper) fundamental para la IA generativa. Mantener el foso tecnológico a través del ecosistema de software CUDA.',
@@ -210,7 +190,6 @@ export const CATEGORIES = [
             {
                 symbol: 'TSLA', name: 'Tesla', tvSymbol: 'NASDAQ:TSLA',
                 sector: 'Tecnología y Crecimiento', riskLevel: 'muy_alto',
-                logo: 'https://logo.clearbit.com/tesla.com',
                 newsQuery: 'Tesla TSLA electric vehicle',
                 description: 'Líder en vehículos eléctricos, almacenamiento de energía en baterías, robótica y conducción autónoma.',
                 planDeNegocios: 'Transición de fabricante automotriz a empresa de software de conducción autónoma (FSD), robotaxis y robótica humanoide (Optimus).',
@@ -220,7 +199,6 @@ export const CATEGORIES = [
             {
                 symbol: 'AMZN', name: 'Amazon', tvSymbol: 'NASDAQ:AMZN',
                 sector: 'Tecnología y Crecimiento', riskLevel: 'medio',
-                logo: 'https://logo.clearbit.com/amazon.com',
                 newsQuery: 'Amazon OR AMZN OR AWS',
                 description: 'Gigante mundial de e-commerce, computación en la nube (AWS) y publicidad digital.',
                 planDeNegocios: 'Consolidación logística e incremento de velocidad de despacho. Crecimiento en AWS con integración de agentes de IA.',
@@ -230,7 +208,6 @@ export const CATEGORIES = [
             {
                 symbol: 'GOOGL', name: 'Alphabet', tvSymbol: 'NASDAQ:GOOGL',
                 sector: 'Tecnología y Crecimiento', riskLevel: 'bajo',
-                logo: 'https://logo.clearbit.com/google.com',
                 newsQuery: 'Google OR Alphabet OR GOOGL',
                 description: 'Matriz de Google Search, YouTube, Android y Google Cloud. Pionera de modelos multimodales de IA (Gemini).',
                 planDeNegocios: 'Defensa del negocio de anuncios en Search mediante IA generativa nativa, crecimiento de YouTube y expansión de Google Cloud.',
@@ -240,7 +217,6 @@ export const CATEGORIES = [
             {
                 symbol: 'NFLX', name: 'Netflix', tvSymbol: 'NASDAQ:NFLX',
                 sector: 'Tecnología y Crecimiento', riskLevel: 'medio',
-                logo: 'https://logo.clearbit.com/netflix.com',
                 newsQuery: 'Netflix OR NFLX',
                 description: 'Plataforma líder global de entretenimiento en streaming con más de 270 millones de suscriptores.',
                 planDeNegocios: 'Monetización mediante planes con anuncios, control de cuentas compartidas y desarrollo de contenido local de alta viralización.',
@@ -250,7 +226,6 @@ export const CATEGORIES = [
             {
                 symbol: 'KO', name: 'Coca-Cola', tvSymbol: 'NYSE:KO',
                 sector: 'Consumo y Otros', riskLevel: 'bajo',
-                logo: 'https://logo.clearbit.com/cocacola.com',
                 newsQuery: 'Coca Cola KO beverage',
                 description: 'Compañía global de bebidas no alcohólicas: un estándar de inversión defensiva con dividendos crecientes por más de 60 años.',
                 planDeNegocios: 'Venta de concentrados a embotelladores bajo modelo de franquicias de bajo capital. Diversificación hacia aguas, jugos, bebidas deportivas, tés y cafés.',
@@ -377,6 +352,10 @@ export const normalizeHoldings = (raw) => {
     }));
 };
 
+// Límite (en %) para ROE, ROA y márgenes: por encima el dato distorsiona el promedio ponderado.
+const RATIO_LIMIT = 100;
+const isFiniteNumber = (v) => v !== null && v !== undefined && Number.isFinite(Number(v));
+
 /**
  * Calcula todas las métricas de fundamentals consolidadas de la cartera
  */
@@ -402,6 +381,7 @@ export const calculatePortfolioMetrics = (holdings, fundamentalsMap = {}) => {
             healthScore: 50,
             diagnostics: [],
             upcomingEarnings: [],
+            roeExcluded: [],
         };
     }
 
@@ -443,6 +423,9 @@ export const calculatePortfolioMetrics = (holdings, fundamentalsMap = {}) => {
     const riskWeights = { bajo: 0, medio: 0, alto: 0, muy_alto: 0 };
     let hhi = 0;
     const upcomingEarnings = [];
+    const roeExcluded = [];
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
 
     normalized.forEach(item => {
         const sym = item.symbol;
@@ -480,22 +463,28 @@ export const calculatePortfolioMetrics = (holdings, fundamentalsMap = {}) => {
             totalWeightEV += w;
         }
 
-        if (data.roe !== null && data.roe !== undefined && !isNaN(data.roe)) {
-            sumROE += w * data.roe;
-            totalWeightROE += w;
+        // Ratios sobre patrimonio o ventas fuera de ±100% no son comparables (por ejemplo, Apple tiene un ROE
+        // de ~150% porque las recompras achicaron su patrimonio): se excluyen del promedio y se informan aparte.
+        if (isFiniteNumber(data.roe)) {
+            if (Math.abs(data.roe) <= RATIO_LIMIT) {
+                sumROE += w * data.roe;
+                totalWeightROE += w;
+            } else {
+                roeExcluded.push(sym);
+            }
         }
 
-        if (data.roa !== null && data.roa !== undefined && !isNaN(data.roa)) {
+        if (isFiniteNumber(data.roa) && Math.abs(data.roa) <= RATIO_LIMIT) {
             sumROA += w * data.roa;
             totalWeightROA += w;
         }
 
-        if (data.operatingMargin !== null && data.operatingMargin !== undefined && !isNaN(data.operatingMargin)) {
+        if (isFiniteNumber(data.operatingMargin) && Math.abs(data.operatingMargin) <= RATIO_LIMIT) {
             sumOpMargin += w * data.operatingMargin;
             totalWeightOpMargin += w;
         }
 
-        if (data.profitMargin !== null && data.profitMargin !== undefined && !isNaN(data.profitMargin)) {
+        if (isFiniteNumber(data.profitMargin) && Math.abs(data.profitMargin) <= RATIO_LIMIT) {
             sumProfitMargin += w * data.profitMargin;
             totalWeightProfitMargin += w;
         }
@@ -515,7 +504,8 @@ export const calculatePortfolioMetrics = (holdings, fundamentalsMap = {}) => {
             totalWeightUpside += w;
         }
 
-        if (data.nextEarningsDate) {
+        // Yahoo a veces devuelve la última fecha de resultados hasta que se anuncia la próxima: solo se listan futuras.
+        if (data.nextEarningsDate && new Date(data.nextEarningsDate) >= startOfToday) {
             upcomingEarnings.push({
                 symbol: sym,
                 name: comp?.name || sym,
@@ -623,5 +613,6 @@ export const calculatePortfolioMetrics = (holdings, fundamentalsMap = {}) => {
         healthScore,
         diagnostics,
         upcomingEarnings,
+        roeExcluded,
     };
 };

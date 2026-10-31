@@ -2,6 +2,9 @@ import AuthShell, { AuthDisabled, Callout } from '@/components/auth/AuthShell';
 import { DeleteAccountForm } from '@/components/auth/AuthForms';
 import { Button } from '@/components/pulso/Button';
 import { cerrarSesion } from '@/app/actions/auth';
+import { actualizarResumen } from '@/app/actions/resumen';
+import TestDigestForm from '@/components/auth/TestDigestForm';
+import { isAdminEmail } from '@/lib/adminEmails';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { requireUser } from '@/lib/supabase/dal';
 import { createClient } from '@/lib/supabase/server';
@@ -45,14 +48,16 @@ export default async function Page({ searchParams }) {
     // RLS limita ambas consultas a las filas del usuario logueado. Si el SQL todavía no se aplicó, se muestra un guion.
     const supabase = await createClient();
     const [profile, items] = await Promise.all([
-        supabase.from('profiles').select('display_name, plan').eq('id', user.id).maybeSingle(),
-        supabase.from('portfolio_items').select('id', { count: 'exact', head: true }),
+        supabase.from('profiles').select('display_name, plan, weekly_email').eq('id', user.id).maybeSingle(),
+        supabase.from('portfolio_positions').select('id', { count: 'exact', head: true }),
     ]);
 
     const viaGoogle = user.app_metadata?.provider === 'google';
     const name = profile.data?.display_name;
     const plan = PLAN_LABEL[profile.data?.plan] ?? '—';
     const positions = items.error ? '—' : items.count ?? 0;
+    // Si el SQL de la etapa 3 todavía no se aplicó la columna no existe y el valor llega vacío: se trata como activado (el valor por defecto).
+    const weekly = profile.data?.weekly_email !== false;
     const since = new Date(user.created_at).toLocaleDateString('es-AR', {
         day: 'numeric',
         month: 'long',
@@ -75,6 +80,15 @@ export default async function Page({ searchParams }) {
                     <Row label="Acceso">{viaGoogle ? 'Google' : 'Email y contraseña'}</Row>
                     <Row label="Plan">{plan}</Row>
                     <Row label="Posiciones guardadas">{positions}</Row>
+                    <Row label="Resumen semanal">
+                        <form action={actualizarResumen} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-3)' }}>
+                            <input type="hidden" name="activo" value={weekly ? 'no' : 'si'} />
+                            <span>{weekly ? 'Activado (viernes)' : 'Desactivado'}</span>
+                            <Button type="submit" variant="secondary" size="sm">
+                                {weekly ? 'Desactivar' : 'Activar'}
+                            </Button>
+                        </form>
+                    </Row>
                     <Row label="Miembro desde">{since}</Row>
                 </dl>
 
@@ -89,6 +103,16 @@ export default async function Page({ searchParams }) {
                         </Button>
                     </form>
                 </div>
+
+                {isAdminEmail(user.email) && (
+                    <section aria-label="Herramientas de administrador" style={{ borderTop: '1px solid var(--line)', paddingTop: 'var(--space-4)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                        <h2 className="label" style={{ margin: 0, color: 'var(--ink-muted)' }}>Herramientas de administrador</h2>
+                        <p className="body-sm" style={{ margin: 0, color: 'var(--ink-muted)' }}>
+                            Te manda a vos el resumen semanal con tu cartera de hoy, para probar el envío sin esperar al viernes.
+                        </p>
+                        <TestDigestForm />
+                    </section>
+                )}
 
                 <details style={{ borderTop: '1px solid var(--line)', paddingTop: 'var(--space-4)' }}>
                     <summary
