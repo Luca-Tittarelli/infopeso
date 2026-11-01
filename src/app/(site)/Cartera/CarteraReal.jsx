@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/pulso/Button';
 import { Delta } from '@/components/pulso/Delta';
 import { formatNumber } from '@/utils/formatters';
-import { CATALOG_BY_TICKER as CATALOG_BY_SYMBOL, calculatePortfolioMetrics } from '@/utils/carteraData';
+import { CATALOG_BY_TICKER as CATALOG_BY_SYMBOL } from '@/utils/carteraData';
 import { usePositions } from '@/hooks/usePositions';
 import { summarize, buildAlerts, KIND_LABELS } from '@/lib/portfolio/valuation';
 import { brokersOf } from '@/lib/portfolio/positionsStore';
@@ -13,9 +13,10 @@ import { BROKERS } from '@/lib/portfolio/importCsv';
 import CarteraAccountBar from './CarteraAccountBar';
 import ImportPanel from './ImportPanel';
 import Evolution from './Evolution';
+import CompanyAnalysis from './CompanyAnalysis';
+import PortfolioNews from './PortfolioNews';
 import { track, trackOnce } from '@/lib/track';
 import { rememberPortfolio } from '@/lib/portfolio/landingHint';
-import { BloombergNewsSlider } from './CarteraClient';
 
 // ─── Utilidades ───────────────────────────────────────────────────────────────
 
@@ -44,6 +45,9 @@ const DEMO = [
     { broker: 'Ejemplo', symbol: 'ARS', kind: 'cash', currency: 'ARS', quantity: 150000, avgCost: null, fileValue: 150000 },
     { broker: 'Ejemplo', symbol: 'USD', kind: 'cash', currency: 'USD', quantity: 300, avgCost: null, fileValue: 300 },
 ];
+
+// Bloque del tablero que entra escalonado (ver .pulso-enter en globals.css).
+const enter = (i) => ({ className: 'pulso-enter', style: { '--enter-i': i } });
 
 const linkBtn = { color: 'var(--signal-text)', textDecoration: 'underline', textUnderlineOffset: '3px', background: 'none', border: 0, cursor: 'pointer', padding: 0, font: 'inherit' };
 
@@ -74,20 +78,30 @@ function useMarket(symbols, enabled) {
     return { ...state, retry: () => setTick((t) => t + 1) };
 }
 
-// Fundamentals de las empresas del catálogo (P/E, ROE, fechas de resultados).
+// Fundamentals de las empresas del catálogo (P/E, ROE, analistas, fechas). La API acepta 30 símbolos por pedido:
+// carteras más grandes se piden en tandas.
+const FUNDAMENTALS_BATCH = 30;
+
 function useFundamentals(catalogSymbols) {
     const key = catalogSymbols.join(',');
-    const [map, setMap] = useState({});
+    const [state, setState] = useState({ key: null, map: {} });
     useEffect(() => {
         if (!key) return;
         let alive = true;
-        fetch(`/api/portfolio-fundamentals?symbols=${encodeURIComponent(key)}`)
+        const symbols = key.split(',');
+        const batches = [];
+        for (let i = 0; i < symbols.length; i += FUNDAMENTALS_BATCH) batches.push(symbols.slice(i, i + FUNDAMENTALS_BATCH));
+        Promise.all(batches.map((b) => fetch(`/api/portfolio-fundamentals?symbols=${encodeURIComponent(b.join(','))}`)
             .then((r) => (r.ok ? r.json() : null))
-            .then((d) => { if (alive && d?.fundamentals) setMap(d.fundamentals); })
-            .catch(() => {});
+            .catch(() => null)))
+            .then((results) => {
+                if (alive) setState({ key, map: Object.assign({}, ...results.map((d) => d?.fundamentals ?? {})) });
+            });
         return () => { alive = false; };
     }, [key]);
-    return map;
+    // Mientras llega una tanda nueva se sigue mostrando lo que ya había; solo se espera si falta alguna empresa.
+    const loading = Boolean(key) && state.key !== key && catalogSymbols.some((s) => !(s in state.map));
+    return { map: state.map, loading };
 }
 
 // ─── Piezas de la pantalla ────────────────────────────────────────────────────
@@ -324,51 +338,6 @@ function AddForm({ onAdd, onClose }) {
     );
 }
 
-function Advanced({ catalogHoldings, fundamentals, coverage }) {
-    const metrics = useMemo(
-        () => calculatePortfolioMetrics(catalogHoldings.map((h) => ({ symbol: h.catalogSymbol, weight: h.valueARS })), fundamentals),
-        [catalogHoldings, fundamentals]
-    );
-    const tiles = [
-        ['P/E ponderado', metrics.weightedPE, 'x', 1],
-        ['ROE ponderado', metrics.weightedROE, ' %', 1],
-        ['Dividendos', metrics.weightedDividendYield, ' %', 2],
-        ['Beta', metrics.weightedBeta, '', 2],
-        ['Potencial según analistas', metrics.weightedUpside, ' %', 1],
-    ];
-    return (
-        <details className="pulso-card" style={{ padding: 0 }}>
-            <summary className="body" style={{ cursor: 'pointer', padding: 'var(--space-4) var(--space-6)', fontWeight: 700, minHeight: '56px', display: 'flex', alignItems: 'center' }}>
-                Análisis de tus empresas <span className="body-sm" style={{ fontWeight: 400, color: 'var(--ink-muted)', marginLeft: 'var(--space-3)' }}>cubre el {pct(coverage, 0)} de tu cartera</span>
-            </summary>
-            <div style={{ padding: '0 var(--space-6) var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-                <p className="body-sm" style={{ margin: 0, color: 'var(--ink-muted)' }}>
-                    Promedios ponderados de las empresas de tu cartera que Infopeso analiza ({catalogHoldings.map((h) => h.symbol).join(', ')}). No incluye bonos, efectivo ni otros activos.
-                    {metrics.roeExcluded?.length > 0 && ` El ROE no incluye ${metrics.roeExcluded.join(', ')}: supera el 100 % y distorsionaría el promedio.`}
-                </p>
-                <dl style={{ margin: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'var(--space-4)' }}>
-                    {tiles.map(([label, value, unit, d]) => (
-                        <div key={label}>
-                            <dt className="label" style={{ color: 'var(--ink-subtle)' }}>{label}</dt>
-                            <dd className="figure" style={{ margin: 0, fontSize: '26px' }}>{value === null || value === undefined ? '—' : `${formatNumber(value, { minimumFractionDigits: d, maximumFractionDigits: d })}${unit}`}</dd>
-                        </div>
-                    ))}
-                </dl>
-                {metrics.diagnostics.length > 0 && (
-                    <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-                        {metrics.diagnostics.map((d) => (
-                            <li key={d.title} style={{ borderLeft: '2px solid var(--line)', paddingLeft: 'var(--space-3)' }}>
-                                <p className="body-sm" style={{ margin: 0, fontWeight: 700, color: 'var(--ink)' }}>{d.title}</p>
-                                <p className="body-sm" style={{ margin: 0, color: 'var(--ink-muted)' }}>{d.desc}</p>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
-        </details>
-    );
-}
-
 function EmptyState({ onImport, onAdd, onDemo }) {
     return (
         <section className="pulso-card-lg" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', alignItems: 'flex-start' }}>
@@ -417,7 +386,8 @@ export default function CarteraReal({ intent = null }) {
             .map((h) => ({ ...h, catalogSymbol: CATALOG_BY_SYMBOL.get(h.symbol).symbol })),
         [summary]
     );
-    const fundamentals = useFundamentals(useMemo(() => catalogHoldings.map((h) => h.catalogSymbol), [catalogHoldings]));
+    const catalogSymbols = useMemo(() => [...new Set(catalogHoldings.map((h) => h.catalogSymbol))], [catalogHoldings]);
+    const { map: fundamentals, loading: fundamentalsLoading } = useFundamentals(catalogSymbols);
     const earnings = useMemo(() => {
         const out = {};
         for (const h of catalogHoldings) {
@@ -428,7 +398,11 @@ export default function CarteraReal({ intent = null }) {
     }, [catalogHoldings, fundamentals]);
     const alerts = useMemo(() => buildAlerts(summary, earnings), [summary, earnings]);
     const coverage = summary.totalARS > 0 ? (catalogHoldings.reduce((s, h) => s + h.valueARS, 0) / summary.totalARS) * 100 : 0;
-    const newsHoldings = useMemo(() => catalogHoldings.map((h) => ({ symbol: h.catalogSymbol, weight: h.valueARS })), [catalogHoldings]);
+    // summary.holdings ya viene ordenado por valor: las primeras son las que más pesan.
+    const newsCompanies = useMemo(
+        () => catalogHoldings.map((h) => ({ symbol: h.symbol, catalogSymbol: h.catalogSymbol })),
+        [catalogHoldings]
+    );
 
     // Medición del embudo: una vez por carga de página, cuando ya se sabe si hay sesión.
     useEffect(() => {
@@ -442,9 +416,10 @@ export default function CarteraReal({ intent = null }) {
         ? { ars: summary.totalARS, usd: summary.totalUSD }
         : null;
 
-    if (!loaded) return <main style={{ minHeight: '60vh' }} aria-busy="true" />;
+    const empty = loaded && positions.length === 0;
+    // El tablero espera a los primeros precios: así entra con los números finales y no salta después.
+    if (!loaded || (!empty && !market.data && !market.failed)) return <main style={{ minHeight: '60vh' }} aria-busy="true" />;
 
-    const empty = positions.length === 0;
     const brokers = brokersOf(positions);
     const stopDemo = () => setDemo(false);
 
@@ -473,14 +448,21 @@ export default function CarteraReal({ intent = null }) {
                     )}
 
                     {!empty && !demo && (
+                        <div {...enter(0)}>
                         <div className="flex flex-wrap items-center justify-between gap-3">
                             <p className="body-sm" style={{ margin: 0, color: 'var(--ink-muted)' }}>
                                 {brokers.length} {brokers.length === 1 ? 'broker' : 'brokers'}: {brokers.join(', ')}
+                                {store.user && store.sync !== 'error' && (
+                                    <span style={{ color: 'var(--ink-subtle)' }}>
+                                        {' · '}{store.sync === 'saving' ? 'Guardando…' : 'Guardada en tu cuenta'}
+                                    </span>
+                                )}
                             </p>
                             <div className="flex flex-wrap gap-3">
                                 <Button size="sm" onClick={() => setPanel('import')}>Importar desde mi broker</Button>
                                 <Button size="sm" variant="secondary" onClick={() => setPanel('add')}>Agregar un activo</Button>
                             </div>
+                        </div>
                         </div>
                     )}
 
@@ -491,16 +473,16 @@ export default function CarteraReal({ intent = null }) {
 
                     {!empty && (
                         <>
-                            <Totals summary={summary} updatedAt={market.data?.updatedAt} demo={demo} />
+                            <div {...enter(1)}><Totals summary={summary} updatedAt={market.data?.updatedAt} demo={demo} /></div>
 
-                            <Evolution user={store.user} enabled={store.enabled} live={live} demo={demo} />
+                            <div {...enter(2)}><Evolution user={store.user} enabled={store.enabled} live={live} demo={demo} /></div>
 
-                            <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 'var(--space-4)', alignItems: 'start' }}>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 pulso-enter" style={{ gap: 'var(--space-4)', alignItems: 'start', '--enter-i': 3 }}>
                                 <Distribution summary={summary} />
                                 <Alerts alerts={alerts} />
                             </div>
 
-                            <section aria-label="Tus activos">
+                            <section aria-label="Tus activos" {...enter(4)}>
                                 <div className="section-head"><h2 className="h2" style={{ margin: 0 }}>Tus activos</h2><span className="body-sm" style={{ color: 'var(--ink-subtle)' }}>{summary.holdings.length}</span></div>
                                 <div style={{ background: 'var(--surface-100)', border: '1px solid var(--line)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
                                     {summary.holdings.map((h) => (
@@ -509,9 +491,17 @@ export default function CarteraReal({ intent = null }) {
                                 </div>
                             </section>
 
-                            {catalogHoldings.length > 0 && <Advanced catalogHoldings={catalogHoldings} fundamentals={fundamentals} coverage={coverage} />}
+                            {catalogHoldings.length > 0 && (
+                                <div {...enter(5)}><CompanyAnalysis
+                                    holdings={catalogHoldings}
+                                    fundamentals={fundamentals}
+                                    loading={fundamentalsLoading}
+                                    coverage={coverage}
+                                    mep={summary.mep}
+                                /></div>
+                            )}
 
-                            {newsHoldings.length > 0 && <BloombergNewsSlider holdings={newsHoldings} />}
+                            {newsCompanies.length > 0 && <div {...enter(6)}><PortfolioNews companies={newsCompanies} /></div>}
 
                             {!demo && (
                                 <details>

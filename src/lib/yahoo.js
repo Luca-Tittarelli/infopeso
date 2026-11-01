@@ -36,14 +36,15 @@ async function fetchFundamentals(rawSymbol) {
             upsidePotential = ((targetMeanPrice - currentPrice) / currentPrice) * 100;
         }
 
+        const isoDate = (v) => {
+            if (!v) return null;
+            const d = new Date(v);
+            return Number.isNaN(d.getTime()) ? null : d.toISOString();
+        };
+
         let nextEarningsDate = null;
         if (ce.earnings?.earningsDate && Array.isArray(ce.earnings.earningsDate) && ce.earnings.earningsDate.length > 0) {
-            const rawDate = ce.earnings.earningsDate[0];
-            if (rawDate) {
-                try {
-                    nextEarningsDate = new Date(rawDate).toISOString();
-                } catch { nextEarningsDate = null; }
-            }
+            nextEarningsDate = isoDate(ce.earnings.earningsDate[0]);
         }
 
         let divYield = num(sd.dividendYield) ?? num(sd.trailingAnnualDividendYield) ?? null;
@@ -83,7 +84,10 @@ async function fetchFundamentals(rawSymbol) {
             debtToEquity: num(fd.debtToEquity) ?? null,
             freeCashflow: num(fd.freeCashflow) ?? null,
             dividendYield: divYield,
-            beta: num(ks.beta) ?? num(sd.beta) ?? 1.0,
+            // Sin dato queda null: antes se completaba con 1,0 y eso movía el promedio de la cartera.
+            beta: num(ks.beta) ?? num(sd.beta) ?? null,
+            fiftyTwoWeekLow: num(sd.fiftyTwoWeekLow) ?? null,
+            fiftyTwoWeekHigh: num(sd.fiftyTwoWeekHigh) ?? null,
             targetMeanPrice,
             targetHighPrice: num(fd.targetHighPrice) ?? null,
             targetLowPrice: num(fd.targetLowPrice) ?? null,
@@ -91,6 +95,8 @@ async function fetchFundamentals(rawSymbol) {
             recommendationKey: fd.recommendationKey || null,
             numberOfAnalysts: num(fd.numberOfAnalystOpinions) ?? 0,
             nextEarningsDate,
+            exDividendDate: isoDate(ce.exDividendDate ?? sd.exDividendDate),
+            dividendDate: isoDate(ce.dividendDate),
         };
     } catch (err) {
         console.warn('Error obteniendo datos para ' + rawSymbol + ':', err.message);
@@ -103,16 +109,17 @@ async function fetchFundamentals(rawSymbol) {
             roe: null,
             operatingMargin: null,
             dividendYield: null,
-            beta: 1.0,
+            beta: null,
             targetMeanPrice: null,
             upsidePotential: null,
         };
     }
 }
 
-// Fundamentales de Yahoo Finance, cacheados 15 minutos por símbolo
+// Fundamentales de Yahoo Finance, cacheados 15 minutos por símbolo. La clave lleva versión: al sumar campos,
+// la caché vieja (sin rango de 52 semanas ni fechas de dividendos) no se reutiliza.
 export const getFundamentals = (symbol) =>
-    unstable_cache(() => fetchFundamentals(symbol), ['yahoo-fundamentals', symbol], { revalidate: 900 })();
+    unstable_cache(() => fetchFundamentals(symbol), ['yahoo-fundamentals-v2', symbol], { revalidate: 900 })();
 
 async function fetchQuote(symbol) {
     try {

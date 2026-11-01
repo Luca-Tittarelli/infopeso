@@ -144,7 +144,7 @@ export default function Evolution({ user, enabled, live, demo }) {
                     </div>
                 )}
             </div>
-            <div role="img" aria-label={`Evolución del valor de tu cartera en ${cur === 'usd' ? 'dólares' : 'pesos'}, desde el ${shortDate(points[0].date)} hasta el ${shortDate(lastDate)}`}>
+            <div className="pulso-fade-in" role="img" aria-label={`Evolución del valor de tu cartera en ${cur === 'usd' ? 'dólares' : 'pesos'}, desde el ${shortDate(points[0].date)} hasta el ${shortDate(lastDate)}`}>
                 <LineChart labels={points.map((p) => shortDate(p.date))} dataset={points.map((p) => p[cur])} height={220} color="signal" />
             </div>
             <p className="body-sm" style={{ margin: 0, color: 'var(--ink-subtle)' }}>

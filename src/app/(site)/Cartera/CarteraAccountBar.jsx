@@ -16,10 +16,12 @@ const SYNC_LABEL = {
     error: 'Sin sincronizar',
 };
 
-// Franja bajo el encabezado: dónde se guarda la cartera y, si hay sesión, el estado de la sincronización.
+// Franja bajo el encabezado: invita a crear una cuenta o avisa algo de la sincronización. Con sesión y todo
+// guardado no aparece (el estado va en la línea de brokers, ver CarteraReal).
 export default function CarteraAccountBar({ user, syncState, imported, onRetry }) {
+    if (user && syncState !== 'error' && !imported) return null;
     return (
-        <div className="pulso-container" style={{ paddingTop: 'var(--space-4)' }}>
+        <div>
             <div
                 role="status"
                 className="body-sm"
