@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getFundamentals } from '@/lib/yahoo';
-import { CATEGORIES } from '@/utils/carteraData';
+import { ANALYZED_SYMBOLS } from '@/utils/carteraData';
 
-// Solo se consultan empresas del catálogo de la Cartera: evita que el endpoint se use como
+// Solo se consultan empresas del catálogo de la Cartera (editorial y extendido): evita que el endpoint se use como
 // proxy gratuito de Yahoo Finance con símbolos arbitrarios.
-const ALLOWED_SYMBOLS = new Set(CATEGORIES.flatMap((cat) => cat.companies.map((c) => c.symbol.toUpperCase())));
+const ALLOWED_SYMBOLS = new Set([...ANALYZED_SYMBOLS].map((s) => s.toUpperCase()));
 const MAX_SYMBOLS = 30;
 
 export async function GET(request) {

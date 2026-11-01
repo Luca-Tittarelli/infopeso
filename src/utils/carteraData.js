@@ -1,3 +1,5 @@
+import { EXTENDED_COMPANIES } from './carteraExtended';
+
 export const CATEGORIES = [
     {
         name: 'Argentina',
@@ -307,10 +309,24 @@ CATEGORIES.forEach(cat => {
     });
 });
 
+// Cobertura extendida: empresas sin ficha editorial que la Cartera igual analiza (ver carteraExtended.js).
+// Quedan fuera de CATEGORIES a propósito: de ahí salen /Empresas, el sitemap y el simulador, que necesitan texto editorial.
+EXTENDED_COMPANIES.forEach((company) => {
+    if (!COMPANY_MAP.has(company.symbol)) COMPANY_MAP.set(company.symbol, Object.freeze({ ...company, extended: true }));
+});
+
 export const getCompanyBySymbol = (symbol) => {
     if (!symbol) return null;
     return COMPANY_MAP.get(symbol) || null;
 };
+
+// Símbolos de Yahoo que se pueden consultar (con y sin ficha editorial).
+export const ANALYZED_SYMBOLS = new Set(COMPANY_MAP.keys());
+
+// Especie de BYMA (la que traen los archivos de los brokers) → empresa analizada.
+export const CATALOG_BY_TICKER = new Map(
+    [...COMPANY_MAP.values()].map((company) => [company.ticker ?? company.symbol.replace(/\.BA$/, ''), company])
+);
 
 export const hasSector = (portfolioHoldings, sectorName) => {
     if (!portfolioHoldings || portfolioHoldings.length === 0) return false;

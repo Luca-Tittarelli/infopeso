@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/pulso/Button';
 import { Delta } from '@/components/pulso/Delta';
 import { formatNumber } from '@/utils/formatters';
-import { CATEGORIES, calculatePortfolioMetrics } from '@/utils/carteraData';
+import { CATALOG_BY_TICKER as CATALOG_BY_SYMBOL, calculatePortfolioMetrics } from '@/utils/carteraData';
 import { usePositions } from '@/hooks/usePositions';
 import { summarize, buildAlerts, KIND_LABELS } from '@/lib/portfolio/valuation';
 import { brokersOf } from '@/lib/portfolio/positionsStore';
@@ -44,12 +44,6 @@ const DEMO = [
     { broker: 'Ejemplo', symbol: 'ARS', kind: 'cash', currency: 'ARS', quantity: 150000, avgCost: null, fileValue: 150000 },
     { broker: 'Ejemplo', symbol: 'USD', kind: 'cash', currency: 'USD', quantity: 300, avgCost: null, fileValue: 300 },
 ];
-
-const CATALOG_BY_SYMBOL = (() => {
-    const m = new Map();
-    for (const cat of CATEGORIES) for (const c of cat.companies) m.set(c.symbol.replace(/\.BA$/, ''), c);
-    return m;
-})();
 
 const linkBtn = { color: 'var(--signal-text)', textDecoration: 'underline', textUnderlineOffset: '3px', background: 'none', border: 0, cursor: 'pointer', padding: 0, font: 'inherit' };
 
@@ -229,7 +223,7 @@ function HoldingRow({ h, readOnly, onRemove }) {
                         </tbody>
                     </table>
                 </div>
-                {company && (
+                {company && !company.extended && (
                     <Link href={`/Empresas/${encodeURIComponent(company.symbol)}`} className="body-sm" style={{ ...linkBtn, alignSelf: 'flex-start' }}>
                         Ver ficha de {company.name}
                     </Link>
