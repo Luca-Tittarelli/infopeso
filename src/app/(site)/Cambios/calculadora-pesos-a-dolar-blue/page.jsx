@@ -5,22 +5,33 @@ import RelatedLinks from '@/components/RelatedLinks';
 import { getDolares, getHistory, valueMonthsAgo, fmtARS } from '@/lib/fx';
 import AdSlot from '@/components/ads/AdSlot';
 
-export const metadata = {
-    title: 'Calculadora de Pesos a Dólar Blue Hoy en Argentina (Conversor Online)',
-    description: 'Calcula al instante el equivalente de tus pesos argentinos a dólar blue (o dólares a pesos). Tabla de conversiones frecuentes ($100, $500, $1000 USD) al tipo de cambio paralelo de hoy.',
-    openGraph: {
-        title: 'Calculadora de Pesos a Dólar Blue Hoy en Argentina (Conversor Online)',
-        description: 'Calcula al instante el equivalente de tus pesos argentinos a dólar blue (o dólares a pesos). Tabla de conversiones frecuentes ($100, $500, $1000 USD) al tipo de cambio paralelo de hoy.',
-        url: 'https://www.infopeso.com.ar/Cambios/calculadora-pesos-a-dolar-blue',
-        siteName: 'Infopeso',
-        locale: 'es_AR',
-        type: 'website',
-        images: [{ url: 'https://www.infopeso.com.ar/logo.png' }],
-    },
-    alternates: {
-        canonical: 'https://www.infopeso.com.ar/Cambios/calculadora-pesos-a-dolar-blue',
-    }
-};
+const DESCRIPTION = 'Convertí pesos a dólar blue (o dólares a pesos) al precio de hoy. Tabla de conversiones frecuentes ($100, $500, $1000 USD) y comparación con el dólar oficial, MEP y tarjeta.';
+
+// Con el precio del día en el título el resultado se destaca en Google (mismo criterio que /Cambios/[id]).
+export async function generateMetadata() {
+    const dolares = await getDolares();
+    const venta = dolares?.find((d) => d.casa === 'blue')?.venta;
+    const title = venta
+        ? `Dólar blue a pesos hoy: $ ${venta.toLocaleString('es-AR')} — Calculadora`
+        : 'Calculadora de dólar blue a pesos hoy (conversor)';
+
+    return {
+        title,
+        description: DESCRIPTION,
+        openGraph: {
+            title,
+            description: DESCRIPTION,
+            url: 'https://www.infopeso.com.ar/Cambios/calculadora-pesos-a-dolar-blue',
+            siteName: 'Infopeso',
+            locale: 'es_AR',
+            type: 'website',
+            images: [{ url: 'https://www.infopeso.com.ar/logo.png' }],
+        },
+        alternates: {
+            canonical: 'https://www.infopeso.com.ar/Cambios/calculadora-pesos-a-dolar-blue',
+        }
+    };
+}
 
 export default async function Page() {
     const [dolares, blueHistory] = await Promise.all([getDolares(), getHistory({ casa: 'blue' })]);

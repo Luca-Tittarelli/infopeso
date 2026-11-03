@@ -1,6 +1,7 @@
 import EmpresasClient from './EmpresasClient';
 import Link from 'next/link';
 import { CATEGORIES } from '@/utils/carteraData';
+import { EXTENDED_COMPANIES } from '@/utils/carteraExtended';
 import { getQuote } from '@/lib/yahoo';
 
 export const metadata = {
@@ -50,6 +51,28 @@ export default async function Page() {
                         );
                     })}
                 </ul>
+
+                {[
+                    { title: 'Más acciones argentinas', list: EXTENDED_COMPANIES.filter((c) => c.symbol.endsWith('.BA')) },
+                    { title: 'Más CEDEARs', list: EXTENDED_COMPANIES.filter((c) => !c.symbol.endsWith('.BA')) },
+                ].map(({ title, list }) => (
+                    <div key={title} className="mt-8">
+                        <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontStyle: 'italic' }}>
+                            {title}
+                        </h2>
+                        <ul className="flex flex-wrap gap-2">
+                            {list.map((c) => (
+                                <li key={c.symbol}>
+                                    <Link href={`/Empresas/${encodeURIComponent(c.symbol)}`}
+                                          className="inline-block px-3 py-1.5 rounded-lg text-xs hover:underline"
+                                          style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', color: 'var(--text-primary)' }}>
+                                        {c.name} <span style={{ color: 'var(--text-tertiary)' }}>({c.ticker})</span>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ))}
             </section>
         </>
     );

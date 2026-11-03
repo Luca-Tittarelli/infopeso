@@ -3,6 +3,7 @@ import { cambiosMetadata } from '@/utils/cambiosMetadata';
 import { BOND_DATA } from '@/utils/bondCalculator';
 import { getAllGuiaSlugs } from '@/utils/guiasData';
 import { CATEGORIES } from '@/utils/carteraData';
+import { EXTENDED_COMPANIES } from '@/utils/carteraExtended';
 
 export default function sitemap() {
     const base = 'https://www.infopeso.com.ar';
@@ -66,12 +67,21 @@ export default function sitemap() {
         priority: 0.75,
     }));
 
+    // Fichas sin texto editorial (cotización y fundamentales del día): menor prioridad que las editoriales.
+    const extendedEmpresas = EXTENDED_COMPANIES.map(c => ({
+        url: `${base}/Empresas/${encodeURIComponent(c.symbol)}`,
+        lastModified: today,
+        changeFrequency: 'daily',
+        priority: 0.5,
+    }));
+
     return [
         ...staticRoutes,
         ...dynamicEconomia,
         ...dynamicCambios,
         ...dynamicBonos,
         ...dynamicGuias,
-        ...dynamicEmpresas
+        ...dynamicEmpresas,
+        ...extendedEmpresas
     ];
 }

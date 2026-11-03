@@ -26,7 +26,7 @@ export default function BonoDetalleClient({ ticker, bond, initialPrice = null })
                 <div className="lg:col-span-1 pulso-card flex flex-col justify-between" style={{ gap: 'var(--space-6)' }}>
                     <div>
                         <h1 className="h2" style={{ color: 'var(--ink)', margin: '0 0 var(--space-1) 0' }}>
-                            Calculadora {ticker}
+                            Bono {ticker} hoy: cotización y TIR
                         </h1>
                         <p className="body-sm" style={{ color: 'var(--ink-muted)', margin: 0 }}>
                             Precio de mercado en dólares MEP (editable) para estimar el rendimiento.
