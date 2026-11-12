@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=2560, height=1440" />
+    <!-- Banner del canal de YouTube · 2560×1440. Zona segura (visible en todos los dispositivos): 1546×423 centrada. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&family=Geist+Mono:wght@500&display=block"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/pulso-video.css" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 2560px; height: 1440px; overflow: hidden; background: var(--ground-000); color: var(--ink); }
+      #root { position: relative; width: 100%; height: 100%; }
+      #safe {
+        position: absolute;
+        left: 507px;
+        top: 508px;
+        width: 1546px;
+        height: 423px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 64px;
+      }
+      #safe img { width: 520px; height: auto; flex: none; }
+      .copy { display: flex; flex-direction: column; gap: 22px; }
+      .claim { font-family: var(--font-display); font-weight: 800; font-size: 76px; line-height: 0.98; letter-spacing: -0.045em; }
+      .claim em { font-style: normal; color: var(--signal); }
+      .temas { font-family: var(--font-mono); font-size: 26px; letter-spacing: 0.06em; color: var(--ink-muted); text-transform: uppercase; }
+      .tri { position: absolute; width: 0; height: 0; border-left: 60px solid transparent; border-right: 60px solid transparent; border-bottom: 104px solid var(--line); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="1" data-width="2560" data-height="1440">
+      <span class="tri clip" data-start="0" data-duration="1" data-track-index="1" style="left: 220px; top: 300px"></span>
+      <span class="tri clip" data-start="0" data-duration="1" data-track-index="2" style="left: 2240px; top: 1040px"></span>
+      <div id="safe" class="clip" data-start="0" data-duration="1" data-track-index="3">
+        <img src="assets/logo-principal-sobre-oscuro.svg" alt="Infopeso" />
+        <div class="copy">
+          <div class="claim">Los números de la<br />economía, <em>claros</em>.</div>
+          <div class="temas">Dólar · Inflación · Riesgo país · Mercado · Tu cartera</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.set({}, {}, 1);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

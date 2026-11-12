@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="es-AR" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <!-- Plantilla «Dato del día» · Infopeso Pulso · 1080×1920 · 10 s
+         Para un video nuevo: copiá esta carpeta a videos/AAAA-MM-DD-slug/ y editá SOLO el objeto DATO de abajo
+         (y los textos si el guion lo pide). Los valores salen de `node ../../herramientas/datos.mjs --json`. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Geist+Mono:wght@400;500&display=block"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/pulso-video.css" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ground-000);
+        color: var(--ink);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        font-family: var(--font-display);
+      }
+      .layer {
+        position: absolute;
+        left: var(--safe-x);
+        right: var(--safe-x);
+      }
+
+      /* Encabezado */
+      #kicker { top: var(--safe-top); display: flex; align-items: center; gap: 20px; color: var(--ink-muted); }
+      #kicker img { width: 34px; height: auto; }
+
+      /* Cifra héroe */
+      #hero { top: 520px; }
+      #hero .v-hero, #delta { position: relative; z-index: 1; }
+      #hero .v-hero { white-space: nowrap; }
+      #hero-flash {
+        position: absolute;
+        inset: -24px -40px;
+        background: var(--surface-200);
+        border-radius: 24px;
+        opacity: 0;
+        z-index: 0;
+      }
+      #delta { margin-top: 36px; display: flex; align-items: baseline; gap: 18px; }
+      #delta .tri { font-size: 52px; line-height: 1; }
+
+      /* Comparación */
+      #rows { top: 1000px; border-top: 1px solid var(--line); }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 30px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .row .name { color: var(--ink-muted); }
+      .row .val { font-family: var(--font-mono); font-size: 52px; font-variant-numeric: tabular-nums; color: var(--ink); }
+
+      /* Fuente */
+      #source { top: 1440px; color: var(--ink-subtle); }
+
+      /* Cierre */
+      #outro {
+        inset: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+        background: var(--ground-000);
+      }
+      #outro img { width: 620px; height: auto; }
+      #outro .v-label { color: var(--ink-muted); }
+      #disclaimer { color: var(--ink-subtle); font-size: 28px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1080" data-height="1920">
+      <div id="kicker" class="layer clip" data-start="0" data-duration="7" data-track-index="1">
+        <img src="assets/isotipo-triangulo.svg" alt="" />
+        <span class="v-label" id="kicker-text"></span>
+      </div>
+
+      <div id="hero" class="layer clip" data-start="0" data-duration="7" data-track-index="2">
+        <div id="hero-flash"></div>
+        <div class="v-hero" id="hero-num">$ 0</div>
+        <div id="delta">
+          <span class="tri" id="delta-tri"></span>
+          <span class="v-sub" id="delta-text"></span>
+        </div>
+      </div>
+
+      <div id="rows" class="layer clip" data-start="1.6" data-duration="5.4" data-track-index="3"></div>
+
+      <div id="source" class="layer clip v-label" data-start="4.6" data-duration="2.4" data-track-index="4"></div>
+
+      <div id="outro" class="layer clip" data-start="7" data-duration="3" data-track-index="5">
+        <img src="assets/logo-principal-sobre-oscuro.svg" alt="Infopeso" />
+        <span class="v-label">infopeso.com.ar</span>
+        <span class="v-label" id="disclaimer"></span>
+      </div>
+    </div>
+
+    <script>
+      // ─── DATO: lo único que hay que editar para un video nuevo ─────────────────────────────
+      const DATO = {
+        etiqueta: "DÓLAR BLUE · VENTA",
+        valor: 1555, // número crudo; se formatea en es-AR
+        moneda: "$", // "$" pesos · "US$" dólares · "" para puntos/porcentajes
+        sufijo: "", // ej. " pb" para riesgo país, " %" para inflación
+        decimales: 0,
+        variacion: -1.0, // en %, con signo. null para ocultar la línea
+        textoVariacion: "vs. el dólar oficial", // qué compara la variación
+        comparar: [
+          ["MEP", 1587.9],
+          ["CCL", 1664.9],
+          ["Oficial", 1570],
+        ],
+        fuente: "FUENTE: DOLARAPI · 06/11 18:00",
+        aviso: "", // ej. "No es recomendación de inversión." cuando hay análisis
+      };
+      // ──────────────────────────────────────────────────────────────────────────────────────
+
+      const fmt = (v, d) =>
+        new Intl.NumberFormat("es-AR", { minimumFractionDigits: d, maximumFractionDigits: d }).format(v);
+      const conMoneda = (v, d) => `${DATO.moneda ? DATO.moneda + " " : ""}${fmt(v, d)}${DATO.sufijo}`;
+
+      document.getElementById("kicker-text").textContent = DATO.etiqueta;
+      document.getElementById("source").textContent = DATO.fuente;
+      document.getElementById("disclaimer").textContent = DATO.aviso;
+
+      const deltaEl = document.getElementById("delta");
+      if (DATO.variacion == null) {
+        deltaEl.style.display = "none";
+      } else {
+        const v = DATO.variacion;
+        const clase = v > 0 ? "is-up" : v < 0 ? "is-down" : "is-flat";
+        const signo = v > 0 ? "+" : v < 0 ? "−" : "=";
+        document.getElementById("delta-tri").textContent = v > 0 ? "▲" : v < 0 ? "▼" : "";
+        document.getElementById("delta-tri").className = "tri " + clase;
+        document.getElementById("delta-text").innerHTML =
+          `<span class="${clase}">${signo}${fmt(Math.abs(v), 2)} %</span> <span style="color:var(--ink-muted);font-weight:400">${DATO.textoVariacion}</span>`;
+      }
+
+      const rows = document.getElementById("rows");
+      rows.innerHTML = DATO.comparar
+        .map(([n, v]) => `<div class="row"><span class="v-sub name">${n}</span><span class="val">${conMoneda(v, v % 1 ? 2 : 0)}</span></div>`)
+        .join("");
+
+      // ─── Timeline (pausada y seekable: el render salta a cada cuadro) ───────────────────────
+      const tl = gsap.timeline({ paused: true });
+      const heroNum = document.getElementById("hero-num");
+      
+      // El cuadro 0 es la miniatura en redes: el dato real ya está en pantalla (nunca un número intermedio).
+      heroNum.textContent = conMoneda(DATO.valor, DATO.decimales);
+
+      tl.fromTo("#kicker img", { y: 0 }, { y: -14, duration: 0.25, ease: "power2.out", yoyo: true, repeat: 1 }, 0.2) // latido del ▲
+        .fromTo("#hero-flash", { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "power1.out" }, 0.3) // destello de actualización
+        .to("#hero-flash", { opacity: 0, duration: 0.45, ease: "power1.out" }, 0.45)
+        .fromTo("#delta", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.7)
+        .fromTo("#rows", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 1.6)
+        .fromTo("#rows .row", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", stagger: 0.18 }, 1.6)
+        .fromTo("#source", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 4.6)
+        .to(["#kicker", "#hero", "#rows", "#source"], { opacity: 0, y: -30, duration: 0.3, ease: "power2.in" }, 6.7)
+        .fromTo("#outro", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power1.out" }, 7.0)
+        .fromTo("#outro img", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.55, ease: "expo.out" }, 7.05)
+        .fromTo("#outro .v-label", { opacity: 0 }, { opacity: 1, duration: 0.4, stagger: 0.12 }, 7.3);
+
+      tl.set({}, {}, 10); // fija la duración total en 10 s
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

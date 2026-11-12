@@ -1,0 +1,35 @@
+/* Infopeso Pulso — tokens para composiciones de video (HyperFrames).
+   Colores idénticos a ../../brand/tokens/tokens.css (tema oscuro). Escala tipográfica para lienzo 1080 px de ancho.
+   Cada proyecto de video tiene una copia en assets/pulso-video.css: si cambiás este archivo, volvé a copiarlo. */
+
+:root {
+  --ground-000: #141210;
+  --surface-100: #1c1916;
+  --surface-200: #2a2622;
+  --line: #332e29;
+  --ink: #f1ece4;
+  --ink-muted: #c4bcb1;
+  --ink-subtle: #9c948a;
+  --signal: #ff6a33;
+  --signal-text: #ff8a5c;
+  --on-signal: #141210;
+  --up: var(--signal);
+  --down: #6e9bff;
+
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  --safe-x: 96px;
+  --safe-top: 220px;
+  --safe-bottom: 380px;
+}
+
+.v-hero { font-family: var(--font-display); font-size: 240px; line-height: 0.9; font-weight: 800; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; font-optical-sizing: auto; }
+.v-title { font-family: var(--font-display); font-size: 104px; line-height: 0.98; font-weight: 800; letter-spacing: -0.045em; font-optical-sizing: auto; }
+.v-sub { font-family: var(--font-display); font-size: 60px; line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; }
+.v-body { font-family: var(--font-display); font-size: 48px; line-height: 1.3; font-weight: 400; }
+.v-label { font-family: var(--font-mono); font-size: 34px; line-height: 1.3; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+
+.is-up { color: var(--up); }
+.is-down { color: var(--down); }
+.is-flat { color: var(--ink-subtle); }

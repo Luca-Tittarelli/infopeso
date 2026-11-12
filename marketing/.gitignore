@@ -1,0 +1,7 @@
+# Renders y artefactos de HyperFrames
+*.mp4
+*.webm
+*.mov
+renders/
+.hyperframes/
+node_modules/

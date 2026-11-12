@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node herramientas/datos.mjs:*)",
+      "Bash(npx --yes hyperframes@0.9.19 check:*)",
+      "Bash(npx --yes hyperframes@0.9.19 lint:*)",
+      "Bash(npx --yes hyperframes@0.9.19 snapshot:*)",
+      "Bash(npx --yes hyperframes@0.9.19 render:*)",
+      "Bash(npx --yes hyperframes@0.9.19 preview:*)",
+      "Bash(npx --yes hyperframes@0.9.19 docs:*)",
+      "Bash(npx --yes hyperframes@0.9.19 catalog:*)",
+      "Bash(npx --yes hyperframes@0.9.19 info:*)",
+      "Bash(npx --yes hyperframes@0.9.19 timeline:*)",
+      "WebFetch(domain:dolarapi.com)",
+      "WebFetch(domain:api.argentinadatos.com)",
+      "WebFetch(domain:api.bcra.gob.ar)",
+      "WebFetch(domain:hyperframes.heygen.com)"
+    ],
+    "ask": [
+      "Bash(npx --yes hyperframes@0.9.19 publish:*)",
+      "Bash(npx hyperframes publish:*)"
+    ]
+  }
+}
